@@ -13,6 +13,7 @@ import { RegistorDirector } from './RegistorDirector'
 import { Reseption } from './Reseption/Reseption'
 import { Sayt } from './Sayt/sayt'
 import { Turn } from './Turn/Turn'
+import { Site } from './WebSite/Site'
 
 export const useRoutes = () => {
     return (
@@ -53,8 +54,11 @@ export const useRoutes = () => {
             <Route path="/labaratoriya" >
                 <Labaratoriya />
             </Route>
-            <Route path="/" >
+            <Route path="/sayt" >
                 <Sayt />
+            </Route>
+            <Route path="/" >
+                <Site />
             </Route>
             <Redirect to="/" />
         </Switch>
