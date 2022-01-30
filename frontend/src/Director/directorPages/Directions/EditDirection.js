@@ -1,23 +1,11 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Link, useHistory, useParams } from 'react-router-dom'
-import Modal from 'react-modal'
+import { Link, useHistory, useLocation, useParams } from 'react-router-dom'
 import { toast } from "react-toastify"
 import { AuthContext } from '../../context/AuthContext'
 import { useHttp } from '../../hooks/http.hook'
 import { CheckDirection } from './CheckDirection'
 import { Loader } from '../../components/Loader'
 
-
-const customStyles = {
-  content: {
-    top: '50%',
-    left: '50%',
-    right: 'auto',
-    bottom: 'auto',
-    marginRight: '-50%',
-    transform: 'translate(-50%, -50%)',
-  },
-}
 toast.configure()
 export const EditDirection = () => {
   const auth = useContext(AuthContext)
@@ -32,30 +20,41 @@ export const EditDirection = () => {
     price: "",
     section: "",
     subsection: " ",
+    shortname: "",
     label: "",
     room: "",
     doctorProcient: "",
     counteragentProcient: "",
-    counterDoctor: ""
+    counterDoctor: "",
+    norma: " ",
+    result: " ",
+    additionalone: " ",
+    additionaltwo: " ",
   })
   const directionId = useParams().id
+  const headId = useParams().headid
 
   const getDirection = useCallback(async () => {
     try {
       const data = await request(`/api/direction/id/${directionId}`, 'GET', null, {
         Authorization: `Bearer ${auth.token}`
       })
-      console.log(data);
       setDirection({
         value: data.value,
         price: data.price,
         section: data.section,
         subsection: data.subsection,
+        shortname: data.shortname,
+        headsection: data.headsection,
         room: data.room,
         label: data.label,
         doctorProcient: data.doctorProcient,
         counteragentProcient: data.counteragentProcient,
-        counterDoctor: data.counterDoctor
+        counterDoctor: data.counterDoctor,
+        norma: " ",
+        result: " ",
+        additionalone: " ",
+        additionaltwo: " ",
 
       })
     } catch (e) {
@@ -67,8 +66,8 @@ export const EditDirection = () => {
     setDirection({
       ...direction,
       section: event.target.value,
-      value: event.target.value + " " + direction.subsection,
-      label: event.target.value + " " + direction.subsection
+      value: headdirection && headdirection.name + " " + event.target.value + " " + direction.subsection,
+      label: headdirection && headdirection.name + " " + event.target.value + " " + direction.subsection
     })
   }
 
@@ -76,8 +75,15 @@ export const EditDirection = () => {
     setDirection({
       ...direction,
       subsection: event.target.value,
-      value: direction.section + " " + event.target.value,
-      label: direction.section + " " + event.target.value
+      value: headdirection && headdirection.name + " " + direction.section + " " + event.target.value,
+      label: headdirection && headdirection.name + " " + direction.section + " " + event.target.value
+    })
+  }
+
+  const changeShortname = (event) => {
+    setDirection({
+      ...direction,
+      shortname: event.target.value,
     })
   }
 
@@ -106,7 +112,7 @@ export const EditDirection = () => {
       const data = await request(`/api/direction/${directionId}`, "PATCH", { ...direction }, {
         Authorization: `Bearer ${auth.token}`
       })
-      history.push('/director/directions')
+      history.push(`/director/directions/${direction.headsection}`)
     } catch (e) {
       notify(e)
     }
@@ -119,6 +125,23 @@ export const EditDirection = () => {
     toast.error(e)
   }
 
+  //Direction ma'lumotlari
+  const [headdirection, setHeadDirection] = useState()
+
+  const getHeadDirection = useCallback(async () => {
+    try {
+      const fetch = await request(`/api/headsection/${headId}`, 'GET', null, {
+        Authorization: `Bearer ${auth.token}`
+      })
+
+      setHeadDirection({
+        name: fetch.name
+      })
+
+    } catch (error) {
+      notify(error)
+    }
+  }, [auth, request, setHeadDirection])
 
   useEffect(() => {
     if (direction.value === "") {
@@ -128,8 +151,10 @@ export const EditDirection = () => {
       notify(error)
       clearError()
     }
-
-  }, [getDirection, notify, clearError])
+    if (!headdirection) {
+      getHeadDirection()
+    }
+  }, [getDirection, notify, clearError, getHeadDirection])
 
   if (loading) {
     return <Loader />
@@ -146,8 +171,9 @@ export const EditDirection = () => {
                   <thead>
                     <tr>
                       <th className="text-center">Xizmat nomi</th>
-                      <th className="text-center">Xizmat narxi</th>
                       <th className="text-center">Xizmat turi</th>
+                      <th className="text-center">Xizmatning qisqartma nomi</th>
+                      <th className="text-center">Xizmat narxi</th>
                       <th className="text-center">Xizmat xonasi</th>
                       <th className="text-center">Doctor ulushi</th>
                       <th className="text-center">Medpridstavitel ulushi</th>
@@ -159,11 +185,20 @@ export const EditDirection = () => {
                     <tr>
                       <td className="text-center">
                         <span className="table-avatar">
-                          <span href="profile.html"> <input style={{ width: "100px" }} defaultValue={direction.section} onChange={changeSection} name="lastname" className="addDirection" /> </span>
+                          <span href="profile.html"> <input style={{ width: "200px" }} defaultValue={direction.section} onChange={changeSection} name="lastname" className="addDirection" /> </span>
+                        </span>
+                      </td>
+                      <td className="text-center">
+                        <span className="table-avatar">
+                          <span href="profile.html"> <input style={{ width: "100px" }} defaultValue={direction.subsection} onChange={changeSubsection} name="lastname" className="addDirection" /> </span>
+                        </span>
+                      </td>
+                      <td className="text-center">
+                        <span className="table-avatar">
+                          <span href="profile.html"> <input style={{ width: "100px" }} defaultValue={direction.shortname} onChange={changeShortname} name="lastname" className="addDirection" /> </span>
                         </span>
                       </td>
                       <td className="text-center"><input style={{ width: "100px" }} defaultValue={direction.price} onChange={changePrice} type="number" name="lastname" className="addDirection" /> sum</td>
-                      <td className="text-center"><input style={{ width: "100px" }} defaultValue={direction.subsection} onChange={changeSubsection} name="lastname" className="addDirection" /></td>
                       <td className="text-center"><input style={{ width: "100px" }} defaultValue={direction.room} onChange={changeRoom} name="room" className="addDirection" /></td>
                       <td className="text-center"><input style={{ width: "100px" }} type="number" defaultValue={direction.doctorProcient} onChange={changeProcient} name="doctorProcient" className="addDirection" /></td>
                       <td className="text-center"><input style={{ width: "100px" }} type="number" defaultValue={direction.counteragentProcient} onChange={changeProcient} name="counteragentProcient" className="addDirection" /></td>
@@ -191,21 +226,31 @@ export const EditDirection = () => {
                   <thead>
                     <tr>
                       <th className="text-center">Xizmat nomi</th>
-                      <th className="text-center">Xizmat narxi</th>
                       <th className="text-center">Xizmat turi</th>
+                      <th className="text-center">Xizmat narxi</th>
                       <th className="text-center">Xizmat xonasi</th>
+                      <th className="text-center">Doctor ulushi</th>
+                      <th className="text-center">Medpridstovitel ulushi</th>
+                      <th className="text-center">Yo'llanma bergan doctor ulushi</th>
                     </tr>
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="text-center">
+                      <td className="text-center" style={{ width: "200px" }}>
                         <span className="table-avatar">
                           <span href="profile.html"> {direction.section} </span>
                         </span>
                       </td>
-                      <td className="text-center">{direction.price} sum</td>
-                      <td className="text-center">{direction.subsection}</td>
-                      <td className="text-center">{direction.room}</td>
+                      <td className="text-center" style={{ width: "200px" }}>
+                        <span className="table-avatar">
+                          <span href="profile.html"> {direction.subsection} </span>
+                        </span>
+                      </td>
+                      <td className="text-center" style={{ width: "100px" }}>{direction.price} sum</td>
+                      <td className="text-center" style={{ width: "100px" }}>{direction.room}</td>
+                      <td className="text-center" style={{ width: "100px" }}>{direction.doctorProcient}</td>
+                      <td className="text-center" style={{ width: "100px" }}>{direction.counteragentProcient}</td>
+                      <td className="text-center" style={{ width: "100px" }}>{direction.counterDoctor}</td>
                     </tr>
 
                   </tbody>
@@ -219,6 +264,9 @@ export const EditDirection = () => {
               </div>
             </div>
           </div>
+
+
+
         </div>
       </div>
 

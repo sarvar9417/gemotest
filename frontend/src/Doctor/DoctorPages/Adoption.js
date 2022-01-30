@@ -1,125 +1,141 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { useHistory, useParams } from 'react-router'
+import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import { useHistory, useParams } from 'react-router-dom'
+import { useReactToPrint } from 'react-to-print'
 import { AuthContext } from '../context/AuthContext'
-import { useHttp } from '../hooks/http.hook'
 import { toast } from 'react-toastify'
+import { useHttp } from '../hooks/http.hook'
+import { Print } from './Print'
 import QRCode from 'qrcode'
-import { Loader } from '../components/Loader'
-import makeAnimated from "react-select/animated"
-import Select from 'react-select'
-const animatedComponents = makeAnimated()
 
 toast.configure()
 export const Adoption = () => {
-    const { request, loading, error, clearError } = useHttp()
-    const sectionId = useParams().id
-    const auth = useContext(AuthContext)
-    const [section, setSection] = useState()
     const history = useHistory()
-    const [options, setOptions] = useState()
+    const componentRef = useRef()
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
+    })
+    const notify = (e) => {
+        toast.error(e);
+    };
+    const auth = useContext(AuthContext)
+    const { loading, request, error, clearError } = useHttp()
+
+    const clientId = useParams().clientid
+    const connectorId = useParams().connectorid
     const [client, setClient] = useState()
-
-
-    //Modal oyna
-    const [modal1, setModal1] = useState(false)
-    const [modal2, setModal2] = useState(false)
-
-    const getSection = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/section/doctor/${sectionId}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            setSection(fetch)
-        } catch (error) {
-            notify(error)
-        }
-    }, [request, auth, sectionId])
+    const [connector, setConnector] = useState()
+    const [sections, setSections] = useState()
+    const [tablesections, setTableSections] = useState()
 
     const getClient = useCallback(async () => {
         try {
-            const fetch = await request(`/api/clients/doctor/${section.client}`, 'GET', null, {
+            const fetch = await request(`/api/clients/doctor/${clientId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
             setClient(fetch)
         } catch (e) {
             notify(e)
         }
-    }, [request, auth, section])
+    }, [request, auth, setClient, clientId])
 
-    const checkUp = (event) => {
-        setSection({ ...section, [event.target.name]: event.target.id })
-        window.scrollTo({ top: 0 })
-        setModal1(true)
-    }
-
-    const dontCome = useCallback(async () => {
+    const getConnector = useCallback(async () => {
         try {
-            const fetch = await request(`/api/section/doctordontcome/${sectionId}`, 'PUT', { checkUp: "kelmagan" }, {
+            const fetch = await request(`/api/connector/doctorconnector/${auth.doctor.section}/${connectorId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            history.push(`/doctor`)
+            setConnector(fetch.connector)
+            setSections(fetch.sections)
+            setTableSections(fetch.tablesections)
         } catch (e) {
-
+            notify(e)
         }
-    }, [request, auth])
+    }, [request, auth, connectorId, setConnector, setSections, setTableSections])
 
-
-    const doneCome = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/section/doctordone/${sectionId}`, 'PUT',
-                {
-                    checkUp: "kelgan",
-                    comment: section.comment,
-                    summary: section.summary,
-                    done: "tasdiqlangan",
-                    doctor: auth.doctor.lastname + " " + auth.doctor.firstname + " " + auth.doctor.fathername
-                },
-                {
-                    Authorization: `Bearer ${auth.token}`
-                })
-            history.push(`/doctor`)
-        } catch (e) {
-
-        }
-    }, [request, auth, section, sectionId])
-
-    const changeSections = (event) => {
-        let s = ""
-        event.map((e) => {
-            s = s + e.label + `
-            
-        ` + e.value + `
-            
-`
-        })
-        setSection({
-            ...section, summary: section.summary + `  
-        ` + s
-        })
+    const changeNorma = (event, index, key) => {
+        let t = [...tablesections]
+        t[index][key].norma = event.target.value
+        setTableSections(t)
+    }
+    const changeResult = (event, index, key) => {
+        let t = [...tablesections]
+        t[index][key].result = event.target.value
+        setTableSections(t)
+    }
+    const changeAdditionalone = (event, index, key) => {
+        let t = [...tablesections]
+        t[index][key].additionalone = event.target.value
+        setTableSections(t)
     }
 
-    const changeHandlar = (event) => {
-        setSection({ ...section, [event.target.name]: event.target.value })
+    const changeAdditionaltwo = (event, index, key) => {
+        let t = [...tablesections]
+        t[index][key].additionaltwo = event.target.value
+        setTableSections(t)
     }
 
-    const getTemplates = useCallback(async () => {
+    const changeAccept = useCallback((event, index, key) => {
+        let t = [...tablesections]
+        t[index][key].accept = event.target.checked
+        let b = true
+        t[index].map(tablesection => {
+            if (!tablesection.accept) {
+                b = false
+            }
+        })
+        if (b) {
+            let s = [...sections]
+            s[index].accept = true
+            setSections(s)
+        } else {
+            let s = [...sections]
+            s[index].accept = false
+            setSections(s)
+        }
+        setTableSections(t)
+
+    }, [sections, setSections, setTableSections, tablesections])
+
+    const changeSectionaccept = useCallback((event, index) => {
+        let t = [...tablesections]
+        t[index].map(tablesection => {
+            tablesection.accept = event.target.checked
+        })
+        let s = [...sections]
+        s[index].accept = event.target.checked
+        setTableSections(t)
+        setSections(s)
+    }, [sections, setSections, setTableSections, tablesections])
+
+    const sectionAccept = useCallback((event, index) => {
+        let s = [...sections]
+        s[index].accept = event.target.checked
+        setSections(s)
+    }, [sections, setSections])
+
+    const sectionSummary = useCallback((event, index) => {
+        let s = [...sections]
+        s[index].summary = event.target.value
+        setSections(s)
+    }, [sections, setSections])
+
+    const sectionComment = useCallback((event, index) => {
+        let s = [...sections]
+        s[index].comment = event.target.value
+        setSections(s)
+    }, [sections, setSections])
+
+    const patchData = useCallback(async () => {
         try {
-            const fetch = await request(`/api/templatedoctor`, 'GET', null, {
+            const fetch = await request(`/api/section/doctor`, 'PATCH', { sections: [...sections], tablesections: [...tablesections] }, {
                 Authorization: `Bearer ${auth.token}`
             })
-            let opt = []
-            fetch.map((template) => {
-                let option = {
-                    label: template.subsection,
-                    value: template.template
-                }
-                opt.push(option)
-            })
-            setOptions(opt)
-        } catch (error) {
-            notify(error)
+            toast.success(fetch.message)
+            history.push('/doctor')
+        } catch (e) {
+            notify(e)
         }
-    }, [request, auth])
+    }, [request, auth, sections, tablesections, toast])
+
 
     const [logo, setLogo] = useState()
     const getLogo = useCallback(async () => {
@@ -131,244 +147,285 @@ export const Adoption = () => {
         }
     }, [request, setLogo])
 
-    const notify = (e) => {
-        toast(e)
-    }
-
-    const [baseUrl, setBaseUrl] = useState()
+    const [qr, setQr] = useState()
+    const [baseUrl, setBasuUrl] = useState()
     const getBaseUrl = useCallback(async () => {
         try {
             const fetch = await request(`/api/clienthistorys/url`, 'GET', null)
-            setBaseUrl(fetch)
+            setBasuUrl(fetch)
         } catch (e) {
             notify(e)
         }
-    }, [request, setBaseUrl])
-
-    const [qr, setQr] = useState()
-    const createQR = () => {
-        QRCode.toDataURL(`${baseUrl}/api/clienthistorys/${client._id}`)
-            .then(data => {
-                setQr(data)
-            })
-    }
+    }, [request, setBasuUrl])
 
     useEffect(() => {
-
-        if (!logo) {
-            getLogo()
+        if (client) {
+            QRCode.toDataURL(`${baseUrl}/clienthistorys/${client._id}`)
+                .then(data => {
+                    setQr(data)
+                })
+        }
+        if (!client) {
+            getClient()
         }
         if (error) {
             notify(error)
             clearError()
         }
-        if (!section) {
-            getSection()
+        if (!connector) {
+            getConnector()
         }
-        if (!options) {
-            getTemplates()
+        if (!logo) {
+            getLogo()
         }
         if (!baseUrl) {
             getBaseUrl()
         }
-        if (section && !client) {
-            getClient()
-        }
-        if (client) {
-            createQR()
-        }
     }, [notify, clearError])
 
-    if (loading) {
-        return <Loader />
-    }
-
-
     return (
-        <div style={{ marginTop: "70px" }}>
-
-            <div className="container">
-                <div style={{ fontFamily: "times !important" }} className="m-2">
-                    <div className="row">
-                        <div className=" col-md-8 col-12 border-right border-dark text-center  border-5 m-none">
-                            <img alt="logo" src={logo && logo.logo} className="w-50" />
-                            <div className="row mt-3">
-                                <div className="col-3 text-end">
-                                    <span className="fw-normal d-block" >Адрес:</span>
-                                </div>
-                                <div className="col-9 text-start fw-bold">
-                                    {logo && logo.address}
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-3 text-end">
-                                    <span className="fw-normal" >Ориентир:</span>
-                                </div>
-                                <div className="col-9 text-start fw-bold">
-                                    {logo && logo.orientation}
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-3 text-end">
-                                    <span className="fw-normal" >Тел:</span>
-                                </div>
-                                <div className="col-9 text-start fw-bold">
-                                    {logo && logo.phone1 !== null ? "+" + logo.phone1 : ""} <br />
-                                    {logo && logo.phone2 !== null ? "+" + logo.phone2 : ""} <br />
-                                    {logo && logo.phone3 !== null ? "+" + logo.phone3 : ""} <br />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-md-4 col-12 text-center">
-                            <img src={qr && qr} />
-                        </div>
+        <>
+            <div className='d-none'>
+                <div ref={componentRef} className="container p-4" style={{ fontFamily: "times" }}>
+                    <Print qr={qr} logo={logo} connector={connector} client={client} sections={sections} tablesections={tablesections} />
+                </div>
+            </div>
+            <div className="container p-4" style={{ fontFamily: "times" }}>
+                <div className="row" style={{ fontSize: "10pt" }}>
+                    <div className="col-6" style={{ border: "1px solid", textAlign: "center" }}>
+                        <p>
+                            Министерство Здравоохранения Республики Узбекистан
+                        </p>
                     </div>
-                    <div className="row my-3">
-                        <div className="col-12 fs-4 text-center fw-bold">
-                            {section && section.name}
-                            <h4 className=""> ({section && section.subname})</h4>
-
-                        </div>
+                    <div className="col-2" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
+                        <p>
+                            ОКОНХ  91514
+                        </p>
                     </div>
-                    <div className="row">
-                        <div className="col-12">
-                            <table className="w-100 historytable" >
-                                <tr>
-                                    <th className="px-3  w-25 text-end">
-                                        Пациент
-                                    </th>
-                                    <th className="px-3 w-75">
-                                        {client && client.lastname + " " + client.firstname + " " + client.fathername}
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th className="px-3 w-25 text-end">
-                                        Год рождения
-                                    </th>
-                                    <th className="px-3 w-75">
-                                        {client && new Date(client.born).toLocaleDateString()}
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th className="px-3 w-25 text-end">
-                                        Дата обследования
-                                    </th>
-                                    <th className="px-3 w-75">
-                                        {section && new Date(section.bronDay).toLocaleDateString() + " " + new Date(section.bronDay).toLocaleTimeString()}
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th className="px-3 w-25 text-end">
-                                        Tелефон номер
-                                    </th>
-                                    <th className="px-3 w-75">
-                                        +{client && client.phone}
-                                    </th>
-                                </tr>
-                                <tr>
-                                    <th className="px-3 w-25 text-end">
-                                        Врач
-                                    </th>
-                                    <th className="px-3 w-75">
-                                        {auth.doctor && auth.doctor.lastname + " " + auth.doctor.firstname}
-                                    </th>
-                                </tr>
-                            </table>
-
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-12 col-md-6 pt-3">
-                        </div>
-                        <div className="col-12 col-md-6">
-
-                            <Select
-                                className="mt-3"
-                                onChange={(event) => changeSections(event)}
-                                closeMenuOnSelect={false}
-                                components={animatedComponents}
-                                name="shablonlar"
-                                isMulti
-                                options={options && options}
-                            />
-                        </div>
-                    </div>
-                    <br />
-                    <div className="row">
-                        <div className="col-12">
-                            <textarea value={section && section.summary} name="summary" onChange={changeHandlar} className="form-control" style={{ minHeight: "300px" }} />
-                        </div>
-                    </div>
-                    <br />
-                    <div className="row">
-                        <div className="col-12">
-                            Comment:
-                            <textarea value={section && section.comment} name="comment" onChange={changeHandlar} className="form-control" />
-                        </div>
+                    <div className="col-4" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
+                        <p style={{ margin: "0" }}>
+                            Форма №     согласно приказу
+                        </p>
+                        <p style={{ margin: "0" }}>
+                            МинЗдрав.РУз №777 от 25.12.2017г.
+                        </p>
                     </div>
                 </div>
-                <div>
-                    <div className="row mt-5 mb-5">
-                        <div className="col-12">
-                            <button id="kelmagan" name="checkup" onClick={checkUp} className="btn button-danger me-5">Mijoz kelmadi</button>
-                            <button className="btn button-success" onClick={() => { window.scrollTo({ top: 0 }); setModal2(true) }}>Tasdiqlash</button>
-                        </div>
+                <div className="row" style={{ fontSize: "20pt" }}>
+                    <div className="col-6" style={{ textAlign: "center" }}>
+                        <p className='pt-5'>
+                            "GEMOTEST"  LABORATORIYA
+                        </p>
+                    </div>
+                    <div className="col-2">
+
+                    </div>
+                    <div className="col-4" style={{ textAlign: "center" }}>
+                        <p className='text-end m-0'>
+                            <img width="140" src={qr && qr} alt="QR" />
+                        </p>
+                    </div>
+                </div>
+                <div className="row" >
+                    <div className="col-12" style={{ padding: "0" }}>
+                        <table style={{ width: "100%", border: "2px solid", borderTop: "3px solid" }}>
+                            <tr style={{ textAlign: "center" }}>
+                                <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                    Ф.И.О. больного
+                                </td>
+                                <td className='p-0 py-1' style={{ width: "33%", border: "1px solid #000" }}>
+                                    <h4>{client && client.lastname + " " + client.firstname}</h4>
+                                </td>
+                                <td rowSpan="3" style={{ width: "33%" }}>
+                                    <p>
+                                        <img width="200" src={logo && logo.logo} alt='Logo' />
+                                    </p>
+                                </td>
+                            </tr>
+                            <tr style={{ textAlign: "center" }}>
+                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                    Год рождения
+                                </td>
+                                <td className='p-0 py-2' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
+                                    {client && new Date(client.born).toLocaleDateString()}
+                                </td>
+                            </tr>
+                            <tr style={{ textAlign: "center" }}>
+                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                    Дата
+                                </td>
+                                <td className='p-0 py-2' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
+                                    {connector && new Date(connector.bronDay).toLocaleDateString()}
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                <div className="row mt-3" style={{ backgroundColor: "#C0C0C0" }}>
+                    <div className="col-1">
+
+                    </div>
+                    <div className="col-4">
+                        <p>
+                            "GEMO-TEST" х/к
+                        </p>
+                    </div>
+                    <div className="col-7">
+                        <p>
+                            Услуги лицензированны   ЛИЦЕНЗИЯ №01419  от 28.02.2019г. МинЗдрав Ру
+                        </p>
+                    </div>
+                </div>
+                <div className="row">
+
+                    {
+                        sections && sections.map((section, index) => {
+                            if (
+                                tablesections && tablesections[index].length > 0
+                            ) {
+                                return (
+                                    <div className='p-0'>
+                                        <table style={{ width: "100%" }}>
+                                            <tr>
+                                                <td colSpan={6} style={{ backgroundColor: "#FFF" }} >
+                                                    {section.name + " " + section.subname}
+                                                </td>
+                                            </tr>
+                                            <tr style={{ backgroundColor: "#C0C0C0" }}>
+                                                <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                    №
+                                                </td>
+                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                    Показатели
+                                                </td>
+                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                    Результат
+                                                </td>
+                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                    Референтные значения
+                                                </td>
+                                                {
+                                                    tablesections && (tablesections[index][0].additionalone).length > 1 ?
+                                                        <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                            Референтные значения
+                                                        </td> : ""
+                                                }
+                                                {
+                                                    tablesections && (tablesections[index][0].additionaltwo).length > 1 ?
+                                                        <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                            Референтные значения
+                                                        </td> : ""
+                                                }
+                                                <td className='text-center px-2' style={{ border: "1px solid #000" }}>
+                                                    <input checked={section.accept} onChange={(event) => changeSectionaccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} />
+                                                </td>
+                                            </tr>
+                                            {
+                                                tablesections && tablesections[index].map((tablesection, key) => {
+                                                    return (
+                                                        <tr style={{ backgroundColor: "white" }}>
+                                                            <td style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                {key + 1}
+                                                            </td>
+                                                            <td className='px-3' style={{ border: "1px solid #000", padding: "10px", maxWidth: "33%", minWidth: "19%" }}>
+                                                                {tablesection.name}
+                                                            </td>
+                                                            <td className='p-0' style={{ textAlign: "center", border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                                <textarea style={{ border: "none" }} onChange={(event) => { changeResult(event, index, key) }} name='result' className='form-control text-center' defaultValue={tablesection.result}></textarea>
+                                                            </td>
+                                                            <td className='p-0' style={{ textAlign: "center", border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                                <textarea style={{ border: "none" }} onChange={(event) => { changeNorma(event, index, key) }} name='norma' className='form-control text-center' defaultValue={tablesection.norma} ></textarea>
+                                                            </td>
+                                                            {
+                                                                tablesection.additionalone !== " " ?
+                                                                    <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                        <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionalone(event, index, key) }} name='additionalone' className='form-control text-center' defaultValue={tablesection.additionalone}></textarea>
+                                                                    </td> : ""
+                                                            }
+                                                            {
+                                                                tablesection.additionaltwo !== " " ?
+                                                                    <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                        <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionaltwo(event, index, key) }} name='additionaltwo' className='form-control text-center' defaultValue={tablesection.additionaltwo}></textarea>
+                                                                    </td> : ""
+                                                            }
+                                                            <td className='text-center px-2' style={{ border: "1px solid #000" }}>
+                                                                <input checked={tablesection.accept} onChange={(event) => changeAccept(event, index, key)} type="checkbox" style={{ width: "20px", height: "20px" }} />
+                                                            </td>
+                                                        </tr>
+                                                    )
+                                                })
+                                            }
+                                        </table>
+                                        <br />
+                                        {
+                                            !section.probirka ?
+                                                (<table style={{ width: "100%" }}>
+                                                    <tr style={{ backgroundColor: "white" }}>
+                                                        <th style={{ border: "1px solid #000", padding: "10px" }} > Xulosa </th>
+                                                        <td style={{ border: "1px solid #000", padding: "10px" }} colSpan="5">
+                                                            <textarea defaultValue={section.summary} onChange={(event) => { sectionSummary(event, index) }} className='form-control text-center' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
+                                                        </td>
+                                                        <td rowSpan="2" className='text-center' style={{ border: "1px solid #000", padding: "10px" }}>
+                                                            <input checked={section.accept} onChange={(event) => sectionAccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} />
+                                                        </td>
+                                                    </tr>
+                                                    <tr style={{ backgroundColor: "white" }}>
+                                                        <th style={{ border: "1px solid #000", padding: "10px" }}> Izoh </th>
+                                                        <td style={{ border: "1px solid #000", padding: "10px" }}>
+                                                            <textarea defaultValue={section.comment} onChange={(event) => { sectionComment(event, index) }} className='form-control text-center' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
+                                                        </td>
+                                                    </tr></table>) : ""
+                                        }
+                                    </div>
+                                )
+                            } else {
+                                if (!section.probirka) {
+                                    return (
+                                        <table>
+                                            <tr style={{ backgroundColor: "white" }}>
+                                                <td colSpan={6} style={{ backgroundColor: "#FFF" }} >
+                                                    {section.name + " " + section.subname}
+                                                </td>
+                                            </tr>
+                                            <tr style={{ backgroundColor: "white" }}>
+                                                <th style={{ border: "1px solid #000", padding: "10px" }} > Xulosa </th>
+                                                <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
+                                                    <textarea defaultValue={section.summary} onChange={(event) => { sectionSummary(event, index) }} className='form-control text-center' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
+                                                </td>
+                                                <td rowSpan="2" className='text-center' style={{ border: "1px solid #000", padding: "10px" }}>
+                                                    <input checked={section.accept} onChange={(event) => sectionAccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} />
+                                                </td>
+                                            </tr>
+                                            <tr style={{ backgroundColor: "white" }}>
+                                                <th style={{ border: "1px solid #000", padding: "10px" }}> Izoh </th>
+                                                <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
+                                                    <textarea defaultValue={section.comment} onChange={(event) => { sectionComment(event, index) }} className='form-control text-center' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    )
+                                }
+                            }
+
+                        })
+
+                    }
+
+                </div>
+                <div className='row'>
+                    <div className='col-12 text-center my-4' >
+                        <button onClick={patchData} className='btn btn-success px-4 mx-4'> Tasdiqlash</button>
+                        <button onClick={handlePrint} className="btn btn-info px-5" >
+                            Chop etish
+                        </button>
                     </div>
                 </div>
             </div>
 
 
-            {/* Modal oynaning ochilishi */}
-            <div className={modal1 ? "modal" : "d-none"}>
-                <div className="modal-card">
-                    <div className="card p-4" style={{ fontFamily: "times" }}>
-                        <div className="row m-1">
-                            <div className="col-12 text-center mb-4 ">
-                                <h4>Mijoz kelmaganini tasdiqlaysizmi?</h4>
-                            </div>
-                        </div>
-                        <div className="row m-1">
-                            <div className="col-12 text-center">
-                                <button onClick={dontCome} className="btn button-success" style={{ marginRight: "30px" }}>Tasdiqlash</button>
-                                <button onClick={() => setModal1(false)} className="btn button-danger" >Qaytish</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            {/* Modal oynaning ochilishi */}
-            <div className={modal2 ? "modal" : "d-none"}>
-                <div className="modal-card">
-                    <div className="card p-4" style={{ fontFamily: "times" }}>
-                        <div className="row m-1">
-                            <div className="col-12 ">
-                            </div>
-                        </div>
-                        <div className="row m-1">
-                            <div className="col-12 ">
-                                <pre style={{ whiteSpace: "pre-wrap" }} >
-                                    Xulosa: <br />
-                                    {section && section.summary}
-                                </pre>
-                            </div>
-                            <div className="col-12 ">
-                                <pre style={{ whiteSpace: "pre-wrap" }}>
-                                    Izoh: <br />
-                                    {section && section.comment}
-                                </pre>
-                            </div>
-                        </div>
-                        <div className="row m-1">
-                            <div className="col-12 text-center">
-                                <button onClick={doneCome} className="btn button-success" style={{ marginRight: "30px" }}>Tasdiqlash</button>
-                                <button onClick={() => setModal2(false)} className="btn button-danger" >Qaytish</button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-        </div >
+        </>
     )
 }
+
+

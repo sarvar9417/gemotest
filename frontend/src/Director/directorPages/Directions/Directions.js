@@ -1,5 +1,5 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { AuthContext } from '../../context/AuthContext'
 import { useHttp } from '../../hooks/http.hook'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
@@ -13,19 +13,40 @@ export const Directions = () => {
     const [directions, setDirections] = useState()
     const [remove, setRemove] = useState()
     const history = useHistory()
+    const headId = useParams().id
+
     // Modal oyna funksiyalari
     const [modal, setModal] = useState(false)
 
     const getAllDirections = useCallback(async () => {
         try {
-            const fetch = await request(`/api/direction`, 'GET', null, {
+            const fetch = await request(`/api/direction/head/${headId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
+            console.log(fetch)
             setDirections(fetch)
         } catch (e) {
 
         }
     }, [request, auth, setDirections])
+
+    //Direction ma'lumotlari
+    const [headdirection, setHeadDirection] = useState()
+
+    const getHeadDirection = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/headsection/${headId}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+
+            setHeadDirection({
+                name: fetch.name
+            })
+
+        } catch (error) {
+            notify(error)
+        }
+    }, [auth, request, setHeadDirection])
 
     const Delete = async (id) => {
         try {
@@ -66,7 +87,10 @@ export const Directions = () => {
             notify(error)
             clearError()
         }
-    }, [getAllDirections, notify, clearError])
+        if (!headdirection) {
+            getHeadDirection()
+        }
+    }, [getAllDirections, notify, clearError, getHeadDirection])
 
 
     return (
@@ -77,7 +101,7 @@ export const Directions = () => {
                         <div className="card-body">
                             <div className='row mb-3'>
                                 <div className='col-2 '>
-                                    <input onChange={(event) => { setDirectionName(event.target.value) }} className='form-control' placeholder='Mijoz ism-familiyasi' />
+                                    <input onChange={(event) => { setDirectionName(event.target.value) }} className='form-control' placeholder='Xizmat nomi' />
                                 </div>
                                 <div className='col-1'>
                                     <button onClick={searchDirection} className="btn text-white" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
@@ -86,7 +110,7 @@ export const Directions = () => {
                                     <button onClick={getAllDirections} className="btn text-white" style={{ backgroundColor: "#45D3D3" }}>Barcha Xizmatlar </button>
                                 </div>
                                 <div className="col-3 offset-4 text-end">
-                                    <Link to="/director/adddirection" className=" mx-4 btn button-success">Bo'lim yaratish</Link>
+                                    <Link to={`/director/adddirection/${headId}`} className=" mx-4 btn button-success">Xizmat yaratish</Link>
                                 </div>
                             </div>
                             <div className="table-responsive">
@@ -94,9 +118,10 @@ export const Directions = () => {
                                     <thead>
                                         <tr>
                                             <th className="text-center">№</th>
+                                            <th className="text-center">Bo'lim nomi</th>
                                             <th className="text-center">Xizmat nomi</th>
-                                            <th className="text-center">Xizmat narxi</th>
                                             <th className="text-center">Xizmat turi</th>
+                                            <th className="text-center">Xizmat narxi</th>
                                             <th className="text-center">Xizmat xonasi</th>
                                             <th className="text-center">Doctor ulushi</th>
                                             <th className="text-center">Medpristovitel ulushi</th>
@@ -112,19 +137,27 @@ export const Directions = () => {
                                                     <tr>
                                                         <td className="">{index + 1}</td>
                                                         <td className="text-bold">
+                                                            {headdirection && headdirection.name}
+                                                        </td>
+                                                        <td className="text-bold">
                                                             <span className="table-avatar">
                                                                 <span href="profile.html">{direction.section}</span>
                                                             </span>
                                                         </td>
+                                                        <td className="text-bold">
+                                                            <span className="table-avatar">
+                                                                <span href="profile.html">{direction.subsection}</span>
+                                                            </span>
+                                                        </td>
                                                         <td className="text-center">{direction.price} sum</td>
-                                                        <td className="text-bold">{direction.subsection}</td>
                                                         <td className="text-center">{direction.room}</td>
                                                         <td className="text-center">{direction.doctorProcient}</td>
                                                         <td className="text-center">{direction.counteragentProcient}</td>
                                                         <td className="text-center">{direction.counterDoctor}</td>
-                                                        <td className="text-center"> <Link to={`/director/directionedit/${direction._id}`} className="btn button-success  px-3" ><FontAwesomeIcon icon={faEdit}></FontAwesomeIcon> </Link></td>
+                                                        <td className="text-center"> <Link to={`/director/directionedit/${headId}/${direction._id}`} className="btn button-success  px-3" ><FontAwesomeIcon icon={faEdit}></FontAwesomeIcon> </Link></td>
                                                         <td className="text-center"> <button onClick={() => { setRemove(direction); window.scrollTo({ top: 0 }); setModal(true) }} className="btn button-danger px-3" ><FontAwesomeIcon icon={faTrashAlt}></FontAwesomeIcon> </button></td>
-                                                    </tr>)
+                                                    </tr>
+                                                )
                                             })
                                         }
 
@@ -148,7 +181,6 @@ export const Directions = () => {
                                         <tr>
                                             <th className="text-center">Xizmat nomi</th>
                                             <th className="text-center">Xizmat narxi</th>
-                                            <th className="text-center">Xizmat turi</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -159,7 +191,6 @@ export const Directions = () => {
                                                 </span>
                                             </td>
                                             <td className="text-center">{remove && remove.price} sum</td>
-                                            <td className="text-center">{remove && remove.subsection}</td>
                                         </tr>
 
 

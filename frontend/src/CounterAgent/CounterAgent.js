@@ -12,6 +12,7 @@ export const CounterAgent = () => {
     localStorage.removeItem('medsestraData')
     localStorage.removeItem('fizioterapevtData')
     localStorage.removeItem('reseptionData')
+    localStorage.removeItem('labaratoriyaData')
     const { login, token, logout, counteragentId, counteragent } = useAuth()
     const isAuthenticated = !!token
     const counteragentRouter = CounterAgentRoutes(isAuthenticated)

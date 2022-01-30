@@ -1,6 +1,6 @@
 {
-    "PORT": 8000,
-    "mongoUri": "mongodb://localhost/medcenter",
+    "PORT": 8001,
+    "mongoUri": "mongodb://localhost/gemotest",
     "jwtSecret": "sarvar9417",
-    "baseUrl": "http://localhost:8000"
+    "baseUrl": "http://localhost:8001"
 }

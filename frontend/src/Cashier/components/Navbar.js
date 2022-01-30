@@ -38,9 +38,9 @@ export const Navbar = () => {
                         <li className="nav-item">
                             <Link className="nav-link a aktive" to="/cashier">Bosh sahifa</Link>
                         </li>
-                        <li className="nav-item">
+                        {/* <li className="nav-item">
                             <Link className="nav-link a" to="/cashier/statsionar">Statsionar</Link>
-                        </li>
+                        </li> */}
 
                     </ul>
                     <li className="nav-item ll" >

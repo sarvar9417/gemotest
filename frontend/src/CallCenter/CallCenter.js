@@ -12,6 +12,7 @@ export const CallCenter = () => {
     localStorage.removeItem('medsestraData')
     localStorage.removeItem('fizioterapevtData')
     localStorage.removeItem('counteragentData')
+    localStorage.removeItem('labaratoriyaData')
     const { login, token, logout, callcenterId } = useAuth()
     const isAuthenticated = !!token
     const callcenterRouter = CallCenterRoutes(isAuthenticated)

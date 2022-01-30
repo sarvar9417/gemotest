@@ -9,7 +9,7 @@ const doctor = new Schema({
     fathername: { type: String },
     phone: { type: Number },
     born: { type: Date },
-    section: { type: String },
+    section: { type: Types.ObjectId, ref: "HeadSection" },
     image: { type: String },
     procient: {type: Number}
 })

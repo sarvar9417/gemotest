@@ -148,7 +148,6 @@ export const NewOnlineClient = () => {
                     ...sections,
                     [key]: { ...sections[key], source: name },
                 })
-
             )
         })
         setSource(name)
@@ -167,9 +166,21 @@ export const NewOnlineClient = () => {
                     turn++
                 }
             })
+            let headname
+            let p = false
+            headdirections.map(h => {
+                if (h._id === section.headsection) {
+                    headname = h.name
+                    if (h.probirka) {
+                        p = true
+                    }
+                }
+            })
             s.push({
                 name: section.section,
                 subname: section.subsection,
+                shortname: section.shortname,
+                headsection: headname,
                 price: section.price,
                 priceCashier: 0,
                 commentCashier: " ",
@@ -186,7 +197,11 @@ export const NewOnlineClient = () => {
                 doctor: " ",
                 counteragent: " ",
                 paymentMethod: " ",
-                source: source
+                source: source,
+                nameid: section._id,
+                headsectionid: section.headsection,
+                accept: false,
+                probirka: p
             })
         })
         setSections(s)
@@ -197,21 +212,6 @@ export const NewOnlineClient = () => {
         let key = parseInt(event.target.id)
         setSections(Object.values({ ...sections, [key]: { ...sections[key], price: event.target.value } }), () => setSections(Object.values({ ...sections, [key]: { ...sections[key], turn: parseInt(event.target.name) } })))
     }
-
-    const allClients = useCallback(async () => {
-        try {
-            const fetch = await request("/api/clients/reseption/length", "GET", null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            const sec = await request("/api/section/reseption/turn", "GET", null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            seTurns(sec)
-            client.id = fetch + 1000001
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, auth, client])
 
 
     const checkData = () => {
@@ -248,6 +248,8 @@ export const NewOnlineClient = () => {
                 diagnosis: " ",
                 bronDay: new Date(),
                 prepaymentCashier: 0,
+                accept: false,
+                probirka: probirka && probirka
             }, {
                 Authorization: `Bearer ${auth.token}`
             })
@@ -326,8 +328,38 @@ export const NewOnlineClient = () => {
     // =================================================================================
     // =================================================================================
 
+    const [headdirections, setHeadDirections] = useState()
+    const getHeadDirections = useCallback(async () => {
+        try {
+            const fetch = await request('/api/headsection/', 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setHeadDirections(fetch)
+        } catch (error) {
+            notify(error)
+        }
+    }, [auth, request, setHeadDirections, notify])
+
+    const [probirka, setProbirka] = useState()
+
+    const getProbirka = useCallback(async () => {
+        try {
+            const fetch = await request("/api/connector/probirka", "GET", null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setProbirka(fetch + 1)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, auth, setProbirka])
 
     useEffect(() => {
+        if (!probirka) {
+            getProbirka()
+        }
+        if (!headdirections) {
+            getHeadDirections()
+        }
         if (!options) {
             getOptions()
         }
@@ -337,7 +369,6 @@ export const NewOnlineClient = () => {
         if (!sources) {
             getSources()
         }
-        allClients()
         if (error) {
             notify(error)
             clearError()
@@ -345,7 +376,7 @@ export const NewOnlineClient = () => {
         if (!wareconnectors) {
             getWareConnectors()
         }
-    }, [allClients])
+    }, [getHeadDirections])
 
 
     const checkTurn = (turn, name) => {
@@ -615,7 +646,7 @@ export const NewOnlineClient = () => {
                                             <tr key={key}>
                                                 <td style={{ width: "10%", textAlign: "center", padding: "10px 0" }}>{key + 1}</td>
                                                 <td style={{ width: "30%", textAlign: "center", padding: "10px 0" }}>
-                                                    {section.name}
+                                                    {section.headsection} {section.name} {section.subname}
                                                 </td>
                                                 <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{section.price}</td>
                                                 <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{new Date(section.bronDay).toLocaleDateString()}</td>

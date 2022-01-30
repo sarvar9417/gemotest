@@ -27,22 +27,6 @@ export const Reciept = () => {
     const [client, setClient] = useState()
     const { loading, request, error, clearError } = useHttp()
     const [sections, setSections] = useState()
-    //================================================================================
-    //================================================================================
-    //================================================================================
-    //Xonalarni olish
-    const [allSections, setAllSections] = useState()
-    const getAllSections = useCallback(async () => {
-        try {
-            const data = await request("/api/direction/", "GET", null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            console.log(data)
-            setAllSections(data)
-        } catch (e) {
-            notify(e)
-        }
-    }, [auth, request, setAllSections])
 
     const getClient = useCallback(async () => {
         try {
@@ -94,7 +78,6 @@ export const Reciept = () => {
     // =================================================================================
     // =================================================================================
 
-
     const getSections = useCallback(async () => {
         try {
             const data = await request(`/api/section/reseptionid/${clientId}/${connectorId}`, 'GET', null, {
@@ -132,9 +115,6 @@ export const Reciept = () => {
         if (!services) {
             getServices()
         }
-        if (!allSections) {
-            getAllSections()
-        }
     }, [error, clearError])
 
     if (loading) {
@@ -143,127 +123,130 @@ export const Reciept = () => {
 
 
     return (
-        <div>
-            <div ref={componentRef}>
-                <div className="container p-3" >
-                    <div className="row"  >
-                        <table className="table ">
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <ul className="list-unstyled  text-start m-3">
-                                            <li className="" style={{ fontSize: "10pt", fontFamily: "times" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }} > {logo && logo.companyname}</strong></li>
-                                            <li style={{ fontSize: "10pt", fontFamily: "times" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }}>Manzil: </strong> {logo && logo.address}</li>
-                                            <li style={{ fontSize: "10pt", fontFamily: "times" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }}>Bank: </strong> {logo && logo.bank}</li>
-                                            <li style={{ fontSize: "10pt", fontFamily: "times" }}> <strong style={{ fontSize: "10pt", fontFamily: "times" }}>MFO: </strong> {logo && logo.mfo}</li>
-                                            <li style={{ fontFamily: "times" }}> <h5 style={{ textAlign: "", fontSize: "10pt" }}> {today}</h5> </li>
-                                            <li style={{ textAlign: "", fontSize: "10pt" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }}>INN:</strong> {logo && logo.inn}</li>
-                                            <li style={{ textAlign: "", fontSize: "10pt" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }}>Hisob raqam: </strong> {logo && logo.accountnumber}</li>
-                                            <li style={{ textAlign: "", fontSize: "10pt" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }}>Telefon raqam: </strong>
-                                                {logo && logo.phone1 !== null ? "+" + logo.phone1 : ""} <br />
-                                                {logo && logo.phone2 !== null ? "+" + logo.phone2 : ""} <br />
-                                                {logo && logo.phone3 !== null ? "+" + logo.phone3 : ""} <br /></li>
-                                        </ul>
-                                    </td>
-                                    <td className="text-end">
-                                        <img className='me-3' width="150" src={logo && logo.logo} alt="logo" /><br />
-                                        <img width="140" className='me-3' src={qr && qr} alt="QR" /><br />
-                                        <p className="pe-3 me-1" style={{ fontSize: "10pt" }}>Bu yerni skanerlang</p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+        <div style={{ width: "110mm", margin: "0 auto" }} >
+            <div ref={componentRef}  >
+                <div style={{ width: "108mm", fontFamily: "monospace", fontSize: "10pt" }} className='px-3'>
+                    {/* <div className='text-center'>
+                        <img src={logo && logo.logo} width="250px" />
+                    </div> */}
+                    <div className='row'>
+                        <div className='col-12 text-center border-bottom border-dark'>
+                            {logo && logo.companyname}
+                        </div>
                     </div>
-                    <div className="row">
-                        <div className="col-lg-12">
-                            <div className="invoice-from">
-                                <h6 style={{ textTransform: "uppercase", fontFamily: "times", fontSize: "20pt" }} >ID: {client && client.id}</h6>
-                                <h6 style={{ fontSize: "20pt", fontFamily: "times" }}>F.I.O: {client && client.lastname} {client && client.firstname} {client && client.fathername}</h6>
-                                <h6 style={{ fontSize: "20pt", fontFamily: "times" }}>Tug'ilgan yil: {client && new Date(client.born).toLocaleDateString()}</h6>
-                                {/* <h6>Maqsad: {client.intact}</h6> */}
-                            </div>
+                    <div className='row'>
+                        <div className='col-12'>
+                            {new Date().toLocaleString()}
                         </div>
-                        <div className="col-lg-12">
-                            <div className="table-responsive" style={{ overflow: "hidden", outline: "none" }} tabindex="0">
-                                <table className="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th className="text-center" style={{ fontSize: "10pt", fontFamily: "times" }}>№</th>
-                                            <th className="text-center" style={{ fontSize: "10pt", fontFamily: "times" }}>Bo'lim</th>
-                                            <th className="text-center" style={{ fontSize: "10pt", fontFamily: "times" }}>Navbat</th>
-                                            <th className="text-center" style={{ fontSize: "10pt", fontFamily: "times" }}>Xona</th>
-                                            <th className="text-center" style={{ fontSize: "10pt", fontFamily: "times" }}>To'lov miqdori</th>
-                                            <th className="text-center" style={{ fontSize: "10pt", fontFamily: "times" }}>To'langan</th>
-                                            <th className="text-center" style={{ fontSize: "10pt", fontFamily: "times" }}>To'lanmagan</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {
-                                            sections && sections.map((section) => {
-                                                paid = paid + section.priceCashier
-                                                section.payment === "to'lanmagan" ? unpaid = unpaid : unpaid = unpaid + (section.price - section.priceCashier)
-                                                k++
-                                                price = price + (section.price - section.priceCashier)
-                                                return (<tr>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }}>{k}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="ps-3">{section.name} {section.subname}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{section.bron === 'offline' ? section.turn : section.bronTime}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{allSections && allSections.map((sec)=>{
-                                                        if (section.name === sec.section && section.subname === sec.subsection) {
-                                                            return sec.room
-                                                        }
-                                                    })}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{section.payment === "to'lanmagan" ? "Rad etilgan" : section.price}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{section.payment === "to'lanmagan" ? "Rad etilgan" : section.priceCashier}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center"> {section.payment === "to'lanmagan" ? "Rad etilgan" : section.price - section.priceCashier}</td>
-                                                </tr>
-                                                )
-
-                                            })
-
-                                        }
-                                        {
-                                            services && services.map((service, index) => {
-                                                paid = paid + service.priceCashier
-                                                service.payment === "to'lanmagan" ? unpaid = unpaid : unpaid = unpaid + (service.price - service.priceCashier)
-                                                k++
-                                                price = price + (service.price - service.priceCashier)
-                                                return (<tr>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }}>{index + 1}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="ps-3">{service.name} {service.type}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{service.pieces} (dona)</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center"></td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{service.price}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{service.priceCashier}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center"> {service.price - service.priceCashier}</td>
-                                                </tr>
-                                                )
-                                            })
-                                        }
-
-
-                                    </tbody>
-                                    <tfoot>
-                                        <tr>
-                                            <th style={{ fontSize: "10pt", fontFamily: "times" }} className="text-right"></th>
-                                            <th style={{ fontSize: "10pt", fontFamily: "times" }} className="text-right"></th>
-                                            <th style={{ fontSize: "10pt", fontFamily: "times" }} className="text-right"></th>
-                                            <th style={{ fontSize: "10pt", fontFamily: "times" }} className="text-right">Jami to'lov:</th>
-                                            <th style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{unpaid + paid}</th>
-                                            <th style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{paid}</th>
-                                            <th style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{unpaid}</th>
-                                        </tr>
-                                    </tfoot>
-                                </table>
-                            </div>
-                            <h6 className="mt-3" style={{ fontSize: "10pt", fontFamily: "times" }}>Kassir: </h6>
-                            <hr />
+                    </div>
+                    <div className='row'>
+                        <div className='col-6'>
+                            Manzil:
                         </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {logo && logo.address}
+                        </div>
+                    </div>
+                    <div className='row border-bottom'>
+                        <div className='col-6'>
+                            Telefon:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            +{logo && logo.phone1}
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-6'>
+                            Bank:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {logo && logo.bank}
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-6'>
+                            MFO:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {logo && logo.mfo}
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-6'>
+                            INN:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {logo && logo.inn}
+                        </div>
+                    </div>
+                    <div className='row border-bottom'>
+                        <div className='col-6'>
+                            Hisob raqam:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {logo && logo.accountnumber}
+                        </div>
+                    </div>
+                    <div className='row'>
+                        <div className='col-6'>
+                            F.I.O:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {client && client.lastname} {client && client.firstname} {client && client.fathername}
+                        </div>
+                    </div>
+                    <div className='row border-bottom border-dark'>
+                        <div className='col-6'>
+                            ID:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {client && client.id}
+                        </div>
+                    </div>
+                    <div className='row fs-6 '>
+                        <div className='col-6'>
+                            {
+                                sections && sections.map(section => {
+                                    paid = paid + section.priceCashier
+                                    unpaid = unpaid + section.price
+                                })
+                            }
+                            {
+                                services && services.map(service => {
+                                    paid = paid + service.priceCashier
+                                    unpaid = unpaid + service.price
+                                })
+                            }
+                            To'lov summasi:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {unpaid} so'm
+                        </div>
+                    </div>
+                    <div className='row fs-6'>
+                        <div className='col-6'>
+                            To'langan summa:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {paid} so'm
+                        </div>
+                    </div>
+                    <div className='row fs-6 mb-5'>
+                        <div className='col-6'>
+                            Qarz summa:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {unpaid - paid} so'm
+                        </div>
+                    </div>
+                    <div style={{ border: "1px  dashed black", marginTop: "100px" }}>
+                    </div>
+                    <div style={{ border: "1px  dashed black", marginTop: "100px" }}>
                     </div>
                 </div>
             </div>
-            <div className="" style={{ position: "fixed", bottom: "20px", width: "100%" }} >
-                <div className="row">
+            <div className="" style={{ position: "fixed", bottom: "20px", width: "110mm" }} >
+                <div className="row w-100">
                     <div className=" col-12 text-center">
                         <button onClick={handlePrint} className="btn btn-primary px-5" >
                             Print

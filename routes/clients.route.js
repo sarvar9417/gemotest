@@ -56,16 +56,7 @@ router.get('/reseption/length', auth, async (req, res) => {
     }
 })
 
-// /api/auth/clients/reseption/
-router.get('/reseption', auth, async (req, res) => {
-    try {
-        const clients = await Clients.find().sort({ _id: -1 })
-        res.json(clients);
 
-    } catch (e) {
-        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
-    }
-})
 
 // /api/auth/clients/reseption
 router.get('/reseption/id/:id', async (req, res) => {
@@ -89,6 +80,16 @@ router.get('/reseption/:id', async (req, res) => {
     }
 })
 
+// /api/auth/clients/reseption
+router.get('/doctor/:id', async (req, res) => {
+    try {
+        const clients = await Clients.findById(req.params.id)
+        res.json(clients)
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
 
 // /api/auth/clients/reseption
 router.patch('/reseption/:id', auth, async (req, res) => {
@@ -96,6 +97,17 @@ router.patch('/reseption/:id', auth, async (req, res) => {
         const id = req.params.id
         const edit = await Clients.findByIdAndUpdate(id, req.body)
         res.json(edit);
+
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/clients/reseption/
+router.get('/reseption', auth, async (req, res) => {
+    try {
+        const clients = await Clients.find().sort({ _id: -1 })
+        res.json(clients);
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })

@@ -20,6 +20,8 @@ app.use('/api/auth/cashier', require('./routes/cashierAuth.route'))
 app.use('/api/auth/doctor', require('./routes/doctorAuth.route'))
 // Medsestra
 app.use('/api/auth/medsestra', require('./routes/medsestraAuth.route'))
+// Labaratoriya
+app.use('/api/auth/labaratoriya', require('./routes/labaratoriyaAuth.route'))
 // Fizioterapevt
 app.use('/api/auth/fizioterapevt', require('./routes/fizioterapevtAuth.route'))
 // Clients
@@ -64,6 +66,10 @@ app.use('/api/usedroom', require('./routes/usedroom.route'))
 app.use('/api/service', require('./routes/sevices.route'))
 // Payment
 app.use('/api/payment', require('./routes/payment.route'))
+// HeadSection
+app.use('/api/headsection', require('./routes/headsection.route'))
+// TableDirection
+app.use('/api/tabledirection', require('./routes/tabledirection.route'))
 if (process.env.NODE_ENV === "production") {
     app.use('/', express.static(path.join(__dirname, 'frontend', 'build')))
 

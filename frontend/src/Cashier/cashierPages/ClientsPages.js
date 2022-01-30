@@ -190,7 +190,7 @@ export const ClientsPages = () => {
     }, [request, auth, startDate, endDate, setAll])
 
     const sortSections = (event) => {
-        if (event.label === "all") {
+        if (event.value === "all") {
             getConnectors()
         } else {
             getSortSection(event.label)

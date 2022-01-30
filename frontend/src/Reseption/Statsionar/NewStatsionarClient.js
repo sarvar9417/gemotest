@@ -281,6 +281,7 @@ export const NewStatsionarClient = () => {
       s.push({
         name: section.section,
         subname: section.subsection,
+        shortname: section.shortname,
         price: section.price,
         priceCashier: 0,
         commentCashier: " ",

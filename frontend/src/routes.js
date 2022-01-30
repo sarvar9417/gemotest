@@ -7,6 +7,7 @@ import { CounterAgent } from './CounterAgent/CounterAgent'
 import { Director } from './Director/Director'
 import { Doctor } from './Doctor/Doctor'
 import { Fizioterapevt } from './Fizioterapevt/Fizioterapevt'
+import { Labaratoriya } from './Labaratoriya/Labaratoriya'
 import { Medsestra } from './Medsestra/Medsestra'
 import { RegistorDirector } from './RegistorDirector'
 import { Reseption } from './Reseption/Reseption'
@@ -48,6 +49,9 @@ export const useRoutes = () => {
             </Route>
             <Route path="/counteragent" >
                 <CounterAgent />
+            </Route>
+            <Route path="/labaratoriya" >
+                <Labaratoriya />
             </Route>
             <Route path="/" >
                 <Sayt />

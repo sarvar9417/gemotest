@@ -27,7 +27,7 @@ export const Header = () => {
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul className="navbar-nav">
                         <li className="nav-item">
-                            <Link className="btn nav-link a aktive" to="/director" >Statistika</Link>
+                            <Link className="btn nav-link a aktive" to="/director" >Bosh sahifa</Link>
                         </li>
                         <li className="nav-item  dropdown">
                             <button class="w-100 nav-link dropdown-toggle btn a" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -35,7 +35,7 @@ export const Header = () => {
                             </button>
                             <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
                                 <li>
-                                    <Link className="dropdown-item " to="/director/directions" >Xizmat turlari</Link>
+                                    <Link className="dropdown-item " to="/director/headdirections" >Xizmat turlari</Link>
                                 </li>
                                 <li>
                                     <Link className="dropdown-item " to="/director/doctors" >Shifokorlar</Link>

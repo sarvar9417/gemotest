@@ -12,6 +12,7 @@ export const Director = () => {
     localStorage.removeItem('medsestraData')
     localStorage.removeItem('fizioterapevtData')
     localStorage.removeItem('counteragentData')
+    localStorage.removeItem('labaratoriyaData')
     const { login, token, logout, directorId, director } = useAuth()
     const isAuthenticated = !!token
     const directorRouter = DirectorRoutes(isAuthenticated)

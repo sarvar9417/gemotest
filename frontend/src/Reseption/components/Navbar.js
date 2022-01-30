@@ -8,9 +8,7 @@ import { AuthContext } from '../context/AuthContext'
 import './nav.css'
 
 export const Navbar = () => {
-    useEffect(() => {
-        AOS.init()
-    }, [])
+
     const history = useHistory()
     const auth = useContext(AuthContext)
 
@@ -25,6 +23,10 @@ export const Navbar = () => {
         window.location.reload()
     }
     const [show, setShow] = useState(true)
+
+    useEffect(() => {
+        AOS.init()
+    }, [])
     return (
         <nav className="navbar navbar-expand-md navbar-light shadow fixed-top bg-light" data-aos="fade-down" data-aos-duration="1000" >
             <div className="container" >
@@ -42,9 +44,9 @@ export const Navbar = () => {
                                 <li>
                                     <Link className="dropdown-item aktive" to="/reseption/home" >Kunduzgi</Link>
                                 </li>
-                                <li>
+                                {/* <li>
                                     <Link className="dropdown-item aktive" to="/reseption/statsionar" >Statsionar</Link>
-                                </li>
+                                </li> */}
                                 <li>
                                     <Link className="dropdown-item aktive" to="/reseption/onlineqabul">Online</Link>
                                 </li>
@@ -58,9 +60,9 @@ export const Navbar = () => {
                                 <li>
                                     <Link className="dropdown-item aktive" to="/reseption/clients" >Kunduzgi</Link>
                                 </li>
-                                <li>
+                                {/* <li>
                                     <Link className="dropdown-item aktive" to="/reseption/clientsstatsionar" >Statsionar</Link>
-                                </li>
+                                </li> */}
                                 <li>
                                     <Link className="dropdown-item aktive" to="/reseption/onlineclients">Online</Link>
                                 </li>

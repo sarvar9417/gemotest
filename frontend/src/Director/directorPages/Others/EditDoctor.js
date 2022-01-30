@@ -59,7 +59,7 @@ export const EditDoctor = () => {
   const [options, setOptions] = useState()
   const getOptions = useCallback(async () => {
     try {
-      const data = await request("/api/direction/", "GET", null, {
+      const data = await request("/api/headsection/", "GET", null, {
         Authorization: `Bearer ${auth.token}`
       })
       let s = []
@@ -72,8 +72,8 @@ export const EditDoctor = () => {
         })
         if (!k) {
           s.push({
-            label: section.section,
-            value: section.section,
+            label: section.name,
+            value: section._id,
           })
         }
       })
@@ -231,7 +231,7 @@ export const EditDoctor = () => {
               <input defaultValue={doctor.procient} onChange={changeProcient} name="procient" type="number" className="form-control" /> */}
             </div>
             <div className="col-12 col-md-6 p-4">
-              <p className="fs-4"> Qabul bo'lim xodimi ma'lumotlari </p>
+              <p className="fs-4"> Shifokor ma'lumotlari </p>
               <label htmlFor="name" className="fw-normal" style={{ color: "#888" }}>Familiyasi</label>
               <input defaultValue={doctor.lastname} onChange={changeHandler} name="lastname" className="form-control" />
               <br />
@@ -296,7 +296,7 @@ export const EditDoctor = () => {
                     <input defaultValue={doctor.procient} disabled name="procient" type="number" className="form-control" /> */}
                   </div>
                   <div className="col-12 col-md-6 p-4">
-                    <p className="fs-4"> Rahbar ma'lumotlari </p>
+                    <p className="fs-4"> Shifokorning ma'lumotlari </p>
                     <label htmlFor="name" className="fw-normal" style={{ color: "#888" }}>Familiyasi</label>
                     <input disabled value={doctor.lastname} onChange={changeHandler} name="lastname" className="form-control" />
                     <br />

@@ -13,10 +13,8 @@ import { ClientsPages } from './directorPages/Others/ClientsPages'
 import { AddDoctor } from './directorPages/Others/AddDoctor'
 import { AddLogo } from './directorPages/Others/AddLogo'
 import { EditDoctor } from './directorPages/Others/EditDoctor'
-import { Directions } from './directorPages/Others/Directions'
-import { AddDirection } from './directorPages/Others/AddDirection'
-import { EditDirection } from './directorPages/Others/EditDirection'
-import { ClientAllHistory } from './directorPages/Others/ClientAllHistory'
+import { AddDirection } from './directorPages/Directions/AddDirection'
+import { ClientAllHistory } from './directorPages/adoptions/ClientAllHistory'
 import { ClientHistory } from './directorPages/Others/ClientHistory'
 import { EditDirector } from './directorPages/Others/EditDirector'
 import { EditReseption } from './directorPages/Others/EditReseption'
@@ -47,6 +45,13 @@ import { RecieptStatsionar } from './directorPages/RecieptStatsionar'
 import { ChartsMarketing } from './marketing/ChartsMarketing'
 import { PaymentsCounterAgents } from './marketing/counteragents/PaymentsCounterAgents'
 import { CallCenterClientsPages } from './marketing/callcenter/CallCenterClientsPages'
+import { HeadDirections } from './directorPages/Directions/HeadDirections'
+import { AddHeadDirection } from './directorPages/Directions/AddHeadDirection'
+import { EditHeadDirection } from './directorPages/Directions/EditHeadDirection'
+import { Directions } from './directorPages/Directions/Directions'
+import { EditDirection } from './directorPages/Directions/EditDirection'
+import { ClientsDirector } from './directorPages/adoptions/ClientsDirektor'
+import { Adoption } from './directorPages/adoptions/Adoption'
 
 export const DirectorRoutes = (isAuthenticated) => {
     if (isAuthenticated) {
@@ -71,13 +76,22 @@ export const DirectorRoutes = (isAuthenticated) => {
                     <Route path='/director/editdoctor/:id' >
                         <RouterComponent component={<EditDoctor />} menu={true} />
                     </Route>
-                    <Route path='/director/directions' >
+                    <Route path='/director/headdirections' >
+                        <RouterComponent component={<HeadDirections />} menu={true} />
+                    </Route>
+                    <Route path='/director/directions/:id' >
                         <RouterComponent component={<Directions />} menu={true} />
                     </Route>
-                    <Route path='/director/adddirection' >
+                    <Route path='/director/addheaddirection' >
+                        <RouterComponent component={<AddHeadDirection />} menu={true} />
+                    </Route>
+                    <Route path='/director/editheaddirection/:id' >
+                        <RouterComponent component={<EditHeadDirection />} menu={true} />
+                    </Route>
+                    <Route path='/director/adddirection/:id' >
                         <RouterComponent component={<AddDirection />} menu={true} />
                     </Route>
-                    <Route path='/director/directionedit/:id' >
+                    <Route path='/director/directionedit/:headid/:id' >
                         <RouterComponent component={<EditDirection />} menu={true} />
                     </Route>
                     <Route path='/director/clientallhistory/:id' >
@@ -175,6 +189,12 @@ export const DirectorRoutes = (isAuthenticated) => {
                     </Route>
                     <Route path='/director/editcounterdoctor/:id' >
                         <RouterComponent component={<Marketing component={<EditCounterDoctor />} />} />
+                    </Route>
+                    <Route path='/director/clients' >
+                        <RouterComponent component={<ClientsDirector />} menu={true} />
+                    </Route>
+                    <Route path='/director/adoption/:clientid/:connectorid' >
+                        <RouterComponent component={<Adoption />} menu={false} />
                     </Route>
                     <Route path="/sayt" >
                         <Sayt />

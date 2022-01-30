@@ -4,6 +4,11 @@ const { Section, validateSection } = require('../models/Section')
 const { Service, validateService } = require('../models/Service')
 const { Payment, validatePayment } = require('../models/Payment')
 const auth = require('../middleware/auth.middleware')
+const { TableDirection } = require('../models/TableDirection')
+const { TableSection } = require('../models/TableSection')
+const { Direction } = require('../models/Direction')
+const { Connector } = require('../models/Connector')
+const { Clients } = require('../models/Clients')
 
 // ===================================================================================
 // ===================================================================================
@@ -20,9 +25,12 @@ router.post('/reseption/register/:id', auth, async (req, res) => {
             })
         }
 
+
         const {
+            headsection,
             name,
             subname,
+            shortname,
             price,
             priceCashier,
             commentCashier,
@@ -40,12 +48,18 @@ router.post('/reseption/register/:id', auth, async (req, res) => {
             doctor,
             source,
             counteragent,
-            paymentMethod
+            paymentMethod,
+            nameid,
+            headsectionid,
+            accept,
+            probirka
         } = req.body
         const section = new Section({
             client: id,
+            headsection,
             name,
             subname,
+            shortname,
             price,
             priceCashier,
             commentCashier,
@@ -63,10 +77,34 @@ router.post('/reseption/register/:id', auth, async (req, res) => {
             doctor,
             source,
             counteragent,
-            paymentMethod
+            paymentMethod,
+            nameid,
+            headsectionid,
+            accept,
+            probirka
         })
+
+        const tabledirection = await TableDirection.find({
+            directionid: nameid
+        })
+
+        for (let i = 0; i < tabledirection.length; i++) {
+            const sectiontable = new TableSection({
+                sectionid: section._id,
+                connectorid: connector,
+                clientid: id,
+                name: tabledirection[i].name,
+                norma: tabledirection[i].norma,
+                result: tabledirection[i].result,
+                additionalone: tabledirection[i].additionalone,
+                additionaltwo: tabledirection[i].additionaltwo,
+                accept: tabledirection[i].accept
+            })
+            await sectiontable.save()
+        }
+
         await section.save()
-        res.status(201).send(section)
+        res.status(201).json({ message: "Mijoz yaratildi." })
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
@@ -249,7 +287,7 @@ router.patch('/cashier', auth, async (req, res) => {
         const services = req.body.services
         const payment = req.body.payment
 
-        
+
         for (let i = 0; i < sections.length; i++) {
             const section = await Section.findByIdAndUpdate(sections[i]._id, sections[i])
         }
@@ -413,6 +451,22 @@ router.put('/doctordone/:id', auth, async (req, res) => {
         await edit.save()
         res.json(edit)
 
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+router.patch('/doctor', auth, async (req, res) => {
+    try {
+        const sections = req.body.sections
+        const tablesections = req.body.tablesections
+        for (let i = 0; i < sections.length; i++) {
+            const section = await Section.findByIdAndUpdate(sections[i]._id, { ...sections[i] })
+            for (let j = 0; j < tablesections[i].length; j++) {
+                const tablesection = await TableSection.findByIdAndUpdate(tablesections[i][j]._id, { ...tablesections[i][j] })
+            }
+        }
+        res.send({ message: "Ma'lumot yangilandi." })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -583,6 +637,85 @@ router.get('/turn/:section', async (req, res) => {
 // ===================================================================================
 
 
+
+router.get('/table/:start/:end/:section', async (req, res) => {
+    try {
+        const start = new Date(req.params.start)
+        const end = new Date(req.params.end)
+        const directions = await Direction.find({
+            section: req.params.section
+        })
+
+        let allsections = []
+        for (let i = 0; i < directions.length; i++) {
+            const sections = await Section.find({
+                name: directions[i].section,
+                bronDay: {
+                    $gte:
+                        new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
+                    $lt:
+                        new Date(new Date(end).getFullYear(), new Date(end).getMonth(), new Date(end).getDate() + 1)
+                }
+            })
+            allsections = allsections.concat(sections)
+        }
+        let connectors = []
+        for (let i = 0; i < allsections.length; i++) {
+            const connector = await Connector.findById(allsections[i].connector)
+            let k = true
+            if (!connector.accept) {
+                k = false
+            }
+
+            connectors.map(c => {
+                (c._id).toString() === (connector._id).toString() ?
+                    k = false :
+                    ""
+            })
+            if (k) {
+                connectors.push(connector)
+            }
+        }
+
+        let clients = []
+        for (let i = 0; i < connectors.length; i++) {
+            const client = await Clients.findById(connectors[i].client)
+            clients.push(client)
+        }
+
+        let datas = []
+        let tables = []
+        for (let i = 0; i < connectors.length; i++) {
+            let data = []
+            let table = []
+            const sections = await Section.find({
+                connector: connectors[i]._id
+            })
+            for (let j = 0; j < directions.length; j++) {
+                let yes
+                let t
+                for (let k = 0; k < sections.length; k++) {
+                    if (directions[j].subsection === sections[k].subname) {
+                        yes = 1
+                        t = await TableSection.findOne({
+                            sectionid: sections[k]._id
+                        })
+                    }
+                }
+                data.push(yes)
+                table.push(t)
+            }
+            datas.push(data)
+            tables.push(table)
+        }
+
+        res.send({ clients, datas, directions, tables })
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+
 // /api/section/
 router.get('/:id', auth, async (req, res) => {
     try {
@@ -602,6 +735,23 @@ router.put('/:id', auth, async (req, res) => {
         edit.position = req.body.position
         await edit.save()
         res.json(edit);
+
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+router.patch('/table', auth, async (req, res) => {
+    try {
+        const alltables = [...req.body]
+        alltables.map(async (tables) => {
+            tables.map(async (table) => {
+                if (table) {
+                    const t = await TableSection.findByIdAndUpdate(table._id, table)
+                }
+            })
+        })
+        res.json({ message: "Ma'lumotlar muvaffaqqiyatli saqlandi" })
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })

@@ -123,7 +123,7 @@ export const DashboardMenu = () => {
                     {/* small box */}
                     <Link to='/director/info' className="small-box bg-success">
                         <div className="inner">
-                            <h5>Kunduzgi</h5>
+                            <h5>Mijozlar</h5>
                             <div className='row'>
                                 <div className='col-6'> {new Date().toLocaleDateString()}</div>
                                 <div className='col-6 text-end'>{sections}</div>
@@ -136,22 +136,7 @@ export const DashboardMenu = () => {
                     </Link>
                 </div>
                 {/* ./col */}
-                <div className="col-lg-3 col-6">
-                    {/* small box */}
-                    <Link to='/director/statsionar' className="small-box bg-warning">
-                        <div className="inner text-white">
-                            <h5>Statsionar</h5>
-                            <div className='row'>
-                                <div className='col-6'> {new Date().toLocaleDateString()}</div>
-                                <div className='col-6 text-end'>{priceToday}</div>
-                            </div>
-                        </div>
-                        <div className="icon">
-                            <i className="ion ion-person-add" />
-                        </div>
-                        <a href="#" className="small-box-footer"> <i className="fas fa-arrow-circle-right" /></a>
-                    </Link>
-                </div>
+
                 <div className="col-lg-3 col-6">
                     <Link to="/director/payments" className="small-box bg-danger">
                         <div className="inner">
@@ -163,6 +148,22 @@ export const DashboardMenu = () => {
                         </div>
                         <div className="icon">
                             <i className="ion ion-pie-graph" />
+                        </div>
+                        <a href="#" className="small-box-footer"> <i className="fas fa-arrow-circle-right" /></a>
+                    </Link>
+                </div>
+                <div className="col-lg-3 col-6">
+                    {/* small box */}
+                    <Link to='/director/clients' className="small-box bg-warning">
+                        <div className="inner text-white">
+                            <h5>Bosh shifokor</h5>
+                            <div className='row'>
+                                <div className='col-6'> {new Date().toLocaleDateString()}</div>
+                                <div className='col-6 text-end'>Mijozlar soni</div>
+                            </div>
+                        </div>
+                        <div className="icon">
+                            <i className="ion ion-person-add" />
                         </div>
                         <a href="#" className="small-box-footer"> <i className="fas fa-arrow-circle-right" /></a>
                     </Link>

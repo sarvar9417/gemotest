@@ -193,7 +193,7 @@ export const ClientsPages = () => {
     }, [request, auth, startDate, endDate, setAll])
 
     const sortSections = (event) => {
-        if (event.label === "all") {
+        if (event.value === "all") {
             getConnectors()
         } else {
             getSortSection(event.label)
@@ -648,7 +648,7 @@ export const ClientsPages = () => {
                 </table>
             </div>
 
-            <div className="overflow-auto" style={{ height: "65vh", minWidth: "1100px" }}>
+            <div className="overflow-auto" style={{ height: "60vh", minWidth: "1100px" }}>
                 <table className=" table-hover"  >
                     <tbody className="" >
                         {all &&

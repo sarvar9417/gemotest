@@ -104,6 +104,7 @@ export const AddServices = () => {
   const changeSections = (event) => {
     s = []
     let i = []
+    let prob = false
     event.map((section) => {
       i.push(section._id)
       let turn = 0
@@ -119,11 +120,24 @@ export const AddServices = () => {
         }
 
       })
+      let headname
+      let p = false
+      headdirections.map(h => {
+        if (h._id === section.headsection) {
+          headname = h.name
+          if (h.probirka) {
+            prob = true
+            p = true
+          }
+        }
+      })
       s.push({
         client: client && client._id,
         connector: connector && connector._id,
         name: section.section,
         subname: section.subsection,
+        shortname: section.shortname,
+        headsection: headname,
         price: section.price,
         priceCashier: 0,
         commentCashier: " ",
@@ -131,22 +145,53 @@ export const AddServices = () => {
         summary: " ",
         done: "tasdiqlanmagan",
         payment: "kutilmoqda",
-        turn: turn + 1,
+        turn: p ? turnlab : turn + 1,
         bron: "offline",
         bronDay: new Date(),
         bronTime: " ",
         position: "offline",
         checkup: "chaqirilmagan",
         doctor: " ",
-        counteragent: connector && connector.counteragent,
+        counteragent: " ",
         paymentMethod: " ",
-        source: connector && connector.source
+        source: " ",
+        nameid: section._id,
+        headsectionid: section.headsection,
+        accept: false,
+        probirka: p
       })
 
     })
     setSections(s)
     setIds(i)
+    setCheckProbirka(prob)
   }
+
+  const [probirka, setProbirka] = useState()
+  const [checkProbirka, setCheckProbirka] = useState(false)
+
+  const getProbirka = useCallback(async () => {
+    try {
+      const fetch = await request("/api/connector/probirka", "GET", null, {
+        Authorization: `Bearer ${auth.token}`
+      })
+      setProbirka(fetch + 1)
+    } catch (e) {
+      notify(e)
+    }
+  }, [request, auth, setProbirka])
+
+  const [headdirections, setHeadDirections] = useState()
+  const getHeadDirections = useCallback(async () => {
+    try {
+      const fetch = await request('/api/headsection/', 'GET', null, {
+        Authorization: `Bearer ${auth.token}`
+      })
+      setHeadDirections(fetch)
+    } catch (error) {
+      notify(error)
+    }
+  }, [auth, request, setHeadDirections, notify])
 
   const allClients = useCallback(async () => {
     try {
@@ -275,6 +320,7 @@ export const AddServices = () => {
       create(id, section, connector)
     })
     WareUseds(connector)
+    toast.success("Mijozga yangi xizmatlar biriktirildi.")
     history.push(`/reseption/clients`)
   }
 
@@ -350,8 +396,22 @@ export const AddServices = () => {
   // =================================================================================
   // =================================================================================
 
+  const [turnlab, setTurnlab] = useState()
+  const getTurnlab = useCallback(async () => {
+    try {
+      const fetch = await request(`/api/connector/turnlab`, "GET", null, {
+        Authorization: `Bearer ${auth.token}`
+      })
+      setTurnlab(fetch)
+    } catch (e) {
+      notify(e)
+    }
+  }, [request, auth, setTurnlab])
 
   useEffect(() => {
+    if (!turnlab) {
+      getTurnlab()
+    }
     if (!options) {
       getOptions()
     }
@@ -373,6 +433,12 @@ export const AddServices = () => {
     }
     if (!wareconnectors) {
       getWareConnectors()
+    }
+    if (!headdirections) {
+      getHeadDirections()
+    }
+    if (!probirka) {
+      getProbirka()
     }
   }, [notify, clearError])
 

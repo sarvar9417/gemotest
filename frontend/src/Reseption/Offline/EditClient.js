@@ -17,7 +17,6 @@ export const EditClient = () => {
 
     const getClient = useCallback(async () => {
         try {
-            console.log("salom");
             const data = await request(`/api/clients/reseption/${clientId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })

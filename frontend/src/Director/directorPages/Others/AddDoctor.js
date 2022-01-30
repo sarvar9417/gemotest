@@ -24,7 +24,7 @@ export const AddDoctor = () => {
   const [options, setOptions] = useState()
   const getOptions = useCallback(async () => {
     try {
-      const data = await request("/api/direction/", "GET", null, {
+      const data = await request("/api/headsection/", "GET", null, {
         Authorization: `Bearer ${auth.token}`
       })
       let s = []
@@ -37,8 +37,8 @@ export const AddDoctor = () => {
         })
         if (!k) {
           s.push({
-            label: section.section,
-            value: section.section,
+            label: section.name,
+            value: section._id,
           })
         }
       })
@@ -66,15 +66,15 @@ export const AddDoctor = () => {
   const changeHandler = (event) => {
     setDoctor({ ...doctor, [event.target.name]: event.target.value })
   }
-  const changeProcient = (event) => {
-    if (parseInt(event.target.value ) > 100) {
-        return notify("Diqqat! Shifokor maoshi ishlagan summasidan ortib ketdi. Iltimos, maosh miqdori 100 foizdan oshmasligiga e'tibor qarating!")
-    }
-    if (parseInt(event.target.value) < 0) {
-      return notify("Diqqat! Shifokor maoshi ishlagan summasining 0 foizidan kam. Iltimos, maosh miqdori 0 foizdan kam emasligiga e'tibor qarating!")
-    }
-    setDoctor({ ...doctor, procient: parseInt(event.target.value) })
-  }
+  // const changeProcient = (event) => {
+  //   if (parseInt(event.target.value) > 100) {
+  //     return notify("Diqqat! Shifokor maoshi ishlagan summasidan ortib ketdi. Iltimos, maosh miqdori 100 foizdan oshmasligiga e'tibor qarating!")
+  //   }
+  //   if (parseInt(event.target.value) < 0) {
+  //     return notify("Diqqat! Shifokor maoshi ishlagan summasining 0 foizidan kam. Iltimos, maosh miqdori 0 foizdan kam emasligiga e'tibor qarating!")
+  //   }
+  //   setDoctor({ ...doctor, procient: parseInt(event.target.value) })
+  // }
 
   const changeDate = (event) => {
     setDoctor({ ...doctor, born: new Date(event.target.value) })
@@ -191,9 +191,9 @@ export const AddDoctor = () => {
               <br />
               <label htmlFor="name" className="fw-normal" style={{ color: "#888" }}>Parolni qayta kiriting</label>
               <input type="password" placeholder="Parolni qayta kiriting" onChange={changePassword} className={borderGreen ? `form-control border border-success` : `${borderRed ? "form-control border border-danger" : "form-control border"}`} />
-              <br/>
+              {/* <br />
               <label htmlFor="name" className="fw-normal" style={{ color: "#888" }}>Ish haqi(foiz - % miqdorida)</label>
-              <input defaultValue={doctor.procient} onChange={changeProcient} name="procient" type="number" className="form-control" />
+              <input defaultValue={doctor.procient} onChange={changeProcient} name="procient" type="number" className="form-control" /> */}
             </div>
             <div className="col-12 col-md-6 p-4">
               <p className="fs-4"> Qabul bo'lim xodimi ma'lumotlari </p>
@@ -207,7 +207,7 @@ export const AddDoctor = () => {
               <input defaultValue={doctor.fathername} onChange={changeHandler} name="fathername" className="form-control" />
               <br />
               <label htmlFor="name" className="fw-normal" style={{ color: "#888" }}>Tug'ilgan yili</label>
-              <input onChange={changeDate} name="born" type="date" className="form-control" value={new Date(doctor.born).getFullYear().toString() + '-' + (new Date(doctor.born).getMonth() < 9 ? "0" + (new Date(doctor.born).getMonth() + 1).toString() : (new Date(doctor.born).getMonth() + 1).toString()) + '-' + (new Date(doctor.born).getDate() < 10 ? "0" + (new Date(doctor.born).getDate()).toString() : (new Date(doctor.born).getDate()).toString())} />
+              <input onChange={changeDate} name="born" type="date" className="form-control" />
               <br />
               <label htmlFor="name" className="fw-normal" style={{ color: "#888" }}>Ixtisosligi</label>
               <Select
@@ -255,9 +255,9 @@ export const AddDoctor = () => {
                     <br />
                     <label htmlFor="name" className="fw-normal" style={{ color: "#888" }}>Parol</label>
                     <input disabled placeholder="Parolni kiriting" value={doctor.password} onChange={createPassword} name="password" type="text" className={borderGreen ? `form-control border border-success` : `${borderRed ? "form-control border border-danger" : "form-control border"}`} />
-                    <br />
+                    {/* <br />
                     <label htmlFor="name" className="fw-normal" style={{ color: "#888" }}>Ish haqi(foiz - % miqdorida)</label>
-                    <input defaultValue={doctor.procient} disabled  name="procient" type="number" className="form-control" />
+                    <input defaultValue={doctor.procient} disabled name="procient" type="number" className="form-control" /> */}
                   </div>
                   <div className="col-12 col-md-6 p-4">
                     <p className="fs-4"> Rahbar ma'lumotlari </p>
@@ -274,7 +274,15 @@ export const AddDoctor = () => {
                     <input disabled onChange={changeHandler} name="born" type="date" className="form-control" value={new Date(doctor.born).getFullYear().toString() + '-' + (new Date(doctor.born).getMonth() < 9 ? "0" + (new Date(doctor.born).getMonth() + 1).toString() : (new Date(doctor.born).getMonth() + 1).toString()) + '-' + (new Date(doctor.born).getDate() < 10 ? "0" + (new Date(doctor.born).getDate()).toString() : (new Date(doctor.born).getDate()).toString())} />
                     <br />
                     <label htmlFor="name" className="fw-normal" style={{ color: "#888" }}>Bo'limi</label>
-                    <input disabled value={doctor.section} onChange={changeHandler} name="section" type="text" className="form-control" />
+                    {
+                      options && options.map(option => {
+                        if (option.value === doctor.section) {
+                          return (
+                            <input disabled value={option.label} name="section" type="text" className="form-control" />
+                          )
+                        }
+                      })
+                    }
                     <br />
                     <label htmlFor="name" className="fw-normal" style={{ color: "#888" }}>Telefon raqami</label>
                     <input disabled value={doctor.phone} onChange={changeHandler} name="phone" type="number" className="form-control" />

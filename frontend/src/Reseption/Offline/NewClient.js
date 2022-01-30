@@ -135,6 +135,18 @@ export const NewClient = () => {
     address: " "
   })
 
+  const [headdirections, setHeadDirections] = useState()
+  const getHeadDirections = useCallback(async () => {
+    try {
+      const fetch = await request('/api/headsection/', 'GET', null, {
+        Authorization: `Bearer ${auth.token}`
+      })
+      setHeadDirections(fetch)
+    } catch (error) {
+      notify(error)
+    }
+  }, [auth, request, setHeadDirections, notify])
+
   // =================================================================================
   // =================================================================================
   // Servislar bo'limi
@@ -238,6 +250,7 @@ export const NewClient = () => {
   const changeSections = (event) => {
     s = []
     let i = []
+    let prob = false
     event.map((section) => {
       i.push(section._id)
       let turn = 0
@@ -251,11 +264,23 @@ export const NewClient = () => {
         if (sec.name === section.section) {
           turn++
         }
-
+      })
+      let headname
+      let p = false
+      headdirections.map(h => {
+        if (h._id === section.headsection) {
+          headname = h.name
+          if (h.probirka) {
+            prob = true
+            p = true
+          }
+        }
       })
       s.push({
         name: section.section,
         subname: section.subsection,
+        shortname: section.shortname,
+        headsection: headname,
         price: section.price,
         priceCashier: 0,
         commentCashier: " ",
@@ -263,7 +288,7 @@ export const NewClient = () => {
         summary: " ",
         done: "tasdiqlanmagan",
         payment: "kutilmoqda",
-        turn: turn + 1,
+        turn: p ? turnlab : turn + 1,
         bron: "offline",
         bronDay: new Date(),
         bronTime: " ",
@@ -272,13 +297,19 @@ export const NewClient = () => {
         doctor: " ",
         counteragent: " ",
         paymentMethod: " ",
-        source: source
+        source: source,
+        nameid: section._id,
+        headsectionid: section.headsection,
+        accept: false,
+        probirka: p
       })
 
     })
     setSections(s)
     setIds(i)
+    setCheckProbirka(prob)
   }
+
 
   const allClients = useCallback(async () => {
     try {
@@ -315,6 +346,20 @@ export const NewClient = () => {
     }
   }
 
+  const [probirka, setProbirka] = useState()
+  const [checkProbirka, setCheckProbirka] = useState(false)
+
+  const getProbirka = useCallback(async () => {
+    try {
+      const fetch = await request("/api/connector/probirka", "GET", null, {
+        Authorization: `Bearer ${auth.token}`
+      })
+      setProbirka(fetch + 1)
+    } catch (e) {
+      notify(e)
+    }
+  }, [request, auth, setProbirka])
+
   const createConnector = async (client) => {
     try {
       const connector = await request("/api/connector/register", "POST", {
@@ -327,6 +372,8 @@ export const NewClient = () => {
         diagnosis: " ",
         bronDay: new Date(),
         prepaymentCashier: 0,
+        accept: false,
+        probirka: checkProbirka && probirka ? probirka : 0
       }, {
         Authorization: `Bearer ${auth.token}`
       })
@@ -343,7 +390,8 @@ export const NewClient = () => {
       create(id, section, connector)
     })
     WareUseds(connector)
-    history.push(`/reseption/clients`)
+    toast.success("Mijoz yaratildi.")
+    history.push(`/reseption/reciept/${id}/${connector}`)
   }
 
   const create = async (id, section, connector) => {
@@ -418,8 +466,22 @@ export const NewClient = () => {
   // =================================================================================
   // =================================================================================
 
+  const [turnlab, setTurnlab] = useState()
+  const getTurnlab = useCallback(async () => {
+    try {
+      const fetch = await request(`/api/connector/turnlab`, "GET", null, {
+        Authorization: `Bearer ${auth.token}`
+      })
+      setTurnlab(fetch)
+    } catch (e) {
+      notify(e)
+    }
+  }, [request, auth, setTurnlab])
 
   useEffect(() => {
+    if (!turnlab) {
+      getTurnlab()
+    }
     if (!options) {
       getOptions()
     }
@@ -441,6 +503,12 @@ export const NewClient = () => {
     }
     if (!wareconnectors) {
       getWareConnectors()
+    }
+    if (!headdirections) {
+      getHeadDirections()
+    }
+    if (!probirka) {
+      getProbirka()
     }
   }, [notify, clearError])
 
@@ -615,7 +683,7 @@ export const NewClient = () => {
                 <div className="col-6">
                   <input
                     disabled
-                    value={section.name + " " + section.subname}
+                    value={section.headsection + " " + section.name + " " + section.subsection}
                     id={key}
                     className="form-control mt-2"
                   />
@@ -705,7 +773,7 @@ export const NewClient = () => {
                       <tr key={key}>
                         <td style={{ width: "10%", textAlign: "center", padding: "10px 0" }}>{key + 1}</td>
                         <td style={{ width: "30%", textAlign: "center", padding: "10px 0" }}>
-                          {section.name} {section.subname}
+                          {section.headsection} {section.name} {section.subname}
                         </td>
                         <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{section.price}</td>
                       </tr>

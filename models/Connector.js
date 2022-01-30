@@ -10,7 +10,9 @@ const connector = new Schema({
     doctor: String,
     prepaymentCashier: Number,
     diagnosis: String,
-    bronDay: Date
+    bronDay: Date,
+    probirka: Number,
+    accept: Boolean
 })
 
 function validateConnector(connector) {
@@ -23,7 +25,9 @@ function validateConnector(connector) {
         doctor: Joi.string(),
         prepaymentCashier: Joi.number(),
         diagnosis: Joi.string(),
-        bronDay: Joi.date()
+        bronDay: Joi.date(),
+        probirka: Joi.number(),
+        accept: Joi.bool()
     })
     return schema.validate(connector)
 }

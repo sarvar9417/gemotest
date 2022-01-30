@@ -145,6 +145,7 @@ export const OldStatsionarClient = () => {
         client: client._id,
         name: section.section,
         subname: section.subsection,
+        shortname: section.shortname,
         price: section.price,
         priceCashier: 0,
         commentCashier: " ",

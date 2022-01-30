@@ -1,38 +1,64 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
-import { Link, useHistory } from 'react-router-dom'
+import { Link, useHistory, useParams } from 'react-router-dom'
 import { toast } from "react-toastify"
 import { AuthContext } from '../../context/AuthContext'
 import { useHttp } from '../../hooks/http.hook'
 import { CheckDirection } from './CheckDirection'
 import { Loader } from '../../components/Loader'
 import '../tableStyle.css'
+
 toast.configure()
+
 export const AddDirection = () => {
   const auth = useContext(AuthContext)
   const { request, error, loading, clearError } = useHttp()
   const history = useHistory()
   // Modal oyna funksiyalari
   const [modal, setModal] = useState(false)
-
+  const headId = useParams().id
   //Direction ma'lumotlari
   const [direction, setDirection] = useState({
     value: "",
     price: "",
     section: "",
-    subsection: " ",
+    headsection: headId && headId,
+    subsection: "",
+    shortname: "",
     label: "",
     room: "",
     doctorProcient: "",
     counteragentProcient: "",
     counterDoctor: "",
+    norma: " ",
+    result: " ",
+    additionalone: " ",
+    additionaltwo: " ",
   })
+
+  //Direction ma'lumotlari
+  const [headdirection, setHeadDirection] = useState()
+
+  const getHeadDirection = useCallback(async () => {
+    try {
+      const fetch = await request(`/api/headsection/${headId}`, 'GET', null, {
+        Authorization: `Bearer ${auth.token}`
+      })
+
+      setHeadDirection({
+        name: fetch.name
+      })
+
+    } catch (error) {
+      notify(error)
+    }
+  }, [auth, request, setHeadDirection])
 
   const changeSection = (event) => {
     setDirection({
       ...direction,
       section: event.target.value,
-      value: event.target.value + " " + direction.subsection,
-      label: event.target.value + " " + direction.subsection
+      value: headdirection && headdirection.name + " " + event.target.value + " " + direction.subsection,
+      label: headdirection && headdirection.name + " " + event.target.value + " " + direction.subsection
     })
   }
 
@@ -40,8 +66,15 @@ export const AddDirection = () => {
     setDirection({
       ...direction,
       subsection: event.target.value,
-      value: direction.section + " " + event.target.value,
-      label: direction.section + " " + event.target.value
+      value: headdirection && headdirection.name + " " + direction.section + " " + event.target.value,
+      label: headdirection && headdirection.name + " " + direction.section + " " + event.target.value
+    })
+  }
+
+  const changeShortname = (event) => {
+    setDirection({
+      ...direction,
+      shortname: event.target.value,
     })
   }
 
@@ -66,7 +99,7 @@ export const AddDirection = () => {
       const data = await request("/api/direction/register", "POST", { ...direction }, {
         Authorization: `Bearer ${auth.token}`
       })
-      history.push('/director/directions')
+      history.push(`/director/directions/${headId}`)
     } catch (e) {
       notify(e)
     }
@@ -85,7 +118,10 @@ export const AddDirection = () => {
       notify(error)
       clearError()
     }
-  }, [notify, clearError])
+    if (!headdirection) {
+      getHeadDirection()
+    }
+  }, [notify, clearError, getHeadDirection])
 
   if (loading) {
     return <Loader />
@@ -101,9 +137,11 @@ export const AddDirection = () => {
                 <table className=" table table-hover table-center mb-0">
                   <thead>
                     <tr>
+                      <th className="text-center">Bo'lim nomi</th>
                       <th className="text-center">Xizmat nomi</th>
-                      <th className="text-center">Xizmat narxi</th>
                       <th className="text-center">Xizmat turi</th>
+                      <th className="text-center">Xizmatning qisqartma nomi</th>
+                      <th className="text-center">Xizmat narxi</th>
                       <th className="text-center">Xizmat xonasi</th>
                       <th className="text-center">Doctor ulushi</th>
                       <th className="text-center">Medpridstovitel ulushi</th>
@@ -113,13 +151,23 @@ export const AddDirection = () => {
                   </thead>
                   <tbody>
                     <tr>
+                      <td className="text-center"><input style={{ width: "100px" }} defaultValue={headdirection && headdirection.name} disabled name="lastname" className="addDirection" /></td>
                       <td className="text-center">
                         <span className="table-avatar">
                           <span href="profile.html"> <input style={{ width: "100px" }} defaultValue={direction.section} onChange={changeSection} name="lastname" className="addDirection" /> </span>
                         </span>
                       </td>
+                      <td className="text-center">
+                        <span className="table-avatar">
+                          <span href="profile.html"> <input style={{ width: "100px" }} defaultValue={direction.subsection} onChange={changeSubsection} name="lastname" className="addDirection" /> </span>
+                        </span>
+                      </td>
+                      <td className="text-center">
+                        <span className="table-avatar">
+                          <span href="profile.html"> <input style={{ width: "100px" }} defaultValue={direction.shortname} onChange={changeShortname} name="lastname" className="addDirection" /> </span>
+                        </span>
+                      </td>
                       <td className="text-center"><input style={{ width: "100px" }} defaultValue={direction.price} onChange={changePrice} type="number" name="lastname" className="addDirection" /> sum</td>
-                      <td className="text-center"><input style={{ width: "100px" }} defaultValue={direction.subsection} onChange={changeSubsection} name="lastname" className="addDirection" /></td>
                       <td className="text-center"><input style={{ width: "100px" }} defaultValue={direction.room} onChange={changeRoom} name="room" className="addDirection" /></td>
                       <td className="text-center"><input style={{ width: "100px" }} type="number" defaultValue={direction.doctorProcient} onChange={changeProcient} name="doctorProcient" className="addDirection" /></td>
                       <td className="text-center"><input style={{ width: "100px" }} type="number" defaultValue={direction.counteragentProcient} onChange={changeProcient} name="counteragentProcient" className="addDirection" /></td>
@@ -146,9 +194,10 @@ export const AddDirection = () => {
                 <table className="datatable table table-hover table-center mb-0">
                   <thead>
                     <tr>
+                      <th className="text-center">Bo'lim nomi</th>
                       <th className="text-center">Xizmat nomi</th>
-                      <th className="text-center">Xizmat narxi</th>
                       <th className="text-center">Xizmat turi</th>
+                      <th className="text-center">Xizmat narxi</th>
                       <th className="text-center">Xizmat xonasi</th>
                       <th className="text-center">Doctor ulushi</th>
                       <th className="text-center">Medpridstovitel ulushi</th>
@@ -157,13 +206,18 @@ export const AddDirection = () => {
                   </thead>
                   <tbody>
                     <tr>
-                      <td className="text-center" style={{ width: "100px" }}>
+                      <td className="text-center" style={{ width: "200px" }}>{headdirection && headdirection.name}</td>
+                      <td className="text-center" style={{ width: "200px" }}>
                         <span className="table-avatar">
                           <span href="profile.html"> {direction.section} </span>
                         </span>
                       </td>
+                      <td className="text-center" style={{ width: "200px" }}>
+                        <span className="table-avatar">
+                          <span href="profile.html"> {direction.subsection} </span>
+                        </span>
+                      </td>
                       <td className="text-center" style={{ width: "100px" }}>{direction.price} sum</td>
-                      <td className="text-center" style={{ width: "100px" }}>{direction.subsection}</td>
                       <td className="text-center" style={{ width: "100px" }}>{direction.room}</td>
                       <td className="text-center" style={{ width: "100px" }}>{direction.doctorProcient}</td>
                       <td className="text-center" style={{ width: "100px" }}>{direction.counteragentProcient}</td>

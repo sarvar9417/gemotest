@@ -28,8 +28,11 @@ export const CheckHistory = () => {
     const [clientId, setClientId] = useState(useParams().id)
     const [clientid, setClientid] = useState(useParams().id)
     const [sections, setSections] = useState()
+    const [sectionsT, setSectionsT] = useState()
     const [services, setServices] = useState()
+    const [servicesT, setServicesT] = useState()
     const [client, setClient] = useState()
+    const [clientT, setClientT] = useState()
 
     const getClient = useCallback(async () => {
         try {
@@ -37,10 +40,11 @@ export const CheckHistory = () => {
                 Authorization: `Bearer ${auth.token}`
             })
             setClient(fetch)
+            setClientT(1)
         } catch (e) {
             notify(e)
         }
-    }, [request, clientId, setClient, auth])
+    }, [request, clientId, setClient, auth, setClientT])
 
 
     const getAllSections = useCallback(async () => {
@@ -49,10 +53,11 @@ export const CheckHistory = () => {
                 Authorization: `Bearer ${auth.token}`
             })
             setSections(fetch)
+            setSectionsT(1)
         } catch (e) {
             notify(e)
         }
-    }, [request, clientId, setSections, auth])
+    }, [request, clientId, setSections, auth, setSectionsT])
 
     const getAllServices = useCallback(async () => {
         try {
@@ -60,10 +65,11 @@ export const CheckHistory = () => {
                 Authorization: `Bearer ${auth.token}`
             })
             setServices(fetch)
+            setServicesT(1)
         } catch (e) {
             notify(e)
         }
-    }, [request, clientId, setServices, auth])
+    }, [request, clientId, setServices, auth, setServicesT])
 
     const setPayments = () => {
         history.push({
@@ -88,13 +94,13 @@ export const CheckHistory = () => {
             notify(error)
             clearError()
         }
-        if (!sections) {
+        if (!sectionsT) {
             getAllSections()
         }
-        if (!client) {
+        if (!clientT) {
             getClient()
         }
-        if (!services) {
+        if (!servicesT) {
             getAllServices()
         }
     }, [notify, clearError])
@@ -239,7 +245,7 @@ export const CheckHistory = () => {
                     </div>
                     <div className="row">
                         <div className="col-12 text-center">
-                            <button className="btn button-success" onClick={() => { setModal(true) }}>Chekni chop etish</button>
+                            <button disabled={loading} className="btn button-success" onClick={() => { setModal(true) }}>Chekni chop etish</button>
                         </div>
                     </div>
                 </div>

@@ -165,11 +165,24 @@ export const OldOnlineClient = () => {
                     turn++
                 }
             })
+            let headname
+            let p = false
+            headdirections.map(h => {
+                if (h._id === section.headsection) {
+                    headname = h.name
+                    if (h.probirka) {
+                        p = true
+                    }
+                }
+            })
             s.push({
+                client: client._id,
                 name: section.section,
                 subname: section.subsection,
-                priceCashier: 0,
+                shortname: section.shortname,
+                headsection: headname,
                 price: section.price,
+                priceCashier: 0,
                 commentCashier: " ",
                 comment: " ",
                 summary: " ",
@@ -182,9 +195,13 @@ export const OldOnlineClient = () => {
                 position: 'kutilmoqda',
                 checkup: "chaqirilmagan",
                 doctor: " ",
-                counteragent: counteragent,
+                counteragent: " ",
                 paymentMethod: " ",
-                source: source
+                source: source,
+                nameid: section._id,
+                headsectionid: section.headsection,
+                accept: false,
+                probirka: p
             })
         })
         setSections(s)
@@ -238,6 +255,8 @@ export const OldOnlineClient = () => {
                 diagnosis: " ",
                 bronDay: sections ? sections[0].bronDay : new Date(),
                 prepaymentCashier: 0,
+                accept: false,
+                probirka: probirka && probirka
             }, {
                 Authorization: `Bearer ${auth.token}`
             })
@@ -253,7 +272,7 @@ export const OldOnlineClient = () => {
         })
         WareUseds(connector)
         counteragent && createPaymentCounteragent(client && client._id, connector)
-        history.push(`/reseption/clients`)
+        history.push(`/reseption/onlineclients`)
     }
 
     const create = async (section, connector) => {
@@ -316,7 +335,38 @@ export const OldOnlineClient = () => {
     // =================================================================================
 
 
+    const [headdirections, setHeadDirections] = useState()
+    const getHeadDirections = useCallback(async () => {
+        try {
+            const fetch = await request('/api/headsection/', 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setHeadDirections(fetch)
+        } catch (error) {
+            notify(error)
+        }
+    }, [auth, request, setHeadDirections, notify])
+
+    const [probirka, setProbirka] = useState()
+
+    const getProbirka = useCallback(async () => {
+        try {
+            const fetch = await request("/api/connector/probirka", "GET", null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setProbirka(fetch + 1)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, auth, setProbirka])
+
     useEffect(() => {
+        if (!probirka) {
+            getProbirka()
+        }
+        if (!headdirections) {
+            getHeadDirections()
+        }
         if (!options) {
             getOptions()
         }
@@ -572,7 +622,7 @@ export const OldOnlineClient = () => {
                                             <tr key={key}>
                                                 <td style={{ width: "10%", textAlign: "center", padding: "10px 0" }}>{key + 1}</td>
                                                 <td style={{ width: "30%", textAlign: "center", padding: "10px 0" }}>
-                                                    {section.name}
+                                                    {section.headsection} {section.name} {section.subname}
                                                 </td>
                                                 <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{section.price}</td>
                                                 <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{new Date(section.bronDay).toLocaleDateString()}</td>

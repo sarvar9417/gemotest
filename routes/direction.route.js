@@ -11,7 +11,6 @@ const auth = require('../middleware/auth.middleware')
 
 router.post('/register', auth, async (req, res) => {
     try {
-        console.log(req.body);
         const { error } = validateDirection(req.body)
         if (error) {
             return res.status(400).json({
@@ -24,23 +23,35 @@ router.post('/register', auth, async (req, res) => {
             value,
             price,
             label,
+            headsection,
             section,
             subsection,
+            shortname,
             room,
             doctorProcient,
             counteragentProcient,
             counterDoctor,
+            norma,
+            result,
+            additionalone,
+            additionaltwo,
         } = req.body
         const direction = new Direction({
             value,
             price,
             label,
+            headsection,
             section,
             subsection,
+            shortname,
             room,
             doctorProcient,
             counteragentProcient,
             counterDoctor,
+            norma,
+            result,
+            additionalone,
+            additionaltwo,
         })
         await direction.save()
         res.status(201).send(direction)
@@ -49,9 +60,40 @@ router.post('/register', auth, async (req, res) => {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
 })
+
+router.get('/head/:id', auth, async (req, res) => {
+    try {
+        const directions = await Direction.find({
+            headsection: req.params.id
+        })
+        res.json(directions)
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+router.get('/doctor/:section', auth, async (req, res) => {
+    try {
+        const directions = await Direction.find({
+            headsection: req.params.section
+        })
+        res.json(directions)
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
 router.get('/id/:id', auth, async (req, res) => {
     try {
-        console.log("Salom");
+        const direction = await Direction.findById(req.params.id)
+        res.json(direction)
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+router.get('/template/:id', auth, async (req, res) => {
+    try {
         const direction = await Direction.findById(req.params.id)
         res.json(direction)
     } catch (e) {
@@ -65,6 +107,17 @@ router.get('/fizioterapevt', async (req, res) => {
             section: "ФИЗИОТЕРАПИЯ"
         }).sort({ section: 1 })
         res.json(direction)
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+router.get('/table', async (req, res) => {
+    try {
+        const alldirections = await Direction.find()
+        const ids = alldirections.map(o => o.section)
+        const directions = alldirections.filter(({ section }, index) => !ids.includes(section, index + 1))
+        res.json(directions)
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }

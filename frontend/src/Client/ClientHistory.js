@@ -1,81 +1,47 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
-import { savePDF } from '@progress/kendo-react-pdf'
 import { useHttp } from './hooks/http.hook'
 import { toast } from 'react-toastify'
+import { useReactToPrint } from 'react-to-print'
 import QRCode from 'qrcode'
 
 toast.configure()
 export const ClientHistory = () => {
-    //
-    const clientId = useParams().id
-    const { request, error, clearError } = useHttp()
-    const [sections, setSections] = useState([])
-    const [client, setClient] = useState()
-    const [baseUrl, setBasuUrl] = useState()
-    const notify = (e) => {
-        toast.error(e)
-    }
 
-    const contentArea = useRef(null)
-
-    const createSizeHistory = () => {
-        savePDF(
-            contentArea.current,
-            {
-                paperSize: "A4",
-                repeatHeaders: true,
-                fileName: client && client.lastname + client.firstname + client.fathername,
-
-            }, encodeURIComponent()
-
-        )
-    }
-
-    const [doctors, setDoctors] = useState()
-
-    const getDoctors = useCallback(async () => {
-        try {
-            const fetch = await request('/api/auth/doctor/historyclient', 'GET', null)
-            setDoctors(fetch)
-        } catch (error) {
-            notify(error)
-        }
+    const componentRef = useRef()
+    const handlePrint = useReactToPrint({
+        content: () => componentRef.current,
     })
+    const notify = (e) => {
+        toast.error(e);
+    };
+    const { loading, request, error, clearError } = useHttp()
+
+    const clientId = useParams().id
+    const [client, setClient] = useState()
+    const [connectors, setConnectors] = useState()
+    const [allsections, setAllSections] = useState()
+    const [alltablesections, setAllTableSections] = useState()
 
     const getClient = useCallback(async () => {
         try {
-            const data = await request(`/api/clients/reseption/${clientId}`, 'GET', null)
-            getSections()
-            setClient(data)
+            const fetch = await request(`/api/clients/doctor/${clientId}`, 'GET', null)
+            setClient(fetch)
         } catch (e) {
             notify(e)
         }
-    }, [request, clientId])
+    }, [request, setClient, clientId])
 
-    const getSections = useCallback(async () => {
+    const getConnectors = useCallback(async () => {
         try {
-            const fetch = await request(`/api/section/reseptionid/${clientId}`, 'GET', null)
-            let s = []
-            fetch.map((section) => {
-                if (section.done === "tasdiqlangan") {
-                    s.push(section)
-                }
-            })
-            setSections(s)
+            const fetch = await request(`/api/connector/clienthistory/${clientId}`, 'GET', null)
+            setConnectors(fetch.connectors)
+            setAllSections(fetch.allsections)
+            setAllTableSections(fetch.alltablesections)
         } catch (e) {
             notify(e)
         }
-    }, [request, clientId])
-
-    const getBaseUrl = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/clienthistorys/url`, 'GET', null)
-            setBasuUrl(fetch)
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, setBasuUrl])
+    }, [request, setConnectors, setAllSections, setAllTableSections])
 
     const [logo, setLogo] = useState()
     const getLogo = useCallback(async () => {
@@ -88,151 +54,270 @@ export const ClientHistory = () => {
     }, [request, setLogo])
 
     const [qr, setQr] = useState()
-    useEffect(() => {
-        QRCode.toDataURL(`${baseUrl}/clienthistorys/${clientId}`)
-            .then(data => {
-                setQr(data)
-            })
-        if (error) {
-            notify(error)
-            clearError()
+    const [baseUrl, setBasuUrl] = useState()
+    const getBaseUrl = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/clienthistorys/url`, 'GET', null)
+            setBasuUrl(fetch)
+        } catch (e) {
+            notify(e)
         }
-        if (!client) {
-            getClient()
+    }, [request, setBasuUrl])
+
+    useEffect(() => {
+        if (client) {
+            QRCode.toDataURL(`${baseUrl}/clienthistorys/${client._id}`)
+                .then(data => {
+                    setQr(data)
+                })
         }
         if (!baseUrl) {
             getBaseUrl()
         }
+        if (!client) {
+            getClient()
+        }
+        if (error) {
+            notify(error)
+            clearError()
+        }
+        if (!connectors) {
+            getConnectors()
+        }
         if (!logo) {
             getLogo()
-        }
-        if (!doctors) {
-            getDoctors()
         }
     }, [notify, clearError])
 
     return (
         <div>
-            <div className='text-end container pt-3' >
-                <button className='btn btn-success pe-3 mb-2' onClick={createSizeHistory}>Yuklab olish</button>
+            <div className='row'>
+                <div className='col-12 text-center my-4' >
+                    <button onClick={handlePrint} className="btn btn-info px-5" >
+                        Chop etish / Saqlash
+                    </button>
+                </div>
             </div>
-            <dl style={{ maxHeight: "100vh", overflow: "auto" }}>
-                <dl style={{ backgroundColor: "#123456" }}>
-                    <dl ref={contentArea} style={{ width: "15cm", margin: "0 auto" }} >
-                        {sections.length === 0 ? <h3 className='text-white'>Hurmatli mijoz hozirgi vaqtda shifokor tomonidan xulosa berilmagan!!!</h3> : sections.map((section) => {
-                            return (
-                                <dl style={{ minHeight: "297mm", fontFamily: "times !important", fontSize: "7pt", backgroundColor: "white" }} className="m-2">
-                                    <dl className="row">
-                                        <dl className="col-8 border-right border-dark text-center  border-5 m-none">
-                                            <img alt="logo" src={logo && logo.logo} className="w-50" />
-                                            <div className="row mt-3">
-                                                <div className="col-3 text-end">
-                                                    <span className="fw-normal d-block" >Адрес:</span>
-                                                </div>
-                                                <div className="col-9 text-start fw-bold">
-                                                    {logo && logo.address}
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-3 text-end">
-                                                    <span className="fw-normal" >Ориентир:</span>
-                                                </div>
-                                                <div className="col-9 text-start fw-bold">
-                                                    {logo && logo.orientation}
-                                                </div>
-                                            </div>
-                                            <div className="row">
-                                                <div className="col-3 text-end">
-                                                    <span className="fw-normal" >Тел:</span>
-                                                </div>
-                                                <div className="col-9 text-start fw-bold">
-                                                    {logo.phone1 !== null ? "+" + logo.phone1 : ""} <br />
-                                                    {logo.phone2 !== null ? "+" + logo.phone2 : ""} <br />
-                                                    {logo.phone3 !== null ? "+" + logo.phone3 : ""} <br />
-                                                </div>
-                                            </div>
-                                        </dl>
-                                        <dl className="col-4 text-center">
-                                            <img width="100px" src={qr} alt="QR" />
-                                            <p className="">для получения результата сканируйте здесь</p>
-                                        </dl>
-                                    </dl>
-                                    <dl className="row mb-0">
-                                        <dl className="col-12 fs-6 text-center fw-bold mb-0">
-                                            {section.name}
-                                            <h5 style={{ fontSize: "9pt" }}>
-                                                ({section.subname})
-                                            </h5>
-                                        </dl>
-                                    </dl>
-                                    <dl className="row">
-                                        <dl className="col-12">
-                                            <table className="w-100 historytable" >
-                                                <tr>
-                                                    <th className="px-3  w-25 text-end">
-                                                        Пациент
-                                                    </th>
-                                                    <th className="px-3 w-75">
-                                                        {client && client.lastname + " " + client.firstname + " " + client.fathername}
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <th className="px-3 w-25 text-end">
-                                                        Год рождения
-                                                    </th>
-                                                    <th className="px-3 w-75">
-                                                        {client && new Date(client.born).toLocaleDateString()}
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <th className="px-3 w-25 text-end">
-                                                        Дата обследования
-                                                    </th>
-                                                    <th className="px-3 w-75">
-                                                        {new Date(section.bronDay).toLocaleDateString() + " " + new Date(section.bronDay).toLocaleTimeString()}
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <th className="px-3 w-25 text-end">
-                                                        Tелефон номер
-                                                    </th>
-                                                    <th className="px-3 w-75">
-                                                        +{client && client.phone}
-                                                    </th>
-                                                </tr>
-                                                <tr>
-                                                    <th className="px-3 w-25 text-end">
-                                                        Врач
-                                                    </th>
-                                                    <th className="px-3 w-75">
-                                                        {section.doctor && section.doctor}
-                                                    </th>
-                                                </tr>
-                                            </table>
-
-                                        </dl>
-                                    </dl>
-                                    <div style={{ backgroundImage: `${logo && logo.logo}`, backgroundSize: "cover"}}>
-                                        <dl className='row'>
-                                            <dl className='col-12'>
-                                                <pre style={{ whiteSpace: "pre-wrap" }}>
-                                                    {section.comment}
-                                                </pre>
-                                                <pre style={{ whiteSpace: "pre-wrap" }}>
-                                                    {section.summary}
-                                                </pre>
-                                            </dl>
-                                        </dl>
+            <div ref={componentRef} className="container" style={{ fontFamily: "times" }}>
+                {
+                    connectors && connectors.map((connector, i) => {
+                        return (
+                            <div style={{ minHeight: "100vh", pageBreakAfter: "always" }} className='p-4'>
+                                <div className="row" style={{ fontSize: "10pt" }}>
+                                    <div className="col-6" style={{ border: "1px solid", textAlign: "center" }}>
+                                        <p>
+                                            Министерство Здравоохранения Республики Узбекистан
+                                        </p>
                                     </div>
-                                </dl>
-                            )
-                        })
-                        }
-                    </dl>
-                </dl>
+                                    <div className="col-2" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
+                                        <p>
+                                            ОКОНХ  91514
+                                        </p>
+                                    </div>
+                                    <div className="col-4" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
+                                        <p style={{ margin: "0" }}>
+                                            Форма №     согласно приказу
+                                        </p>
+                                        <p style={{ margin: "0" }}>
+                                            МинЗдрав.РУз №777 от 25.12.2017г.
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="row" style={{ fontSize: "20pt" }}>
+                                    <div className="col-6" style={{ textAlign: "center" }}>
+                                        <p className='pt-5'>
+                                            "GEMOTEST"  LABORATORIYA
+                                        </p>
+                                    </div>
+                                    <div className="col-2">
 
+                                    </div>
+                                    <div className="col-4" style={{ textAlign: "center" }}>
+                                        <p className='text-end m-0'>
+                                            <img width="140" src={qr && qr} alt="QR" />
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="row" >
+                                    <div className="col-12" style={{ padding: "0" }}>
+                                        <table style={{ width: "100%", border: "2px solid", borderTop: "3px solid" }}>
+                                            <tr style={{ textAlign: "center" }}>
+                                                <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                                    Ф.И.О. больного
+                                                </td>
+                                                <td className='p-0 py-1' style={{ width: "33%", border: "1px solid #000" }}>
+                                                    <h4>{client && client.lastname + " " + client.firstname}</h4>
+                                                </td>
+                                                <td rowSpan="3" style={{ width: "33%" }}>
+                                                    <p>
+                                                        <img width="200" src={logo && logo.logo} alt='Logo' />
+                                                    </p>
+                                                </td>
+                                            </tr>
+                                            <tr style={{ textAlign: "center" }}>
+                                                <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                                    Год рождения
+                                                </td>
+                                                <td className='p-0 py-1' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
+                                                    {client && new Date(client.born).toLocaleDateString()}
+                                                </td>
+                                            </tr>
+                                            <tr style={{ textAlign: "center" }}>
+                                                <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                                    Дата
+                                                </td>
+                                                <td className='p-0 py-1' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
+                                                    {connector && new Date(connector.bronDay).toLocaleDateString()}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
+                                </div>
+                                <div className="row mt-3" style={{ backgroundColor: "#C0C0C0" }}>
+                                    <div className="col-1">
 
-            </dl>
+                                    </div>
+                                    <div className="col-4">
+                                        <p>
+                                            "GEMO-TEST" х/к
+                                        </p>
+                                    </div>
+                                    <div className="col-7">
+                                        <p>
+                                            Услуги лицензированны   ЛИЦЕНЗИЯ №01419  от 28.02.2019г. МинЗдрав Ру
+                                        </p>
+                                    </div>
+                                </div>
+                                <div className="row">
+
+                                    {
+                                        allsections && allsections[i].map((section, index) => {
+                                            if (section.accept) {
+                                                if (
+                                                    alltablesections && alltablesections[i][index].length > 0
+                                                ) {
+                                                    return (
+                                                        <div className='p-0'>
+                                                            <table className='w-100' >
+                                                                <tr>
+                                                                    <td colSpan={4} style={{ backgroundColor: "#FFF" }} >
+                                                                        {section.name + " " + section.subname}
+                                                                    </td>
+
+                                                                </tr>
+                                                                <tr style={{ backgroundColor: "#C0C0C0" }}>
+                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                        №
+                                                                    </td>
+                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                        Показатели
+                                                                    </td>
+                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                        Результат
+                                                                    </td>
+                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                        Референтные значения
+                                                                    </td>
+                                                                    {
+                                                                        alltablesections[i][index][0] && (alltablesections[i][index][0].additionalone).length > 1 ?
+                                                                            <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                                Референтные значения
+                                                                            </td> : ""
+                                                                    }
+                                                                    {
+                                                                        alltablesections[i][index][0] && (alltablesections[i][index][0].additionaltwo).length > 1 ?
+                                                                            <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                                Референтные значения
+                                                                            </td> : ""
+                                                                    }
+                                                                </tr>
+                                                                {
+                                                                    alltablesections && alltablesections[i][index].map((tablesection, key) => {
+                                                                        return (
+                                                                            <tr style={{ backgroundColor: "white" }}>
+                                                                                <td style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                                    {key + 1}
+                                                                                </td>
+                                                                                <td className='px-3' style={{ border: "1px solid #000", padding: "10px" }}>
+                                                                                    {tablesection.name}
+                                                                                </td>
+                                                                                <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                                    {tablesection.result}
+                                                                                </td>
+                                                                                <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                                    {tablesection.norma}
+                                                                                </td>
+                                                                                {
+                                                                                    tablesection.additionalone !== " " ?
+                                                                                        <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                                            {tablesection.additionalone}
+                                                                                        </td> : ""
+                                                                                }
+                                                                                {
+                                                                                    tablesection.additionaltwo !== " " ?
+                                                                                        <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                                            {tablesection.additionaltwo}
+                                                                                        </td> : ""
+                                                                                }
+                                                                            </tr>
+                                                                        )
+                                                                    })
+                                                                }
+                                                            </table>
+                                                            <br />
+                                                            {
+                                                                !section.probirka ?
+                                                                    (<table style={{ width: "100%" }}>
+                                                                        <tr style={{ backgroundColor: "white" }}>
+                                                                            <th style={{ border: "1px solid #000", padding: "10px", width: "100px" }} > Xulosa </th>
+                                                                            <td style={{ border: "1px solid #000", padding: "10px" }} colSpan="5" className='px-2'>
+                                                                                {section.summary}
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr style={{ backgroundColor: "white" }}>
+                                                                            <th style={{ border: "1px solid #000", padding: "10px", width: "200px" }}> Izoh </th>
+                                                                            <td style={{ border: "1px solid #000", padding: "10px" }} className='px-2'>
+                                                                                {section.comment}
+                                                                            </td>
+                                                                        </tr></table>) : ""
+                                                            }
+                                                        </div>
+                                                    )
+                                                } else {
+                                                    if (!section.probirka) {
+                                                        return (
+                                                            <table>
+                                                                <tr style={{ backgroundColor: "white" }}>
+                                                                    <td colSpan={6} style={{ backgroundColor: "#FFF" }} >
+                                                                        {section.name + " " + section.subname}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style={{ backgroundColor: "white" }}>
+                                                                    <th style={{ border: "1px solid #000", padding: "10px", width: "100px" }} > Xulosa </th>
+                                                                    <td style={{ border: "1px solid #000", padding: "10px" }} className='p-2'>
+                                                                        {section.summary}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style={{ backgroundColor: "white" }}>
+                                                                    <th style={{ border: "1px solid #000", padding: "10px", width: "100px" }}> Izoh </th>
+                                                                    <td style={{ border: "1px solid #000", padding: "10px" }} className='p-2'>
+                                                                        {section.comment}
+                                                                    </td>
+                                                                </tr>
+                                                            </table>
+                                                        )
+                                                    }
+                                                }
+                                            }
+                                        })
+                                    }
+                                </div>
+                            </div>
+                        )
+                    })
+                }
+            </div>
+
         </div>
     )
 }

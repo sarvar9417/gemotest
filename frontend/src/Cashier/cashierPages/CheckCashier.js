@@ -5,6 +5,7 @@ import { useHttp } from '../hooks/http.hook'
 import './cashier.css'
 import { AuthContext } from '../context/AuthContext'
 import { toast } from "react-toastify"
+import { Loader } from '../components/Loader'
 
 toast.configure()
 export const CheckCashier = () => {
@@ -28,9 +29,13 @@ export const CheckCashier = () => {
     const [connectorId, setConnectorId] = useState(useParams().connector)
     const [clientid, setClientid] = useState()
     const [sections, setSections] = useState()
+    const [sectionsT, setSectionsT] = useState()
     const [services, setServices] = useState()
+    const [servicesT, setServicesT] = useState()
     const [connector, setConnector] = useState()
+    const [connectorT, setConnectorT] = useState()
     const [client, setClient] = useState()
+    const [clientT, setClientT] = useState()
     const { request, error, clearError, loading } = useHttp()
 
     const [payment, setPayment] = useState({
@@ -130,10 +135,11 @@ export const CheckCashier = () => {
                 Authorization: `Bearer ${auth.token}`
             })
             setClient(fetch)
+            setClientT(1)
         } catch (e) {
             notify(e)
         }
-    }, [request, clientId, auth, setClient])
+    }, [request, clientId, auth, setClient, setClientT])
 
     const getConnector = useCallback(async () => {
         try {
@@ -142,10 +148,11 @@ export const CheckCashier = () => {
             })
             setConnector(fetch)
             setPayment({ ...payment, position: fetch.type })
+            setConnectorT(1)
         } catch (e) {
             notify(e)
         }
-    }, [request, connectorId, auth, setConnector])
+    }, [request, connectorId, auth, setConnector, setConnectorT])
 
     const [sections1, setSections1] = useState()
     const [services1, setServices1] = useState()
@@ -182,10 +189,11 @@ export const CheckCashier = () => {
             })
             setSections(fetch)
             setSections1(s)
+            setSectionsT(1)
         } catch (e) {
             notify(e)
         }
-    }, [request, connectorId, auth, setSections, setSections1])
+    }, [request, connectorId, auth, setSections, setSections1, setSectionsT])
 
     const getSections1 = useCallback(async () => {
         try {
@@ -209,10 +217,11 @@ export const CheckCashier = () => {
             })
             setServices(fetch)
             setServices1([...fetch])
+            setServicesT(1)
         } catch (e) {
             notify(e)
         }
-    }, [request, connectorId, auth, setServices, setServices1])
+    }, [request, connectorId, auth, setServices, setServices1, setServicesT])
 
     const inputPriceSection = useCallback((event, key) => {
         document.getElementById(`checkbox${key}`).checked = false
@@ -528,21 +537,23 @@ export const CheckCashier = () => {
             notify(error)
             clearError()
         }
-        if (!sections) {
+        if (!sectionsT) {
             getSections()
         }
-        if (!client) {
+        if (!clientT) {
             getClient()
         }
-        if (!connector) {
+        if (!connectorT) {
             getConnector()
         }
-        if (!services) {
+        if (!servicesT) {
             getServices()
         }
     }, [notify, clearError])
 
-
+    if (loading) {
+        return <Loader />
+    }
 
     return (
         <>
@@ -581,7 +592,7 @@ export const CheckCashier = () => {
                             <th style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>№</th>
                             <th style={{ width: "35%", textAlign: "center", padding: "10px 0" }}>Bo'limlar</th>
                             <th style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>Hisob</th>
-                            <th style={{ width: "25%", textAlign: "center", padding: "10px 0" }}>To'lov <input onChange={paymenteds} type="checkbox" className="check" /></th>
+                            <th style={{ width: "25%", textAlign: "center", padding: "10px 0" }}>To'lov <input disabled={loading} onChange={paymenteds} type="checkbox" className="check" /></th>
                             <th style={{ width: "10%", textAlign: "center", padding: "10px 0" }}>Sabab</th>
                         </tr>
                     </thead>
@@ -603,7 +614,7 @@ export const CheckCashier = () => {
                                         <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{section.price}</td>
                                         <td style={{ width: "25%", padding: "10px 0" }}>
                                             <input onChange={event => inputPriceSection(event, key)} value={section.priceCashier} type="number" className="form-control" style={{ width: "80%", margin: "auto", display: "inline" }} />
-                                            <input checked={section.priceCashier === section.price ? true : false} id={`checkbox${key}`} onChange={event => checkboxSection(event, key)} type="checkbox" className="check" style={{ position: "absolute" }} />
+                                            <input disabled={loading} checked={section.priceCashier === section.price ? true : false} id={`checkbox${key}`} onChange={event => checkboxSection(event, key)} type="checkbox" className="check" style={{ position: "absolute" }} />
                                         </td>
 
                                         <td style={{ textAlign: "center", padding: "10px 0", color: "green" }}>
@@ -630,7 +641,7 @@ export const CheckCashier = () => {
                                         <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{service.price}</td>
                                         <td style={{ width: "25%", padding: "10px 0" }}>
                                             <input onChange={event => inputPriceService(event, key)} value={service.priceCashier} type="number" className="form-control" style={{ width: "80%", margin: "auto", display: "inline" }} />
-                                            <input checked={service.priceCashier === service.price ? true : false} id={`checkboxservice${key}`} onChange={event => checkboxService(event, key)} type="checkbox" className="check" style={{ position: "absolute" }} />
+                                            <input disabled={loading} checked={service.priceCashier === service.price ? true : false} id={`checkboxservice${key}`} onChange={event => checkboxService(event, key)} type="checkbox" className="check" style={{ position: "absolute" }} />
                                         </td>
 
                                         <td style={{ textAlign: "center", padding: "10px 0", color: "green" }}>
@@ -685,7 +696,7 @@ export const CheckCashier = () => {
                     <div className='row border-top border-bottom p-3'>
                         <div className='col-md-3 col-4 text-center '>
                             <label className='mx-3 ' >
-                                <input onChange={setAllPayment} id='card' type="radio" name="payment" /> Plastik
+                                <input disabled={loading} onChange={setAllPayment} id='card' type="radio" name="payment" /> Plastik
                             </label>
                             <input
                                 value={payment.card}
@@ -698,7 +709,7 @@ export const CheckCashier = () => {
                         </div>
                         <div className='col-md-3 col-4 text-center'>
                             <label className='mx-3'>
-                                <input onChange={setAllPayment} id='cash' type="radio" name="payment" id='cash' /> Naqt
+                                <input disabled={loading} onChange={setAllPayment} id='cash' type="radio" name="payment" id='cash' /> Naqt
                             </label>
                             <input
                                 value={payment.cash}
@@ -711,7 +722,7 @@ export const CheckCashier = () => {
                         </div>
                         <div className='col-md-3 col-4 text-center'>
                             <label className='mx-3'>
-                                <input onChange={setAllPayment} id='transfer' type="radio" name="payment" /> O'tkazma
+                                <input disabled={loading} onChange={setAllPayment} id='transfer' type="radio" name="payment" /> O'tkazma
                             </label>
                             <input
                                 value={payment.transfer}
@@ -724,13 +735,13 @@ export const CheckCashier = () => {
                         </div>
                         <div className='col-md-3 col-4 text-center'>
                             <label className='mx-3'>
-                                <input onChange={setAllPayment} id='mixed' type="radio" name="payment" /> Aralash
+                                <input disabled={loading} onChange={setAllPayment} id='mixed' type="radio" name="payment" /> Aralash
                             </label>
                         </div>
                     </div>
                     <div className="row pt-3">
                         <div className="col-12 text-center">
-                            <button className="btn button-success" onClick={checkPrices}>To'lovni tasdiqlash</button>
+                            <button disabled={loading} className="btn button-success" onClick={checkPrices}>To'lovni tasdiqlash</button>
                         </div>
                     </div>
                 </div>
