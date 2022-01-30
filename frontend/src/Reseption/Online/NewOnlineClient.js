@@ -267,6 +267,7 @@ export const NewOnlineClient = () => {
         })
         WareUseds(connector)
         counteragent && createPaymentCounteragent(id, connector)
+        toast.success("Mijoz ro'yxatga olindi.")
         history.push(`/reseption/onlineclients`)
     }
 
