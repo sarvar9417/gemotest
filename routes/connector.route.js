@@ -1076,6 +1076,28 @@ router.get('/doctorconnector/:section/:id', async (req, res) => {
 })
 
 // /api/auth/connector/
+router.get('/client/:id/:born', async (req, res) => {
+    try {
+        const id = req.params.id
+        const born = new Date(req.params.born)
+        const client = await Clients.findOne({
+            id: id,
+            born: {
+                $gte: new Date(new Date(born).getFullYear(), new Date(born).getMonth(), new Date(born).getDate()),
+                $lt: new Date(new Date(born).getFullYear(), new Date(born).getMonth(), new Date(born).getDate() + 1)
+            }
+        })
+
+        if (!client) {
+            return res.status(400).json({ message: "Ushbu kiritilgan ma'lumotlarga ega mijoz topilmadi. Iltimos ma'lumotlaringiz to'g'ri kiritilganligiga ishonch hosil qiling." })
+        }
+        res.send(client)
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/connector/
 router.get('/directorconnector/:id', async (req, res) => {
     try {
         const id = req.params.id

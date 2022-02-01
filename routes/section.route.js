@@ -287,6 +287,18 @@ router.patch('/cashier', auth, async (req, res) => {
         const services = req.body.services
         const payment = req.body.payment
 
+        let p = 0
+        for (let i = 0; i < sections.length; i++) {
+            const section = await Section.findById(sections[i]._id)
+            p = p + (sections[i].priceCashier - section.priceCashier)
+        }
+        for (let i = 0; i < services.length; i++) {
+            const service = await Service.findById(services[i]._id)
+            p = p + (services[i].priceCashier - service.priceCashier)
+        }
+        if (p !== payment.total) {
+            res.status(500).json({ message: "To'lov summasini aniqlashda xatolik yuz berdi. Iltimos sahifani yangilab qayta urininb ko'ring." })
+        }
 
         for (let i = 0; i < sections.length; i++) {
             const section = await Section.findByIdAndUpdate(sections[i]._id, sections[i])

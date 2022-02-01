@@ -1,7 +1,9 @@
 import React from 'react';
 import { AboutUs } from './AboutUs';
 import { Counts } from './Counts';
+import { GetResult } from './GetResult';
 import { LogoBlock } from './LogoBlock';
+import { Map } from './Map';
 import { Navbar } from './Navbar';
 import { Slider } from './Slider';
 import { Toptar } from './Toptar';
@@ -13,8 +15,8 @@ export const Site = () => {
             <Navbar />
             <Slider />
             <main id="main">
-                <AboutUs/>
-                <Counts/>
+                <AboutUs />
+                <Counts />
                 {/* ======= Features Section ======= */}
                 <section id="features" className="features">
                     <div className="container" data-aos="fade-up">
@@ -86,59 +88,9 @@ export const Site = () => {
                         </div>
                     </div>
                 </section>{/* End Services Section */}
-                {/* ======= Appointment Section ======= */}
-                <section id="appointment" className="appointment section-bg">
-                    <div className="container" data-aos="fade-up">
-                        <div className="section-title">
-                            <h2>Make an Appointment</h2>
-                            <p>Magnam dolores commodi suscipit. Necessitatibus eius consequatur ex aliquid fuga eum quidem. Sit sint consectetur velit. Quisquam quos quisquam cupiditate. Et nemo qui impedit suscipit alias ea. Quia fugiat sit in iste officiis commodi quidem hic quas.</p>
-                        </div>
-                        <form action="forms/appointment.php" method="post" role="form" className="php-email-form" data-aos="fade-up" data-aos-delay={100}>
-                            <div className="row">
-                                <div className="col-md-4 form-group">
-                                    <input type="text" name="name" className="form-control" id="name" placeholder="Your Name" required />
-                                </div>
-                                <div className="col-md-4 form-group mt-3 mt-md-0">
-                                    <input type="email" className="form-control" name="email" id="email" placeholder="Your Email" required />
-                                </div>
-                                <div className="col-md-4 form-group mt-3 mt-md-0">
-                                    <input type="tel" className="form-control" name="phone" id="phone" placeholder="Your Phone" required />
-                                </div>
-                            </div>
-                            <div className="row">
-                                <div className="col-md-4 form-group mt-3">
-                                    <input type="datetime" name="date" className="form-control datepicker" id="date" placeholder="Appointment Date" required />
-                                </div>
-                                <div className="col-md-4 form-group mt-3">
-                                    <select name="department" id="department" className="form-select">
-                                        <option value>Select Department</option>
-                                        <option value="Department 1">Department 1</option>
-                                        <option value="Department 2">Department 2</option>
-                                        <option value="Department 3">Department 3</option>
-                                    </select>
-                                </div>
-                                <div className="col-md-4 form-group mt-3">
-                                    <select name="doctor" id="doctor" className="form-select">
-                                        <option value>Select Doctor</option>
-                                        <option value="Doctor 1">Doctor 1</option>
-                                        <option value="Doctor 2">Doctor 2</option>
-                                        <option value="Doctor 3">Doctor 3</option>
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="form-group mt-3">
-                                <textarea className="form-control" name="message" rows={5} placeholder="Message (Optional)" defaultValue={""} />
-                            </div>
-                            <div className="my-3">
-                                <div className="loading">Loading</div>
-                                <div className="error-message" />
-                                <div className="sent-message">Your appointment request has been sent successfully. Thank you!</div>
-                            </div>
-                            <div className="text-center"><button type="submit">Make an Appointment</button></div>
-                        </form>
-                    </div>
-                </section>{/* End Appointment Section */}
-                {/* ======= Departments Section ======= */}
+
+                <GetResult />
+
                 <section id="departments" className="departments">
                     <div className="container" data-aos="fade-up">
                         <div className="section-title">
@@ -524,7 +476,7 @@ export const Site = () => {
                         </div>
                     </div>
                     <div>
-                        <iframe style={{ border: 0, width: '100%', height: 350 }} src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d12097.433213460943!2d-74.0062269!3d40.7101282!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0xb89d1fe6bc499443!2sDowntown+Conference+Center!5e0!3m2!1smk!2sbg!4v1539943755621" frameBorder={0} allowFullScreen />
+                        <Map />
                     </div>
                     <div className="container">
                         <div className="row mt-5">

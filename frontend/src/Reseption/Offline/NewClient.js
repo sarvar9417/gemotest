@@ -62,7 +62,7 @@ export const NewClient = () => {
       })
       setCounterAgents(c)
     } catch (error) {
-      notify(error)
+      notify(error.message)
     }
   }, [auth, request, setCounterAgents])
 
@@ -97,7 +97,7 @@ export const NewClient = () => {
       })
       setSources(fetch)
     } catch (error) {
-      notify(error)
+      notify(error.message)
     }
   }, [auth, request, setSources])
 
@@ -141,9 +141,10 @@ export const NewClient = () => {
       const fetch = await request('/api/headsection/', 'GET', null, {
         Authorization: `Bearer ${auth.token}`
       })
+      console.log(fetch);
       setHeadDirections(fetch)
     } catch (error) {
-      notify(error)
+      notify(error.message)
     }
   }, [auth, request, setHeadDirections, notify])
 
@@ -171,7 +172,7 @@ export const NewClient = () => {
       })
       setWarehouse(s)
     } catch (error) {
-      notify(error)
+      notify(error.message)
     }
   }, [auth, request, setWarehouse])
 
@@ -495,7 +496,7 @@ export const NewClient = () => {
       allClients()
     }
     if (error) {
-      notify(error)
+      notify(error.message)
       clearError()
     }
     if (!warehouse) {
@@ -669,6 +670,15 @@ export const NewClient = () => {
       <div className="row pt-3">
         <div className="col-12" >
           <p className="m-0 ps-2">Bo'limni tanlang</p>
+          <Select
+            className=""
+            // onChange={(event) => changeSections(event)}
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            isMulti
+            options={headdirections && headdirections}
+          />
+          <p className="m-0 ps-2">Bo'limni xizmatlarini tanlang</p>
           <Select
             className=""
             onChange={(event) => changeSections(event)}

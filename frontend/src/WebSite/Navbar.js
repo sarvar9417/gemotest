@@ -9,7 +9,6 @@ export const Navbar = () => {
         try {
             const data = await request("/api/companylogo/", "GET", null,)
             setLogo(data[0])
-            console.log(data);
         } catch (e) {
 
         }
