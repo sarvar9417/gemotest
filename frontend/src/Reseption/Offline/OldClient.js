@@ -97,16 +97,39 @@ export const OldClient = () => {
 
   // Bo'limlar
   const [options, setOptions] = useState()
+  const [alloptions, setAllOptions] = useState()
+  const [typeoptions, setTypeOptions] = useState()
   const getOptions = useCallback(async () => {
     try {
       const data = await request("/api/direction/", "GET", null, {
         Authorization: `Bearer ${auth.token}`
       })
+      let s = []
+      data.map((d) => {
+        s.push({
+          label: d.section,
+          value: d.section,
+        })
+      })
+      const ids = s.map(o => o.label)
+      const filtered = s.filter(({ label }, index) => !ids.includes(label, index + 1))
+      setTypeOptions(filtered)
+      setAllOptions(data)
       setOptions(data)
     } catch (e) {
       notify(e)
     }
-  }, [auth, request, setOptions])
+  }, [auth, request, setAllOptions, setTypeOptions])
+
+  const changeTypeOptions = (event) => {
+    let s = []
+    alloptions &&  alloptions.map(op => {
+      if (op.section === event.value) {
+        s.push(op)
+      }
+    })
+    setOptions(s)
+  }
 
   const history = useHistory()
   const [client, setClient] = useState({
@@ -618,6 +641,14 @@ export const OldClient = () => {
       <div className="row pt-3">
         <div className="col-12" >
           <p className="m-0 ps-2">Bo'limni tanlang</p>
+          <Select
+            className=""
+            onChange={changeTypeOptions}
+            closeMenuOnSelect={false}
+            components={animatedComponents}
+            options={typeoptions && typeoptions}
+          />
+          <p className="m-0 ps-2 mt-4">Bo'limni xizmatlarini tanlang</p>
           <Select
             className=""
             onChange={(event) => changeSections(event)}
