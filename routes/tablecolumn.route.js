@@ -33,8 +33,8 @@ router.get('/:id', async (req, res) => {
         const tablecolumn = await TableColumn.findOne({
             direction: req.params.id
         })
-
-        res.json({ calls, clients })
+        console.log(tablecolumn);
+        res.json(tablecolumn)
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }

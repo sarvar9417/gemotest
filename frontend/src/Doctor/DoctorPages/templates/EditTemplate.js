@@ -27,6 +27,29 @@ export const EditTemplate = () => {
         accept: false
     })
 
+    const [t, setT] = useState()
+    const [tablecolumn, setTableColumn] = useState({
+        direction: directionid,
+        col1: ' ',
+        col2: ' ',
+        col3: ' ',
+        col4: ' ',
+        col5: ' '
+    })
+
+    const getTableColumn = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/tablecolumn/${directionid}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            if (!fetch) {
+                setTableColumn(fetch)
+            }
+        } catch (error) {
+            notify(error)
+        }
+    }, [request, auth, directionid, setTableColumn])
+
     const getTemplates = useCallback(async () => {
         try {
             const fetch = await request(`/api/tabledirection/${directionid}`, 'GET', null, {
@@ -80,7 +103,12 @@ export const EditTemplate = () => {
         toast.error(e)
     }
 
+
     useEffect(() => {
+        if (!t) {
+            getTableColumn()
+            setT(1)
+        }
         if (error) {
             notify(error)
             clearError()
@@ -139,8 +167,8 @@ export const EditTemplate = () => {
                 <thead style={{ backgroundColor: "#6c7ae0", color: "white" }}>
                     <tr>
                         <th className='text-center'>Jadval nomi</th>
-                        <th className='text-center'>Norma</th>
                         <th className='text-center'>Rezultat</th>
+                        <th className='text-center'>Norma</th>
                         <th className='text-center'>Qo'shimcha1</th>
                         <th className='text-center'>Qo'shimcha2</th>
                         <th className='text-center'>O'chirish</th>
@@ -155,10 +183,10 @@ export const EditTemplate = () => {
                                         {template.name}
                                     </td>
                                     <td style={{ width: "300px" }} className='text-center fw-bold text-capitalize m-0 p-0 py-3'>
-                                        {template.norma}
+                                        {template.result}
                                     </td>
                                     <td style={{ width: "300px" }} className='text-center p-0 m-0 py-3'>
-                                        {template.result}
+                                        {template.norma}
                                     </td>
                                     <td style={{ width: "300px" }} className='text-center p-0 m-0 py-3'>
                                         {template.additionalone}
