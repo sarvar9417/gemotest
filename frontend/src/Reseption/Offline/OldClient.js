@@ -105,25 +105,44 @@ export const OldClient = () => {
         Authorization: `Bearer ${auth.token}`
       })
       let s = []
+      let all = []
       data.map((d) => {
         s.push({
           label: d.section,
           value: d.section,
         })
+        all.push({
+          _id: d._id,
+          value: d.value,
+          label: d.subsection,
+          section: d.section,
+          headsection: d.headsection,
+          subsection: d.subsection,
+          shortname: d.shortname,
+          price: d.price,
+          room: d.room,
+          doctorProcient: d.doctorProcient,
+          counteragentProcient: d.counteragentProcient,
+          counterDoctor: d.counterDoctor,
+          norma: d.norma,
+          result: d.result,
+          additionalone: d.additionalone,
+          additionaltwo: d.additionaltwo
+        })
       })
       const ids = s.map(o => o.label)
       const filtered = s.filter(({ label }, index) => !ids.includes(label, index + 1))
       setTypeOptions(filtered)
-      setAllOptions(data)
-      setOptions(data)
+      setAllOptions(all)
+      setOptions(all)
     } catch (e) {
       notify(e)
     }
-  }, [auth, request, setAllOptions, setTypeOptions])
+  }, [auth, request, setAllOptions, setTypeOptions, setOptions])
 
   const changeTypeOptions = (event) => {
     let s = []
-    alloptions &&  alloptions.map(op => {
+    alloptions && alloptions.map(op => {
       if (op.section === event.value) {
         s.push(op)
       }
@@ -351,7 +370,7 @@ export const OldClient = () => {
       create(section, connector)
     })
     WareUseds(connector)
-    history.push(`/reseption/clients`)
+    history.push(`/reseption/reciept/${client._id}/${connector}`)
   }
 
   const create = async (section, connector) => {
@@ -449,39 +468,26 @@ export const OldClient = () => {
     }
   }, [request, auth, setTurnlab])
 
+
+  const [t, setT] = useState()
   useEffect(() => {
-    if (!turnlab) {
+    if (!t) {
       getTurnlab()
-    }
-    if (!probirka) {
       getProbirka()
-    }
-    if (!options) {
       getOptions()
-    }
-    if (!counteragents) {
       getCounterAgents()
+      getSources()
+      allTurns()
+      getWarehouse()
+      getWareConnectors()
+      getHeadDirections()
+      setT(1)
     }
     if (error) {
       notify(error)
       clearError()
     }
-    if (!sources) {
-      getSources()
-    }
-    if (!turns) {
-      allTurns()
-    }
-    if (!warehouse) {
-      getWarehouse()
-    }
-    if (!wareconnectors) {
-      getWareConnectors()
-    }
-    if (!headdirections) {
-      getHeadDirections()
-    }
-  }, [notify, clearError, getHeadDirections])
+  }, [notify, clearError, setT])
 
 
   const checkTurn = (turn, name) => {
@@ -663,7 +669,7 @@ export const OldClient = () => {
                 <div className="col-6">
                   <input
                     disabled
-                    value={section.headsection + " " + section.name + " " + section.subname}
+                    value={section.subname}
                     id={key}
                     className="form-control mt-2"
                   />

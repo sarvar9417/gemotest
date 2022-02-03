@@ -1957,6 +1957,15 @@ router.patch('/labaratoriya/:id', async (req, res) => {
         const edit = await Connector.findById(id, req.body)
         edit.accept = true
         await edit.save()
+        const sections = await Section.find({
+            probirka: true,
+            connector: id
+        })
+        for (let i = 0; i < sections.length; i++) {
+            const section = await Section.findById(sections[i]._id)
+            section.checkup = "chaqirilgan"
+            await section.save()
+        }
         res.json(edit);
 
     } catch (e) {

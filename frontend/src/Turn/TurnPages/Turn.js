@@ -14,7 +14,7 @@ export const Turn = () => {
 
     const getDirections = useCallback(async () => {
         try {
-            const data = await request("/api/direction", "GET", null)
+            const data = await request("/api/headsection", "GET", null)
             if (data.message) {
                 return notify(data.message)
             }
@@ -58,7 +58,7 @@ export const Turn = () => {
                         <h1 className="p-4">{new Date().toLocaleDateString()}</h1>
                     </div>
                     <div className="col-lg-4 d-md-block d-none" style={{ textAlign: "center" }}>
-                        <h1 className="p-4">MedicalCenter</h1>
+                        <h1 className="p-4 text-uppercase">Gemo-Test</h1>
                     </div>
                     <div className="col-lg-4 text-md-center">
                         <h1 className="p-4">{time}</h1>
@@ -69,45 +69,14 @@ export const Turn = () => {
                 {directions && directions.map((direction, index) => {
                     if (
                         (index === 0) ||
-                        (index > 0 && directions[index - 1].section !== directions[index].section)
+                        (index > 0 && directions[index - 1].name !== directions[index].name)
                     ) {
                         return (
                             <div className="col-lg-3 col-md-4 col-sm-6 mb-2" key={index}>
-                                <DirectionTurn section={direction.section} room = {direction.room} />
+                                <DirectionTurn section={direction.name} id={direction._id} />
                             </div>)
                     }
                 })}
-            </div>
-            <div className="row mb-4" style={{ overflowX: "hidden" }}>
-                <div className="col-lg-3 col-md-4 col-sm-6">
-
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6">
-
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6">
-
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6">
-
-                </div>
-            </div>
-            <div className="row mb-4" style={{ overflowX: "hidden" }}>
-                <div className="col-lg-3 col-md-4 col-sm-6">
-
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6">
-
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6">
-
-                </div>
-                <div className="col-lg-3 col-md-4 col-sm-6">
-
-                </div>
-            </div>
-            <div className="d-inline-none rounded-circle" style={{ right: "30px", bottom: "30px", position: "fixed" }}>
-
             </div>
         </div>
     )

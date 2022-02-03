@@ -7,6 +7,7 @@ import Select from "react-select"
 import makeAnimated from "react-select/animated"
 import { CheckClentData } from "../Online/CheckClentData"
 import { AuthContext } from "../context/AuthContext"
+import { Loader } from "../components/Loader"
 import '../CSS/radio.css'
 const mongoose = require("mongoose")
 const animatedComponents = makeAnimated()
@@ -120,21 +121,40 @@ export const NewClient = () => {
         Authorization: `Bearer ${auth.token}`
       })
       let s = []
+      let all = []
       data.map((d) => {
         s.push({
           label: d.section,
           value: d.section,
         })
+        all.push({
+          _id: d._id,
+          value: d.value,
+          label: d.subsection,
+          section: d.section,
+          headsection: d.headsection,
+          subsection: d.subsection,
+          shortname: d.shortname,
+          price: d.price,
+          room: d.room,
+          doctorProcient: d.doctorProcient,
+          counteragentProcient: d.counteragentProcient,
+          counterDoctor: d.counterDoctor,
+          norma: d.norma,
+          result: d.result,
+          additionalone: d.additionalone,
+          additionaltwo: d.additionaltwo
+        })
       })
       const ids = s.map(o => o.label)
       const filtered = s.filter(({ label }, index) => !ids.includes(label, index + 1))
       setTypeOptions(filtered)
-      setAllOptions(data)
-      setOptions(data)
+      setAllOptions(all)
+      setOptions(all)
     } catch (e) {
       notify(e)
     }
-  }, [auth, request, setAllOptions, setTypeOptions])
+  }, [auth, request, setAllOptions, setTypeOptions, setOptions,])
 
   const changeTypeOptions = (event) => {
     let s = []
@@ -497,43 +517,29 @@ export const NewClient = () => {
       })
       setTurnlab(fetch)
     } catch (e) {
-      notify(e)
+      notify(e.message)
     }
   }, [request, auth, setTurnlab])
 
+  const [t, setT] = useState()
   useEffect(() => {
-    if (!turnlab) {
+    if (!t) {
       getTurnlab()
-    }
-    if (!options) {
       getOptions()
-    }
-    if (!sources) {
       getSources()
-    }
-    if (!counteragents) {
       getCounterAgents()
-    }
-    if (client.id === 0) {
       allClients()
+      getWarehouse()
+      getWareConnectors()
+      getHeadDirections()
+      getProbirka()
+      setT(1)
     }
     if (error) {
       notify(error.message)
       clearError()
     }
-    if (!warehouse) {
-      getWarehouse()
-    }
-    if (!wareconnectors) {
-      getWareConnectors()
-    }
-    if (!headdirections) {
-      getHeadDirections()
-    }
-    if (!probirka) {
-      getProbirka()
-    }
-  }, [notify, clearError])
+  }, [notify, clearError, setT])
 
   return (
     <div>
@@ -661,9 +667,7 @@ export const NewClient = () => {
       <div className="text-end">
         {
           advertisement ?
-            <button onClick={() => setAdvertisement(false)} className="adver">-</button>
-            :
-            <button onClick={() => setAdvertisement(true)} className="adver">+</button>
+            <button onClick={() => setAdvertisement(false)} className="adver">-</button> : <button onClick={() => setAdvertisement(true)} className="adver">+</button>
         }
       </div>
       <div className={advertisement ? "row m-0 p-1 border rounded" : "d-none"}>
@@ -714,7 +718,7 @@ export const NewClient = () => {
                 <div className="col-6">
                   <input
                     disabled
-                    value={section.headsection + " " + section.name + " " + section.subsection}
+                    value={section.subname}
                     id={key}
                     className="form-control mt-2"
                   />

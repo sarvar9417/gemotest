@@ -624,30 +624,6 @@ router.get('/advertisement/:agent', async (req, res) => {
 // ===================================================================================
 
 
-// ===================================================================================
-// ===================================================================================
-// TURN routes
-
-router.get('/turn/:section', async (req, res) => {
-    try {
-        const section = await Section.find({
-            bronDay: { $gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) },
-            bron: "offline",
-            checkup: "chaqirilmagan",
-            name: req.params.section,
-            payment: { $ne: "to'lanmagan" }
-        }).sort({ turn: 1 })
-        res.json(section[0])
-    } catch (e) {
-        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
-    }
-})
-
-
-// END TURN
-// ===================================================================================
-// ===================================================================================
-
 
 
 router.get('/table/:start/:end/:section', async (req, res) => {
@@ -726,6 +702,55 @@ router.get('/table/:start/:end/:section', async (req, res) => {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
 })
+
+
+// ===================================================================================
+// ===================================================================================
+// TURN routes
+
+router.get('/turn/:section', async (req, res) => {
+    try {
+        const section = await Section.find({
+            bronDay: { $gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) },
+            bron: "offline",
+            checkup: "chaqirilmagan",
+            name: req.params.section,
+            payment: { $ne: "to'lanmagan" }
+        }).sort({ turn: 1 })
+        res.json(section[0])
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+router.get('/turnid/:id', async (req, res) => {
+    try {
+        const section = await Section.find({
+            bronDay: { $gte: new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()) },
+            bron: "offline",
+            checkup: "chaqirilmagan",
+            headsectionid: req.params.id
+            // payment: { $ne: "to'lanmagan" }
+        }).sort({ turn: 1 })
+        if (!section) {
+            return res.status(400).json({ message: 'Mijozlar mavjud emas' })
+        }
+        const direction = await Direction.findById(section[0].nameid)
+        // console.log(section[0])
+        if (!direction) {
+            return res.status(400).json({ message: 'Mijozlar mavjud emas' })
+        }
+        res.json({ section: section[0], room: direction.room })
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+
+// END TURN
+// ===================================================================================
+// ===================================================================================
+
 
 
 // /api/section/

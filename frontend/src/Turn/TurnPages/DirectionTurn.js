@@ -1,37 +1,43 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useHttp } from '../hooks/http.hook'
 
-export const DirectionTurn = ({ section, room }) => {
+export const DirectionTurn = ({ section, id }) => {
     const { request } = useHttp()
 
     const [offline, setOffline] = useState(0)
-
+    const [room, setRoom] = useState(0)
     const getOffline = useCallback(async () => {
         try {
-            const fetch = await request(`/api/section/turn/${section}`, 'GET', null)
+            const fetch = await request(`/api/section/turnid/${id}`, 'GET', null)
             if (!fetch) {
                 setOffline(0)
             } else {
                 if (fetch.turn !== offline) {
-                    setOffline(fetch.turn)
+                    setOffline(fetch.section.turn)
+                }
+                if (fetch.room) {
+                    setRoom(fetch.room)
                 }
             }
         } catch (e) {
-
+            console.log(e);
         }
-    }, [request, offline, setOffline])
+    }, [request, offline, setOffline, id, setRoom])
 
+    // useEffect(() => {
+    // }, [getOffline])
     setTimeout(() => {
         // localStorage.clear()
         // window.localStorage.clear()
         getOffline()
-    }, 5000)
+
+    }, 2000)
 
 
     return (
         <div className="kard" style={{ width: "90%", margin: "auto" }}>
             <div className="info" style={{ backgroundColor: "hsl(212, 86%, 64%)" }}>
-                <h2 className="text">{section}</h2>
+                <h2 className="text px-2">{section}</h2>
                 <p></p>
             </div>
             <div className="row">

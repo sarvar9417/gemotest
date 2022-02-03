@@ -105,25 +105,44 @@ export const OldOnlineClient = () => {
                 Authorization: `Bearer ${auth.token}`
             })
             let s = []
+            let all = []
             data.map((d) => {
                 s.push({
                     label: d.section,
                     value: d.section,
                 })
+                all.push({
+                    _id: d._id,
+                    value: d.value,
+                    label: d.subsection,
+                    section: d.section,
+                    headsection: d.headsection,
+                    subsection: d.subsection,
+                    shortname: d.shortname,
+                    price: d.price,
+                    room: d.room,
+                    doctorProcient: d.doctorProcient,
+                    counteragentProcient: d.counteragentProcient,
+                    counterDoctor: d.counterDoctor,
+                    norma: d.norma,
+                    result: d.result,
+                    additionalone: d.additionalone,
+                    additionaltwo: d.additionaltwo
+                })
             })
             const ids = s.map(o => o.label)
             const filtered = s.filter(({ label }, index) => !ids.includes(label, index + 1))
             setTypeOptions(filtered)
-            setAllOptions(data)
-            setOptions(data)
+            setAllOptions(all)
+            setOptions(all)
         } catch (e) {
             notify(e)
         }
-    }, [auth, request, setAllOptions, setTypeOptions])
+    }, [auth, request, setAllOptions, setTypeOptions, setOptions,])
 
     const changeTypeOptions = (event) => {
         let s = []
-        alloptions &&  alloptions.map(op => {
+        alloptions && alloptions.map(op => {
             if (op.section === event.value) {
                 s.push(op)
             }

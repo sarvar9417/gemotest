@@ -49,22 +49,24 @@ router.post('/register', async (req, res) => {
     }
 })
 
-// /api/auth/companyLogo/
-router.get('/', async (req, res) => {
-    try {
-        const companyLogos = await CompanyLogo.find({}).sort({ _id: -1 })
-        res.json(companyLogos);
 
-    } catch (e) {
-        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
-    }
-})
 
 router.get('/:id', async (req, res) => {
     try {
 
         const companyLogo = await CompanyLogo.findById(req.params.id)
         res.json(companyLogo);
+
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/companyLogo/
+router.get('/', async (req, res) => {
+    try {
+        const companyLogos = await CompanyLogo.find({}).sort({ _id: -1 })
+        res.json(companyLogos);
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })

@@ -70,6 +70,8 @@ app.use('/api/payment', require('./routes/payment.route'))
 app.use('/api/headsection', require('./routes/headsection.route'))
 // TableDirection
 app.use('/api/tabledirection', require('./routes/tabledirection.route'))
+// TableColumn
+app.use('/api/tablecolumn', require('./routes/tablecolumn.route'))
 if (process.env.NODE_ENV === "production") {
     app.use('/', express.static(path.join(__dirname, 'frontend', 'build')))
 

@@ -53,21 +53,40 @@ export const AddServices = () => {
         Authorization: `Bearer ${auth.token}`
       })
       let s = []
+      let all = []
       data.map((d) => {
         s.push({
           label: d.section,
           value: d.section,
         })
+        all.push({
+          _id: d._id,
+          value: d.value,
+          label: d.subsection,
+          section: d.section,
+          headsection: d.headsection,
+          subsection: d.subsection,
+          shortname: d.shortname,
+          price: d.price,
+          room: d.room,
+          doctorProcient: d.doctorProcient,
+          counteragentProcient: d.counteragentProcient,
+          counterDoctor: d.counterDoctor,
+          norma: d.norma,
+          result: d.result,
+          additionalone: d.additionalone,
+          additionaltwo: d.additionaltwo
+        })
       })
       const ids = s.map(o => o.label)
       const filtered = s.filter(({ label }, index) => !ids.includes(label, index + 1))
       setTypeOptions(filtered)
-      setAllOptions(data)
-      setOptions(data)
+      setAllOptions(all)
+      setOptions(all)
     } catch (e) {
       notify(e)
     }
-  }, [auth, request, setAllOptions, setTypeOptions])
+  }, [auth, request, setAllOptions, setTypeOptions, setOptions,])
 
   const changeTypeOptions = (event) => {
     let s = []
@@ -343,8 +362,8 @@ export const AddServices = () => {
       create(id, section, connector)
     })
     WareUseds(connector)
-    toast.success("Mijozga yangi xizmatlar biriktirildi.")
-    history.push(`/reseption/clients`)
+    toast.success("Mijozga xizmatlar biriktirildi.")
+    history.push(`/reseption/reciept/${id}/${connector}`)
   }
 
   const create = async (id, section, connector) => {
@@ -427,43 +446,30 @@ export const AddServices = () => {
       })
       setTurnlab(fetch)
     } catch (e) {
-      notify(e)
+      notify(e.message)
     }
   }, [request, auth, setTurnlab])
 
+  const [t, setT] = useState()
   useEffect(() => {
-    if (!turnlab) {
+    if (!t) {
       getTurnlab()
-    }
-    if (!options) {
       getOptions()
+      getConnector()
+      getWarehouse()
+      allClients()
+      getWareConnectors()
+      getHeadDirections()
+      getClient()
+      getProbirka()
+      setT(1)
+
     }
     if (error) {
       notify(error)
       clearError()
     }
-    if (client.lastname === "") {
-      getClient()
-    }
-    if (!connector) {
-      getConnector()
-    }
-    if (!warehouse) {
-      getWarehouse()
-    }
-    if (client.id === 0) {
-      allClients()
-    }
-    if (!wareconnectors) {
-      getWareConnectors()
-    }
-    if (!headdirections) {
-      getHeadDirections()
-    }
-    if (!probirka) {
-      getProbirka()
-    }
-  }, [notify, clearError])
+  }, [notify, clearError, setT])
 
   return (
     <div>
@@ -613,7 +619,7 @@ export const AddServices = () => {
                 <div className="col-6">
                   <input
                     disabled
-                    value={section.name + " " + section.subname}
+                    value={section.subname}
                     id={key}
                     className="form-control mt-2"
                   />
