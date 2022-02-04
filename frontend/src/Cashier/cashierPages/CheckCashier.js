@@ -609,7 +609,7 @@ export const CheckCashier = () => {
                                     <tr >
                                         <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{num}</td>
                                         <td style={{ width: "35%", textAlign: "center", padding: "10px 0" }}>
-                                            {section.name}
+                                            {section.subname}
                                         </td>
                                         <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{section.price}</td>
                                         <td style={{ width: "25%", padding: "10px 0" }}>

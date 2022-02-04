@@ -13,7 +13,7 @@ export const AboutUs = () => {
                         <img src="assets/img/about.jpg" className="img-fluid" alt />
                     </div>
                     <div className="col-lg-6 pt-4 pt-lg-0 content" data-aos="fade-left">
-                        <h2><span className='text-danger'>GEMO</span><span className='text-info'>TEST</span> labaratoriyasi</h2>
+                        <h2><span className='text-danger'>GEMO-</span><span className='text-info'>TEST</span> labaratoriyasi</h2>
                         <p className="fst-italic">
                             Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore
                             magna aliqua.

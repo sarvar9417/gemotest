@@ -22,6 +22,7 @@ export const ClientHistory = () => {
     const [connectors, setConnectors] = useState()
     const [allsections, setAllSections] = useState()
     const [alltablesections, setAllTableSections] = useState()
+    const [alltablecolumns, setAllTableColumns] = useState()
 
     const getClient = useCallback(async () => {
         try {
@@ -38,10 +39,11 @@ export const ClientHistory = () => {
             setConnectors(fetch.connectors)
             setAllSections(fetch.allsections)
             setAllTableSections(fetch.alltablesections)
+            setAllTableColumns(fetch.alltablecolumns)
         } catch (e) {
             notify(e)
         }
-    }, [request, setConnectors, setAllSections, setAllTableSections])
+    }, [request, setConnectors, setAllSections, setAllTableSections, setAllTableColumns])
 
     const [logo, setLogo] = useState()
     const getLogo = useCallback(async () => {
@@ -119,14 +121,15 @@ export const ClientHistory = () => {
                                             Форма №     согласно приказу
                                         </p>
                                         <p style={{ margin: "0" }}>
-                                            МинЗдрав.РУз №777 от 25.12.2017г.
+                                            МинЗдрав.РУз №363 от 31.12.2020.
                                         </p>
                                     </div>
                                 </div>
                                 <div className="row" style={{ fontSize: "20pt" }}>
                                     <div className="col-6" style={{ textAlign: "center" }}>
-                                        <p className='pt-5'>
-                                            "GEMOTEST"  LABORATORIYA
+                                        <p className='pt-4'>
+                                            "ГЕМО-ТЕСТ"
+                                            <br /> ЛАБОРАТОРИЯ
                                         </p>
                                     </div>
                                     <div className="col-2">
@@ -178,12 +181,12 @@ export const ClientHistory = () => {
 
                                     </div>
                                     <div className="col-4">
-                                        <p>
+                                        <p className='m-0 p-2'>
                                             "GEMO-TEST" х/к
                                         </p>
                                     </div>
                                     <div className="col-7">
-                                        <p>
+                                        <p className='m-0 p-2'>
                                             Услуги лицензированны   ЛИЦЕНЗИЯ №01419  от 28.02.2019г. МинЗдрав Ру
                                         </p>
                                     </div>
@@ -209,25 +212,25 @@ export const ClientHistory = () => {
                                                                     <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
                                                                         №
                                                                     </td>
-                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
-                                                                        Показатели
+                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                                        {alltablecolumns && alltablecolumns[i][index].col1 && alltablecolumns[i][index].col1}
                                                                     </td>
-                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
-                                                                        Результат
+                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                                        {alltablecolumns && alltablecolumns[i][index].col2 && alltablecolumns[i][index].col2}
                                                                     </td>
-                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
-                                                                        Референтные значения
+                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                                        {alltablecolumns && alltablecolumns[i][index].col3 && alltablecolumns[i][index].col3}
                                                                     </td>
                                                                     {
-                                                                        alltablesections[i][index][0] && (alltablesections[i][index][0].additionalone).length > 1 ?
+                                                                        alltablecolumns && alltablecolumns[i][index].col4 && (alltablecolumns[i][index].col4).length > 1 ?
                                                                             <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
-                                                                                Референтные значения
+                                                                                {alltablecolumns[i][index].col4}
                                                                             </td> : ""
                                                                     }
                                                                     {
-                                                                        alltablesections[i][index][0] && (alltablesections[i][index][0].additionaltwo).length > 1 ?
+                                                                        alltablecolumns && alltablecolumns[i][index].col5 && (alltablecolumns[i][index].col5).length > 1 ?
                                                                             <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
-                                                                                Референтные значения
+                                                                                {alltablecolumns[i][index].col5}
                                                                             </td> : ""
                                                                     }
                                                                 </tr>
@@ -248,13 +251,13 @@ export const ClientHistory = () => {
                                                                                     {tablesection.norma}
                                                                                 </td>
                                                                                 {
-                                                                                    tablesection.additionalone !== " " ?
+                                                                                    alltablecolumns && alltablecolumns[i][index].col4 && (alltablecolumns[i][index].col4).length > 1 ?
                                                                                         <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                             {tablesection.additionalone}
                                                                                         </td> : ""
                                                                                 }
                                                                                 {
-                                                                                    tablesection.additionaltwo !== " " ?
+                                                                                    alltablecolumns && alltablecolumns[i][index].col5 && (alltablecolumns[i][index].col5).length > 1 ?
                                                                                         <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                             {tablesection.additionaltwo}
                                                                                         </td> : ""

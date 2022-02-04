@@ -11,6 +11,7 @@ const { UsedRoom } = require('../models/UsedRoom')
 const { Room } = require('../models/Rooms')
 const { TableSection } = require('../models/TableSection')
 const { HeadSection } = require('../models/HeadSection')
+const { TableColumn } = require('../models/Tablecolumn')
 
 
 // /api/auth/connector/register
@@ -1063,13 +1064,18 @@ router.get('/doctorconnector/:section/:id', async (req, res) => {
             connector: connector._id
         })
         let tablesections = []
+        let tablecolumns = []
         for (let i = 0; i < sections.length; i++) {
             const tablesection = await TableSection.find({
                 sectionid: sections[i]._id
             })
             tablesections.push(tablesection)
+            const tablecolumn = await TableColumn.findOne({
+                direction: sections[i].nameid
+            })
+            tablecolumns.push(tablecolumn)
         }
-        res.json({ connector, sections, tablesections })
+        res.json({ connector, sections, tablesections, tablecolumns })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -1106,13 +1112,18 @@ router.get('/directorconnector/:id', async (req, res) => {
             connector: connector._id
         })
         let tablesections = []
+        let tablecolumns = []
         for (let i = 0; i < sections.length; i++) {
             const tablesection = await TableSection.find({
                 sectionid: sections[i]._id
             })
             tablesections.push(tablesection)
+            const tablecolumn = await TableColumn.findOne({
+                direction: sections[i].nameid
+            })
+            tablecolumns.push(tablecolumn)
         }
-        res.json({ connector, sections, tablesections })
+        res.json({ connector, sections, tablesections, tablecolumns })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -1558,21 +1569,28 @@ router.get('/clientallhistory/:id', async (req, res) => {
             .sort({ _id: -1 })
         let allsections = []
         let alltablesections = []
+        let alltablecolumns = []
         for (let i = 0; i < connectors.length; i++) {
             const sections = await Section.find({
                 connector: connectors[i]._id
             })
             let tablesections = []
+            let tablecolumns = []
             for (let j = 0; j < sections.length; j++) {
                 const t = await TableSection.find({
                     sectionid: sections[j]._id
                 })
                 tablesections.push(t)
+                const tablecolumn = await TableColumn.findOne({
+                    direction: sections[j].nameid
+                })
+                tablecolumns.push(tablecolumn)
             }
             allsections.push(sections)
             alltablesections.push(tablesections)
+            alltablecolumns.push(tablecolumns)
         }
-        res.send({ connectors, allsections, alltablesections })
+        res.send({ connectors, allsections, alltablesections, alltablecolumns })
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
@@ -1589,22 +1607,30 @@ router.get('/clienthistory/:id', async (req, res) => {
             .sort({ _id: -1 })
         let allsections = []
         let alltablesections = []
+        let alltablecolumns = []
         for (let i = 0; i < connectors.length; i++) {
             const sections = await Section.find({
                 connector: connectors[i]._id,
-                done: "tasdiqlangan"
+                done: "tasdiqlangan",
+                priceCashier: { $ne: 0 }
             })
             let tablesections = []
+            let tablecolumns = []
             for (let j = 0; j < sections.length; j++) {
                 const t = await TableSection.find({
                     sectionid: sections[j]._id
                 })
                 tablesections.push(t)
+                const tablecolumn = await TableColumn.findOne({
+                    direction: sections[j].nameid
+                })
+                tablecolumns.push(tablecolumn)
             }
             allsections.push(sections)
             alltablesections.push(tablesections)
+            alltablecolumns.push(tablecolumns)
         }
-        res.send({ connectors, allsections, alltablesections })
+        res.send({ connectors, allsections, alltablesections, alltablecolumns })
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })

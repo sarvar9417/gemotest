@@ -732,13 +732,12 @@ router.get('/turnid/:id', async (req, res) => {
             headsectionid: req.params.id
             // payment: { $ne: "to'lanmagan" }
         }).sort({ turn: 1 })
-        if (!section) {
-            return res.status(400).json({ message: 'Mijozlar mavjud emas' })
+        if (section.length === 0) {
+            return res.json(null)
         }
         const direction = await Direction.findById(section[0].nameid)
-        // console.log(section[0])
         if (!direction) {
-            return res.status(400).json({ message: 'Mijozlar mavjud emas' })
+            return res.json(null)
         }
         res.json({ section: section[0], room: direction.room })
     } catch (e) {

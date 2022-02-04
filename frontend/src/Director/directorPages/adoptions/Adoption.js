@@ -28,6 +28,7 @@ export const Adoption = () => {
     const [connector, setConnector] = useState()
     const [sections, setSections] = useState()
     const [tablesections, setTableSections] = useState()
+    const [tablecolumns, setTableColumns] = useState()
 
     const getClient = useCallback(async () => {
         try {
@@ -48,6 +49,7 @@ export const Adoption = () => {
             setConnector(fetch.connector)
             setSections(fetch.sections)
             setTableSections(fetch.tablesections)
+            setTableColumns(fetch.tablecolumns)
             let k = true
             let s = [...fetch.sections]
             for (let i = 0; i < s.length; i++) {
@@ -217,7 +219,7 @@ export const Adoption = () => {
         <>
             <div className='d-none'>
                 <div ref={componentRef} className="container p-4" style={{ fontFamily: "times" }}>
-                    <Print qr={qr && qr} logo={logo} connector={connector} client={client} sections={sections} tablesections={tablesections} />
+                    <Print tablecolumns={tablecolumns} qr={qr && qr} logo={logo} connector={connector} client={client} sections={sections} tablesections={tablesections} />
                 </div>
             </div>
             <div className="container p-4" style={{ fontFamily: "times" }}>
@@ -237,14 +239,15 @@ export const Adoption = () => {
                             Форма №     согласно приказу
                         </p>
                         <p style={{ margin: "0" }}>
-                            МинЗдрав.РУз №777 от 25.12.2017г.
+                            МинЗдрав.РУз №363 от 31.12.2020.
                         </p>
                     </div>
                 </div>
                 <div className="row" style={{ fontSize: "20pt" }}>
                     <div className="col-6" style={{ textAlign: "center" }}>
-                        <p className='pt-5'>
-                            "GEMOTEST"  LABORATORIYA
+                        <p className='pt-4'>
+                            "ГЕМО-ТЕСТ"
+                            <br /> ЛАБОРАТОРИЯ
                         </p>
                     </div>
                     <div className="col-2">
@@ -296,12 +299,12 @@ export const Adoption = () => {
 
                     </div>
                     <div className="col-4">
-                        <p>
+                        <p className='p-2 m-0'>
                             "GEMO-TEST" х/к
                         </p>
                     </div>
                     <div className="col-7">
-                        <p>
+                        <p className='p-2 m-0'>
                             Услуги лицензированны   ЛИЦЕНЗИЯ №01419  от 28.02.2019г. МинЗдрав Ру
                         </p>
                     </div>
@@ -325,25 +328,25 @@ export const Adoption = () => {
                                                 <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
                                                     №
                                                 </td>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
-                                                    Показатели
+                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                    {tablecolumns && tablecolumns[index].col1 && tablecolumns[index].col1}
                                                 </td>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
-                                                    Результат
+                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                    {tablecolumns && tablecolumns[index].col2 && tablecolumns[index].col2}
                                                 </td>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
-                                                    Референтные значения
+                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                    {tablecolumns && tablecolumns[index].col3 && tablecolumns[index].col3}
                                                 </td>
                                                 {
-                                                    tablesections && (tablesections[index][0].additionalone).length > 1 ?
+                                                    tablecolumns && tablecolumns[index].col4 && (tablecolumns[index].col4).length > 1 ?
                                                         <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
-                                                            Референтные значения
+                                                            {tablecolumns[index].col4}
                                                         </td> : ""
                                                 }
                                                 {
-                                                    tablesections && (tablesections[index][0].additionaltwo).length > 1 ?
+                                                    tablecolumns && tablecolumns[index].col5 && (tablecolumns[index].col5).length > 1 ?
                                                         <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
-                                                            Референтные значения
+                                                            {tablecolumns[index].col5}
                                                         </td> : ""
                                                 }
                                                 <td className='text-center px-2' style={{ border: "1px solid #000" }}>
@@ -367,13 +370,13 @@ export const Adoption = () => {
                                                                 <textarea style={{ border: "none" }} onChange={(event) => { changeResult(event, index, key) }} name='result' className='form-control text-center' defaultValue={tablesection.result}></textarea>
                                                             </td>
                                                             {
-                                                                tablesection.additionalone !== " " ?
+                                                                tablecolumns && tablecolumns[index].col4 && (tablecolumns[index].col4).length > 1 ?
                                                                     <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                         <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionalone(event, index, key) }} name='additionalone' className='form-control  text-center' defaultValue={tablesection.additionalone}></textarea>
                                                                     </td> : ""
                                                             }
                                                             {
-                                                                tablesection.additionaltwo !== " " ?
+                                                                tablecolumns && tablecolumns[index].col5 && (tablecolumns[index].col5).length > 1 ?
                                                                     <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                         <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionaltwo(event, index, key) }} name='additionaltwo' className='form-control  text-center' defaultValue={tablesection.additionaltwo}></textarea>
                                                                     </td> : ""

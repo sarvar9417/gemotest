@@ -42,13 +42,31 @@ export const EditTemplate = () => {
             const fetch = await request(`/api/tablecolumn/${directionid}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            if (!fetch) {
+            if (fetch) {
                 setTableColumn(fetch)
             }
         } catch (error) {
             notify(error)
         }
     }, [request, auth, directionid, setTableColumn])
+
+    const changeColumnName = (event) => {
+        setTableColumn({
+            ...tablecolumn, [event.target.name]: event.target.value
+        })
+    }
+
+    const UpdateTableColumn = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/tablecolumn/register`, 'POST', { ...tablecolumn }, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            toast.success("Jadval ustunlari nomlari yangilandi")
+            // window.location.reload()
+        } catch (error) {
+            notify(error)
+        }
+    }, [request, auth, tablecolumn])
 
     const getTemplates = useCallback(async () => {
         try {
@@ -129,12 +147,24 @@ export const EditTemplate = () => {
             <table class="table table-hover table-bordered " style={{ borderRadius: "15px !important" }}>
                 <thead style={{ backgroundColor: "#6c7ae0", color: "white" }}>
                     <tr>
-                        <th className='text-center'>Jadval nomi</th>
-                        <th className='text-center'>Rezultat</th>
-                        <th className='text-center'>Norma</th>
-                        <th className='text-center'>Qo'shimcha1</th>
-                        <th className='text-center'>Qo'shimcha2</th>
-                        <th className='text-center'>Saqlash</th>
+                        <th className='text-center'>
+                            <input onChange={changeColumnName} name="col1" defaultValue={tablecolumn.col1} className='form-control' />
+                        </th>
+                        <th className='text-center'>
+                            <input onChange={changeColumnName} name="col2" defaultValue={tablecolumn.col2} className='form-control' />
+                        </th>
+                        <th className='text-center'>
+                            <input onChange={changeColumnName} name="col3" defaultValue={tablecolumn.col3} className='form-control' />
+                        </th>
+                        <th className='text-center'>
+                            <input onChange={changeColumnName} name="col4" defaultValue={tablecolumn.col4} className='form-control' />
+                        </th>
+                        <th className='text-center'>
+                            <input onChange={changeColumnName} name="col5" defaultValue={tablecolumn.col5} className='form-control' />
+                        </th>
+                        <th className='text-center'>
+                            <button onClick={UpdateTableColumn} className='btn btn-info' ><FontAwesomeIcon icon={faSave} /> </button>
+                        </th>
                     </tr>
                 </thead>
                 <tbody>
@@ -156,7 +186,8 @@ export const EditTemplate = () => {
                             <textarea name='additionaltwo' onChange={inputTemplate} className='form-control border border-white' style={{ height: "100px" }} ></textarea>
                         </td>
                         <td style={{ width: "100px" }} className='text-center pt-4'>
-                            <button onClick={checkTemplate} className='btn btn-info' ><FontAwesomeIcon icon={faSave} /> </button> </td>
+                            <button onClick={checkTemplate} className='btn btn-info' ><FontAwesomeIcon icon={faSave} /> </button>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -166,11 +197,11 @@ export const EditTemplate = () => {
             <table class="table table-hover table-bordered " style={{ borderRadius: "15px !important" }}>
                 <thead style={{ backgroundColor: "#6c7ae0", color: "white" }}>
                     <tr>
-                        <th className='text-center'>Jadval nomi</th>
-                        <th className='text-center'>Rezultat</th>
-                        <th className='text-center'>Norma</th>
-                        <th className='text-center'>Qo'shimcha1</th>
-                        <th className='text-center'>Qo'shimcha2</th>
+                        <th className='text-center'>{tablecolumn.col1}</th>
+                        <th className='text-center'>{tablecolumn.col2}</th>
+                        <th className='text-center'>{tablecolumn.col3}</th>
+                        <th className='text-center'>{tablecolumn.col4}</th>
+                        <th className='text-center'>{tablecolumn.col5}</th>
                         <th className='text-center'>O'chirish</th>
                     </tr>
                 </thead>

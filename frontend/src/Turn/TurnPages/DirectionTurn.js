@@ -12,7 +12,7 @@ export const DirectionTurn = ({ section, id }) => {
             if (!fetch) {
                 setOffline(0)
             } else {
-                if (fetch.turn !== offline) {
+                if (fetch.section.turn !== offline) {
                     setOffline(fetch.section.turn)
                 }
                 if (fetch.room) {
@@ -20,7 +20,7 @@ export const DirectionTurn = ({ section, id }) => {
                 }
             }
         } catch (e) {
-            console.log(e);
+            console.log(e.message);
         }
     }, [request, offline, setOffline, id, setRoom])
 
