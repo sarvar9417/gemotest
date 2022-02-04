@@ -219,22 +219,22 @@ export const ClientAllHistory = () => {
                                                                         №
                                                                     </td>
                                                                     <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
-                                                                        {alltablecolumns && alltablecolumns[i][index].col1 && alltablecolumns[i][index].col1}
+                                                                        {alltablecolumns && alltablecolumns[i][index] && alltablecolumns[i][index].col1}
                                                                     </td>
                                                                     <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
-                                                                        {alltablecolumns && alltablecolumns[i][index].col2 && alltablecolumns[i][index].col2}
+                                                                        {alltablecolumns && alltablecolumns[i][index] && alltablecolumns[i][index].col2}
                                                                     </td>
                                                                     <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
-                                                                        {alltablecolumns && alltablecolumns[i][index].col3 && alltablecolumns[i][index].col3}
+                                                                        {alltablecolumns && alltablecolumns[i][index] && alltablecolumns[i][index].col3}
                                                                     </td>
                                                                     {
-                                                                        alltablecolumns && alltablecolumns[i][index].col4 && (alltablecolumns[i][index].col4).length > 1 ?
+                                                                        alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col4).length > 1 ?
                                                                             <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
                                                                                 {alltablecolumns[i][index].col4}
                                                                             </td> : ""
                                                                     }
                                                                     {
-                                                                        alltablecolumns && alltablecolumns[i][index].col5 && (alltablecolumns[i][index].col5).length > 1 ?
+                                                                        alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col5).length > 1 ?
                                                                             <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
                                                                                 {alltablecolumns[i][index].col5}
                                                                             </td> : ""
@@ -257,13 +257,13 @@ export const ClientAllHistory = () => {
                                                                                     {tablesection.norma}
                                                                                 </td>
                                                                                 {
-                                                                                    alltablecolumns && alltablecolumns[i][index].col4 && (alltablecolumns[i][index].col4).length > 1 ?
+                                                                                    alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col4).length > 1 ?
                                                                                         <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                             {tablesection.additionalone}
                                                                                         </td> : ""
                                                                                 }
                                                                                 {
-                                                                                    alltablecolumns && alltablecolumns[i][index].col5 && (alltablecolumns[i][index].col5).length > 1 ?
+                                                                                    alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col5).length > 1 ?
                                                                                         <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                             {tablesection.additionaltwo}
                                                                                         </td> : ""

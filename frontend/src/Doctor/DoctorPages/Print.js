@@ -110,22 +110,22 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                                 №
                                             </td>
                                             <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
-                                                {tablecolumns && tablecolumns[index].col1 && tablecolumns[index].col1}
+                                                {tablecolumns && tablecolumns[index] && tablecolumns[index].col1}
                                             </td>
                                             <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
-                                                {tablecolumns && tablecolumns[index].col2 && tablecolumns[index].col2}
+                                                {tablecolumns && tablecolumns[index] && tablecolumns[index].col2}
                                             </td>
                                             <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
-                                                {tablecolumns && tablecolumns[index].col3 && tablecolumns[index].col3}
+                                                {tablecolumns && tablecolumns[index] && tablecolumns[index].col3}
                                             </td>
                                             {
-                                                tablecolumns && tablecolumns[index].col4 && (tablecolumns[index].col4).length > 1 ?
+                                                tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
                                                     <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
                                                         {tablecolumns[index].col4}
                                                     </td> : ""
                                             }
                                             {
-                                                tablecolumns && tablecolumns[index].col5 && (tablecolumns[index].col5).length > 1 ?
+                                                tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
                                                     <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
                                                         {tablecolumns[index].col5}
                                                     </td> : ""
@@ -148,13 +148,13 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                                             {tablesection.norma}
                                                         </td>
                                                         {
-                                                            tablecolumns && tablecolumns[index].col4 && (tablecolumns[index].col4).length > 1 ?
+                                                            tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
                                                                 <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                     {tablesection.additionalone}
                                                                 </td> : ""
                                                         }
                                                         {
-                                                            tablecolumns && tablecolumns[index].col5 && (tablecolumns[index].col5).length > 1 ?
+                                                            tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
                                                                 <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                     {tablesection.additionaltwo}
                                                                 </td> : ""
