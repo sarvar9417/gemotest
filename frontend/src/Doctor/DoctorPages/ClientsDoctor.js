@@ -34,6 +34,7 @@ export const ClientsDoctor = () => {
             const fetch = await request(`/api/connector/doctor/${auth && auth.doctor.section}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
+            console.log(fetch);
             setAll(fetch)
         } catch (e) {
             notify(e)

@@ -1,6 +1,6 @@
 const { Router } = require('express')
 const router = Router()
-const { TableColumn, validateTableColumn } = require('../models/TableColumn')
+const { TableColumn, validateTableColumn } = require('../models/Tablecolumn')
 
 // /api/auth/tablecolumn/register
 router.post('/register', async (req, res) => {
