@@ -364,10 +364,10 @@ export const Adoption = () => {
                                                                 {tablesection.name}
                                                             </td>
                                                             <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
-                                                                <textarea style={{ border: "none" }} onChange={(event) => { changeNorma(event, index, key) }} name='norma' className='form-control text-center' defaultValue={tablesection.norma} ></textarea>
+                                                                <textarea style={{ border: "none" }} onChange={(event) => { changeResult(event, index, key) }} name='result' className='form-control text-center' defaultValue={tablesection.result}></textarea>
                                                             </td>
                                                             <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
-                                                                <textarea style={{ border: "none" }} onChange={(event) => { changeResult(event, index, key) }} name='result' className='form-control text-center' defaultValue={tablesection.result}></textarea>
+                                                                <textarea style={{ border: "none" }} onChange={(event) => { changeNorma(event, index, key) }} name='norma' className='form-control text-center' defaultValue={tablesection.norma} ></textarea>
                                                             </td>
                                                             {
                                                                 tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
