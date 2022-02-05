@@ -139,12 +139,12 @@ export const TableSection = () => {
                                         <td>{index + 1}</td>
                                         <td className='fish fw-bold px-2'>{client.lastname + " " + client.firstname}</td>
                                         <td className='fw-bold px-2'>{new Date(client.born).toLocaleDateString()}</td>
-                                        {sections && sections[index].map((section, key) => {
+                                        {sections && sections[index] && sections[index].map((section, key) => {
                                             return (
                                                 <>
                                                     <td className='text-center fw-bold text-success' style={{ width: "20px" }} key={key}>{section} </td>
                                                     <td className={`text-center px-0`} >
-                                                        {tables && tables[index][key] ?
+                                                        {tables && tables[index] && tables[index][key] ?
                                                             <input
                                                                 onChange={(event) => editTables(event, index, key)}
                                                                 defaultValue={tables[index][key].result}
@@ -191,14 +191,14 @@ export const TableSection = () => {
                                         <td>{index + 1}</td>
                                         <td className='fish fw-bold px-2'>{client.lastname + " " + client.firstname}</td>
                                         <td className='fw-bold px-2'>{new Date(client.born).toLocaleDateString()}</td>
-                                        {sections && sections[index].map((section, key) => {
+                                        {sections && sections[index] && sections[index].map((section, key) => {
                                             return (
                                                 <>
                                                     <td className='text-center fw-bold text-success' style={{ width: "20px" }} key={key}>{section} </td>
                                                     <td className={`text-center px-0`} >
-                                                        {tables && tables[index][key] ?
-                                                            tables[index][key].result
-                                                            : ""
+                                                        {tables && tables[index]&& tables[index][key] ?
+                                                        tables[index][key].result
+                                                        : ""
                                                         }
                                                     </td>
                                                 </>

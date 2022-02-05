@@ -113,35 +113,32 @@ export const ClientAllHistory = () => {
                             <div style={{ minHeight: "100vh", pageBreakAfter: "always" }} className='p-4'>
                                 <div className="row" style={{ fontSize: "10pt" }}>
                                     <div className="col-6" style={{ border: "1px solid", textAlign: "center" }}>
-                                        <p>
-                                            Министерство Здравоохранения Республики Узбекистан
+                                        <p className='pt-2'>
+                                            O'zbekiston Respublikasi Sog'liqni Saqlash Vazirligi
                                         </p>
                                     </div>
                                     <div className="col-2" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
-                                        <p>
-                                            ОКОНХ  91514
+                                        <p className='pt-2'>
+                                            ОКED 86900
                                         </p>
                                     </div>
                                     <div className="col-4" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
                                         <p style={{ margin: "0" }}>
-                                            Форма №     согласно приказу
-                                        </p>
-                                        <p style={{ margin: "0" }}>
-                                            МинЗдрав.РУз №363 от 31.12.2020.
+                                            O'zbekiston Respublikasi SSV 31.12.2020y dagi №363 buyrug'i bilan tasdiqlangan
                                         </p>
                                     </div>
                                 </div>
                                 <div className="row" style={{ fontSize: "20pt" }}>
-                                    <div className="col-6" style={{ textAlign: "center" }}>
-                                        <p className='pt-4'>
-                                            "ГЕМО-ТЕСТ"
-                                            <br /> ЛАБОРАТОРИЯ
+                                    <div className="col-3 pt-3">
+                                        <img width="200" src={logo && logo.logo} alt='Logo' />
+                                    </div>
+                                    <div className="col-6 pt-2" style={{ textAlign: "center" }}>
+                                        <p className='pt-4' style={{ fontFamily: "-moz-initial" }}>
+                                            "GEMO-TEST" <br />
+                                            MARKAZIY LABARATORIYA
                                         </p>
                                     </div>
-                                    <div className="col-2">
-
-                                    </div>
-                                    <div className="col-4" style={{ textAlign: "center" }}>
+                                    <div className="col-3" style={{ textAlign: "center" }}>
                                         <p className='text-end m-0'>
                                             <img width="140" src={qr && qr} alt="QR" />
                                         </p>
@@ -152,30 +149,30 @@ export const ClientAllHistory = () => {
                                         <table style={{ width: "100%", border: "2px solid", borderTop: "3px solid" }}>
                                             <tr style={{ textAlign: "center" }}>
                                                 <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
-                                                    Ф.И.О. больного
+                                                    Mijozning F.I.SH
                                                 </td>
                                                 <td className='p-0 py-1' style={{ width: "33%", border: "1px solid #000" }}>
                                                     <h4>{client && client.lastname + " " + client.firstname}</h4>
                                                 </td>
                                                 <td rowSpan="3" style={{ width: "33%" }}>
-                                                    <p>
-                                                        <img width="200" src={logo && logo.logo} alt='Logo' />
+                                                    <p className='fw-bold fs-4'>
+                                                        TAHLIL <br /> NATIJALARI
                                                     </p>
                                                 </td>
                                             </tr>
                                             <tr style={{ textAlign: "center" }}>
-                                                <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
-                                                    Год рождения
+                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                                    Tug'ilgan yili
                                                 </td>
-                                                <td className='p-0 py-1' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
+                                                <td className='p-0 py-2' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
                                                     {client && new Date(client.born).toLocaleDateString()}
                                                 </td>
                                             </tr>
                                             <tr style={{ textAlign: "center" }}>
-                                                <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
-                                                    Дата
+                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                                    Sana
                                                 </td>
-                                                <td className='p-0 py-1' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
+                                                <td className='p-0 py-2' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
                                                     {connector && new Date(connector.bronDay).toLocaleDateString()}
                                                 </td>
                                             </tr>
@@ -187,13 +184,13 @@ export const ClientAllHistory = () => {
 
                                     </div>
                                     <div className="col-4">
-                                        <p className='m-0 p-2'>
+                                        <p className='p-2 m-0'>
                                             "GEMO-TEST" х/к
                                         </p>
                                     </div>
                                     <div className="col-7">
-                                        <p className='m-0 p-2'>
-                                            Услуги лицензированны   ЛИЦЕНЗИЯ №01419  от 28.02.2019г. МинЗдрав Ру
+                                        <p className='p-2 m-0 text-end pr-5'>
+                                            Xizmatlar litsenziyalangan.   LITSENZIYA №01419   28.02.2019y. SSV RU
                                         </p>
                                     </div>
                                 </div>

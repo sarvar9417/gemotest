@@ -173,7 +173,7 @@ export const Reciept = () => {
                         </table>
                     </div>
                     <div className="row">
-                        <div className="col-4">
+                        <div className="col-2">
                             <div className="invoice-from ps-4">
                                 <h6 className='d-inline-block' style={{ textTransform: "uppercase", fontFamily: "times", fontSize: "17pt" }} >ID: {client && client.id}</h6>
                             </div>
@@ -183,7 +183,12 @@ export const Reciept = () => {
                                 <h6 className='d-inline-block' style={{ fontSize: "17pt", fontFamily: "times" }}>F.I.O: {client && client.lastname} {client && client.firstname} {client && client.fathername}</h6>
                             </div>
                         </div>
-                        <div className="col-4">
+                        <div className="col-3">
+                            <div className="invoice-from text-center">
+                                <h6 className='d-inline-block' style={{ fontSize: "17pt", fontFamily: "times" }}>Yil: {client && new Date(client.born).toLocaleDateString()}</h6>
+                            </div>
+                        </div>
+                        <div className="col-3">
                             <div className="invoice-from text-end pe-4">
                                 {
                                     connector && connector.probirka ?
@@ -212,9 +217,9 @@ export const Reciept = () => {
                                                 k++
                                                 price = price + (section.price)
                                                 return (<tr>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }}>{k}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-start px-2"> {section.name} {section.subname}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">
+                                                    <td style={{ fontSize: "15pt", fontFamily: "times" }}>{k}</td>
+                                                    <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-start px-2"> {section.name} {section.subname}</td>
+                                                    <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-center">
                                                         {section.bron === 'offline' ? section.turn : section.bronTime}
 
                                                     </td>
@@ -230,10 +235,10 @@ export const Reciept = () => {
                                                 k++
                                                 price = price + (service.price - service.priceCashier)
                                                 return (<tr>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }}>{k}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-start px-2">{service.name} {service.type}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{service.pieces} (dona)</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">{service.price - service.priceCashier}</td>
+                                                    <td style={{ fontSize: "13pt", fontFamily: "times" }}>{k}</td>
+                                                    <td style={{ fontSize: "13pt", fontFamily: "times" }} className="text-start px-2">{service.name} {service.type}</td>
+                                                    <td style={{ fontSize: "13pt", fontFamily: "times" }} className="text-center">{service.pieces} (dona)</td>
+                                                    <td style={{ fontSize: "13pt", fontFamily: "times" }} className="text-center">{service.price - service.priceCashier}</td>
                                                 </tr>
                                                 )
 
@@ -276,7 +281,7 @@ export const Reciept = () => {
                         </table>
                     </div>
                     <div className="row">
-                        <div className="col-4">
+                        <div className="col-2">
                             <div className="invoice-from ps-4">
                                 <h6 className='d-inline-block' style={{ textTransform: "uppercase", fontFamily: "times", fontSize: "17pt" }} >ID: {client && client.id}</h6>
                             </div>
@@ -286,7 +291,12 @@ export const Reciept = () => {
                                 <h6 className='d-inline-block' style={{ fontSize: "17pt", fontFamily: "times" }}>F.I.O: {client && client.lastname} {client && client.firstname} {client && client.fathername}</h6>
                             </div>
                         </div>
-                        <div className="col-4">
+                        <div className="col-3">
+                            <div className="invoice-from text-center">
+                                <h6 className='d-inline-block' style={{ fontSize: "17pt", fontFamily: "times" }}>Yil: {client && new Date(client.born).toLocaleDateString()}</h6>
+                            </div>
+                        </div>
+                        <div className="col-3">
                             <div className="invoice-from text-end pe-4">
                                 {
                                     connector && connector.probirka ?
@@ -315,9 +325,9 @@ export const Reciept = () => {
                                                 l++
                                                 price = price + (section.price)
                                                 return (<tr>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }}>{l}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-start px-2">{section.name} {section.subname}</td>
-                                                    <td style={{ fontSize: "10pt", fontFamily: "times" }} className="text-center">
+                                                    <td style={{ fontSize: "15pt", fontFamily: "times" }}>{l}</td>
+                                                    <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-start px-2">{section.name} {section.subname}</td>
+                                                    <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-center">
                                                         {section.bron === 'offline' ? section.turn : section.bronTime}
 
                                                     </td>

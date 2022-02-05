@@ -59,7 +59,7 @@ tr:nth-child(even) {
     background-color: #eee;
 }
 
-td{
+td {
     padding: 10px 0 !important;
 }
 
@@ -68,13 +68,54 @@ td:nth-child(1) {
     text-align: center;
 }
 
-.come{
+.come {
     background-color: rgba(15, 183, 107, 0.12);
 
     color: #26aa48 !important;
 }
 
-.dontcome{
+.dontcome {
     background-color: rgba(242, 17, 54, 0.12);
     color: #e63c3c !important;
 }
+
+table.report-container {
+    page-break-after: always;
+}
+
+
+thead.report-header {
+    display: table-header-group;
+
+}
+
+tfoot.report-footer {
+    display: table-footer-group;
+
+}
+
+table.report-container .box {
+    page-break-inside: avoid;
+}
+
+
+.cw30 {
+    width: 30%;
+}
+
+.cw22 {
+    width: 22%;
+}
+
+.cw18 {
+    width: 18%;
+}
+
+.cn {
+    width: 5%;
+}
+
+/* 
+@page {
+    size: 210mm 290mm;
+} */

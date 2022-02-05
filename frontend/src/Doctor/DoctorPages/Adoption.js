@@ -12,6 +12,7 @@ export const Adoption = () => {
     const history = useHistory()
     const componentRef = useRef()
     const handlePrint = useReactToPrint({
+        pageStyle=`{size: 2.5in 290in }`,
         content: () => componentRef.current,
     })
     const notify = (e) => {
@@ -30,7 +31,7 @@ export const Adoption = () => {
 
     const getClient = useCallback(async () => {
         try {
-            const fetch = await request(`/api/clients/doctor/${clientId}`, 'GET', null, {
+            const fetch = await request(`/ api / clients / doctor / ${clientId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
             setClient(fetch)
@@ -41,7 +42,7 @@ export const Adoption = () => {
 
     const getConnector = useCallback(async () => {
         try {
-            const fetch = await request(`/api/connector/doctorconnector/${auth.doctor.section}/${connectorId}`, 'GET', null, {
+            const fetch = await request(`/ api / connector / doctorconnector / ${auth.doctor.section} / ${connectorId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
             setConnector(fetch.connector)
@@ -128,7 +129,7 @@ export const Adoption = () => {
 
     const patchData = useCallback(async () => {
         try {
-            const fetch = await request(`/api/section/doctor`, 'PATCH', { sections: [...sections], tablesections: [...tablesections] }, {
+            const fetch = await request(`/ api / section / doctor`, 'PATCH', { sections: [...sections], tablesections: [...tablesections] }, {
                 Authorization: `Bearer ${auth.token}`
             })
             toast.success(fetch.message)
@@ -153,7 +154,7 @@ export const Adoption = () => {
     const [baseUrl, setBasuUrl] = useState()
     const getBaseUrl = useCallback(async () => {
         try {
-            const fetch = await request(`/api/clienthistorys/url`, 'GET', null)
+            const fetch = await request(`/ api / clienthistorys / url`, 'GET', null)
             setBasuUrl(fetch)
         } catch (e) {
             notify(e)
@@ -162,7 +163,7 @@ export const Adoption = () => {
 
     useEffect(() => {
         if (client) {
-            QRCode.toDataURL(`${baseUrl}/clienthistorys/${client._id}`)
+            QRCode.toDataURL(`${baseUrl} / clienthistorys / ${client._id}`)
                 .then(data => {
                     setQr(data)
                 })
@@ -195,35 +196,32 @@ export const Adoption = () => {
             <div className="container p-4" style={{ fontFamily: "times" }}>
                 <div className="row" style={{ fontSize: "10pt" }}>
                     <div className="col-6" style={{ border: "1px solid", textAlign: "center" }}>
-                        <p>
-                            Министерство Здравоохранения Республики Узбекистан
+                        <p className='pt-2'>
+                            O'zbekiston Respublikasi Sog'liqni Saqlash Vazirligi
                         </p>
                     </div>
                     <div className="col-2" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
                         <p>
-                            ОКОНХ  91514
+                            ОКED 86900
                         </p>
                     </div>
                     <div className="col-4" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
                         <p style={{ margin: "0" }}>
-                            Форма №     согласно приказу
-                        </p>
-                        <p style={{ margin: "0" }}>
-                            МинЗдрав.РУз №363 от 31.12.2020.
+                            O'zbekiston Respublikasi SSV 31.12.2020 dagi №363 buyrug'i bilan tasdiqlangan
                         </p>
                     </div>
                 </div>
                 <div className="row" style={{ fontSize: "20pt" }}>
-                    <div className="col-6" style={{ textAlign: "center" }}>
-                        <p className='pt-4'>
-                            "ГЕМО-ТЕСТ"
-                            <br /> ЛАБОРАТОРИЯ
+                    <div className="col-3 pt-3">
+                        <img width="200" src={logo && logo.logo} alt='Logo' />
+                    </div>
+                    <div className="col-6 pt-2" style={{ textAlign: "center" }}>
+                        <p className='pt-4' style={{ fontFamily: "-moz-initial" }}>
+                            "GEMO-TEST" <br />
+                            MARKAZIY LABARATORIYA
                         </p>
                     </div>
-                    <div className="col-2">
-
-                    </div>
-                    <div className="col-4" style={{ textAlign: "center" }}>
+                    <div className="col-3" style={{ textAlign: "center" }}>
                         <p className='text-end m-0'>
                             <img width="140" src={qr && qr} alt="QR" />
                         </p>
@@ -234,20 +232,20 @@ export const Adoption = () => {
                         <table style={{ width: "100%", border: "2px solid", borderTop: "3px solid" }}>
                             <tr style={{ textAlign: "center" }}>
                                 <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
-                                    Ф.И.О. больного
+                                    Mijozning F.I.SH
                                 </td>
                                 <td className='p-0 py-1' style={{ width: "33%", border: "1px solid #000" }}>
                                     <h4>{client && client.lastname + " " + client.firstname}</h4>
                                 </td>
                                 <td rowSpan="3" style={{ width: "33%" }}>
-                                    <p>
-                                        <img width="200" src={logo && logo.logo} alt='Logo' />
+                                    <p className='fw-bold'>
+                                        ANALIZ NATIJALARI
                                     </p>
                                 </td>
                             </tr>
                             <tr style={{ textAlign: "center" }}>
                                 <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
-                                    Год рождения
+                                    Tug'ilgan yili
                                 </td>
                                 <td className='p-0 py-2' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
                                     {client && new Date(client.born).toLocaleDateString()}
@@ -255,7 +253,7 @@ export const Adoption = () => {
                             </tr>
                             <tr style={{ textAlign: "center" }}>
                                 <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
-                                    Дата
+                                    Murojaat vaqti
                                 </td>
                                 <td className='p-0 py-2' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
                                     {connector && new Date(connector.bronDay).toLocaleDateString()}
@@ -275,7 +273,7 @@ export const Adoption = () => {
                     </div>
                     <div className="col-7">
                         <p className='p-2 m-0'>
-                            Услуги лицензированны   ЛИЦЕНЗИЯ №01419  от 28.02.2019г. МинЗдрав Ру
+                            Xizmatlar litsenziyalangan   ЛИЦЕНЗИЯ №01419  от 28.02.2019г. МинЗдрав Ру
                         </p>
                     </div>
                 </div>
@@ -295,16 +293,16 @@ export const Adoption = () => {
                                                 </td>
                                             </tr>
                                             <tr style={{ backgroundColor: "#C0C0C0" }}>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                <td className='text-center fw-bold cn' style={{ border: "1px solid #000" }}>
                                                     №
                                                 </td>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                <td className='text-center fw-bold cw30' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                     {tablecolumns && tablecolumns[index] && tablecolumns[index].col1}
                                                 </td>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                <td className='text-center fw-bold cw30' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                     {tablecolumns && tablecolumns[index] && tablecolumns[index].col2}
                                                 </td>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                <td className='text-center fw-bold cw30' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                     {tablecolumns && tablecolumns[index] && tablecolumns[index].col3}
                                                 </td>
                                                 {
@@ -327,16 +325,16 @@ export const Adoption = () => {
                                                 tablesections && tablesections[index].map((tablesection, key) => {
                                                     return (
                                                         <tr style={{ backgroundColor: "white" }}>
-                                                            <td style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                            <td className='cn' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                 {key + 1}
                                                             </td>
-                                                            <td className='px-3' style={{ border: "1px solid #000", padding: "10px", maxWidth: "33%", minWidth: "19%" }}>
+                                                            <td className='px-3 cw30' style={{ border: "1px solid #000", padding: "10px", maxWidth: "33%", minWidth: "19%" }}>
                                                                 {tablesection.name}
                                                             </td>
-                                                            <td className='p-0' style={{ textAlign: "center", border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                            <td className='p-0 cw30' style={{ textAlign: "center", border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                                 <textarea style={{ border: "none" }} onChange={(event) => { changeResult(event, index, key) }} name='result' className='form-control text-center' defaultValue={tablesection.result}></textarea>
                                                             </td>
-                                                            <td className='p-0' style={{ textAlign: "center", border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                            <td className='p-0 cw30' style={{ textAlign: "center", border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                                 <textarea style={{ border: "none" }} onChange={(event) => { changeNorma(event, index, key) }} name='norma' className='form-control text-center' defaultValue={tablesection.norma} ></textarea>
                                                             </td>
                                                             {
