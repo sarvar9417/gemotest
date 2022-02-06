@@ -4,7 +4,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTelegram } from '@fortawesome/free-brands-svg-icons'
 
 export const Print = ({ client, connector, sections, tablesections, logo, qr, tablecolumns }) => {
+    const checkClassHead = (data) => {
+        if (data.col5.length > 1) {
+            return "text-center fw-bold cw18"
+        }
+        if (data.col4.length > 1) {
+            return "text-center fw-bold   cw22"
+        }
+        return "text-center fw-bold  cw30"
+    }
 
+    const checkClassFoot = (data) => {
+        if (data.col5.length > 1) {
+            return "text-center cw18"
+        }
+        if (data.col4.length > 1) {
+            return "text-center  cw22"
+        }
+        return "text-center cw30"
+    }
     return (
         <div >
             <table className="report-container w-100">
@@ -117,24 +135,24 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                                         <td className='text-center fw-bold cn' style={{ border: "1px solid #000" }}>
                                                             №
                                                         </td>
-                                                        <td className='text-center fw-bold cw30' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                             {tablecolumns && tablecolumns[index] && tablecolumns[index].col1}
                                                         </td>
-                                                        <td className='text-center fw-bold cw30' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                             {tablecolumns && tablecolumns[index] && tablecolumns[index].col2}
                                                         </td>
-                                                        <td className='text-center fw-bold cw30' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                             {tablecolumns && tablecolumns[index] && tablecolumns[index].col3}
                                                         </td>
                                                         {
                                                             tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                                <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
                                                                     {tablecolumns[index].col4}
                                                                 </td> : ""
                                                         }
                                                         {
                                                             tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
                                                                     {tablecolumns[index].col5}
                                                                 </td> : ""
                                                         }
@@ -146,24 +164,24 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                                                     <td className='cn' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                         {key + 1}
                                                                     </td>
-                                                                    <td className='px-3 cw30' style={{ border: "1px solid #000", padding: "10px", minWidth: "20%", maxWidth: "33%" }}>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ border: "1px solid #000", padding: "10px", minWidth: "20%", maxWidth: "33%" }}>
                                                                         {tablesection.name}
                                                                     </td>
-                                                                    <td className='p-0 cw30' style={{ textAlign: "center", border: "1px solid #000", minWidth: "20%", maxWidth: "33%" }}>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", minWidth: "20%", maxWidth: "33%" }}>
                                                                         {tablesection.result}
                                                                     </td>
-                                                                    <td className='p-0 cw30' style={{ textAlign: "center", border: "1px solid #000", minWidth: "20%", maxWidth: "33%" }}>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", minWidth: "20%", maxWidth: "33%" }}>
                                                                         {tablesection.norma}
                                                                     </td>
                                                                     {
                                                                         tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                                            <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                 {tablesection.additionalone}
                                                                             </td> : ""
                                                                     }
                                                                     {
                                                                         tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                            <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                 {tablesection.additionaltwo}
                                                                             </td> : ""
                                                                     }

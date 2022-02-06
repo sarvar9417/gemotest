@@ -12,7 +12,6 @@ export const Adoption = () => {
     const history = useHistory()
     const componentRef = useRef()
     const handlePrint = useReactToPrint({
-        pageStyle=`{size: 2.5in 290in }`,
         content: () => componentRef.current,
     })
     const notify = (e) => {
@@ -31,7 +30,7 @@ export const Adoption = () => {
 
     const getClient = useCallback(async () => {
         try {
-            const fetch = await request(`/ api / clients / doctor / ${clientId}`, 'GET', null, {
+            const fetch = await request(`/api/clients/doctor/${clientId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
             setClient(fetch)
@@ -42,7 +41,7 @@ export const Adoption = () => {
 
     const getConnector = useCallback(async () => {
         try {
-            const fetch = await request(`/ api / connector / doctorconnector / ${auth.doctor.section} / ${connectorId}`, 'GET', null, {
+            const fetch = await request(`/api/connector/doctorconnector/${auth.doctor.section}/${connectorId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
             setConnector(fetch.connector)
@@ -129,7 +128,7 @@ export const Adoption = () => {
 
     const patchData = useCallback(async () => {
         try {
-            const fetch = await request(`/ api / section / doctor`, 'PATCH', { sections: [...sections], tablesections: [...tablesections] }, {
+            const fetch = await request(`/api/section/doctor`, 'PATCH', { sections: [...sections], tablesections: [...tablesections] }, {
                 Authorization: `Bearer ${auth.token}`
             })
             toast.success(fetch.message)
@@ -154,7 +153,7 @@ export const Adoption = () => {
     const [baseUrl, setBasuUrl] = useState()
     const getBaseUrl = useCallback(async () => {
         try {
-            const fetch = await request(`/ api / clienthistorys / url`, 'GET', null)
+            const fetch = await request(`/api/clienthistorys/url`, 'GET', null)
             setBasuUrl(fetch)
         } catch (e) {
             notify(e)
@@ -163,7 +162,7 @@ export const Adoption = () => {
 
     useEffect(() => {
         if (client) {
-            QRCode.toDataURL(`${baseUrl} / clienthistorys / ${client._id}`)
+            QRCode.toDataURL(`${baseUrl}/clienthistorys/${client._id}`)
                 .then(data => {
                     setQr(data)
                 })
@@ -185,6 +184,26 @@ export const Adoption = () => {
             getBaseUrl()
         }
     }, [notify, clearError])
+
+    const checkClassHead = (data) => {
+        if (data.col5.length > 1) {
+            return "text-center fw-bold cw18"
+        }
+        if (data.col4.length > 1) {
+            return "text-center fw-bold   cw22"
+        }
+        return "text-center fw-bold  cw30"
+    }
+
+    const checkClassFoot = (data) => {
+        if (data.col5.length > 1) {
+            return "text-center cw18"
+        }
+        if (data.col4.length > 1) {
+            return "text-center  cw22"
+        }
+        return "text-center cw30"
+    }
 
     return (
         <>
@@ -296,24 +315,24 @@ export const Adoption = () => {
                                                 <td className='text-center fw-bold cn' style={{ border: "1px solid #000" }}>
                                                     №
                                                 </td>
-                                                <td className='text-center fw-bold cw30' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
                                                     {tablecolumns && tablecolumns[index] && tablecolumns[index].col1}
                                                 </td>
-                                                <td className='text-center fw-bold cw30' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
                                                     {tablecolumns && tablecolumns[index] && tablecolumns[index].col2}
                                                 </td>
-                                                <td className='text-center fw-bold cw30' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
                                                     {tablecolumns && tablecolumns[index] && tablecolumns[index].col3}
                                                 </td>
                                                 {
                                                     tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                        <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
                                                             {tablecolumns[index].col4}
                                                         </td> : ""
                                                 }
                                                 {
                                                     tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                        <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
                                                             {tablecolumns[index].col5}
                                                         </td> : ""
                                                 }
@@ -328,24 +347,24 @@ export const Adoption = () => {
                                                             <td className='cn' style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                 {key + 1}
                                                             </td>
-                                                            <td className='px-3 cw30' style={{ border: "1px solid #000", padding: "10px", maxWidth: "33%", minWidth: "19%" }}>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ border: "1px solid #000", padding: "10px" }}>
                                                                 {tablesection.name}
                                                             </td>
-                                                            <td className='p-0 cw30' style={{ textAlign: "center", border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                 <textarea style={{ border: "none" }} onChange={(event) => { changeResult(event, index, key) }} name='result' className='form-control text-center' defaultValue={tablesection.result}></textarea>
                                                             </td>
-                                                            <td className='p-0 cw30' style={{ textAlign: "center", border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                 <textarea style={{ border: "none" }} onChange={(event) => { changeNorma(event, index, key) }} name='norma' className='form-control text-center' defaultValue={tablesection.norma} ></textarea>
                                                             </td>
                                                             {
                                                                 tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                                    <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                         <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionalone(event, index, key) }} name='additionalone' className='form-control text-center' defaultValue={tablesection.additionalone}></textarea>
                                                                     </td> : ""
                                                             }
                                                             {
                                                                 tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                    <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                         <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionaltwo(event, index, key) }} name='additionaltwo' className='form-control text-center' defaultValue={tablesection.additionaltwo}></textarea>
                                                                     </td> : ""
                                                             }
