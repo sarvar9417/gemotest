@@ -13,6 +13,7 @@ export const Adoption = () => {
     const componentRef = useRef()
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
+        
     })
     const notify = (e) => {
         toast.error(e);
