@@ -215,6 +215,26 @@ export const Adoption = () => {
         }
     }, [notify, clearError])
 
+    const checkClassHead = (data) => {
+        if (data.col5.length > 1) {
+            return "text-center fw-bold cw18"
+        }
+        if (data.col4.length > 1) {
+            return "text-center fw-bold   cw22"
+        }
+        return "text-center fw-bold  cw30"
+    }
+
+    const checkClassFoot = (data) => {
+        if (data.col5.length > 1) {
+            return "text-center cw18"
+        }
+        if (data.col4.length > 1) {
+            return "text-center  cw22"
+        }
+        return "text-center cw30"
+    }
+
     return (
         <>
             <div className='d-none'>
@@ -322,27 +342,27 @@ export const Adoption = () => {
                                                 </td>
                                             </tr>
                                             <tr style={{ backgroundColor: "#C0C0C0" }}>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                <td className="fw-bold text-center cn" style={{ border: "1px solid #000" }}>
                                                     №
                                                 </td>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                     {tablecolumns && tablecolumns[index] && tablecolumns[index].col1}
                                                 </td>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                     {tablecolumns && tablecolumns[index] && tablecolumns[index].col2}
                                                 </td>
-                                                <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                     {tablecolumns && tablecolumns[index] && tablecolumns[index].col3}
                                                 </td>
                                                 {
                                                     tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                        <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
                                                             {tablecolumns[index].col4}
                                                         </td> : ""
                                                 }
                                                 {
                                                     tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                        <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
                                                             {tablecolumns[index].col5}
                                                         </td> : ""
                                                 }
@@ -357,24 +377,24 @@ export const Adoption = () => {
                                                             <td style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                 {key + 1}
                                                             </td>
-                                                            <td className='px-3' style={{ border: "1px solid #000", padding: "10px" }}>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ border: "1px solid #000", padding: "10px" }}>
                                                                 {tablesection.name}
                                                             </td>
-                                                            <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                 <textarea style={{ border: "none" }} onChange={(event) => { changeResult(event, index, key) }} name='result' className='form-control text-center' defaultValue={tablesection.result}></textarea>
                                                             </td>
-                                                            <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                 <textarea style={{ border: "none" }} onChange={(event) => { changeNorma(event, index, key) }} name='norma' className='form-control text-center' defaultValue={tablesection.norma} ></textarea>
                                                             </td>
                                                             {
                                                                 tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                                    <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                         <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionalone(event, index, key) }} name='additionalone' className='form-control  text-center' defaultValue={tablesection.additionalone}></textarea>
                                                                     </td> : ""
                                                             }
                                                             {
                                                                 tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                    <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                         <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionaltwo(event, index, key) }} name='additionaltwo' className='form-control  text-center' defaultValue={tablesection.additionaltwo}></textarea>
                                                                     </td> : ""
                                                             }

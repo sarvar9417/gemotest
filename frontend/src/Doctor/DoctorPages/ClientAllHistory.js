@@ -97,6 +97,26 @@ export const ClientAllHistory = () => {
         }
     }, [notify, clearError])
 
+    const checkClassHead = (data) => {
+        if (data.col5.length > 1) {
+            return "text-center fw-bold cw18"
+        }
+        if (data.col4.length > 1) {
+            return "text-center fw-bold   cw22"
+        }
+        return "text-center fw-bold  cw30"
+    }
+
+    const checkClassFoot = (data) => {
+        if (data.col5.length > 1) {
+            return "text-center cw18"
+        }
+        if (data.col4.length > 1) {
+            return "text-center  cw22"
+        }
+        return "text-center cw30"
+    }
+
     return (
         <div>
             <div className='row'>
@@ -203,7 +223,7 @@ export const ClientAllHistory = () => {
                                                     alltablesections && alltablesections[i][index].length > 0
                                                 ) {
                                                     return (
-                                                        <div className='p-0'>
+                                                        <div className='p-0 '>
                                                             <table className='w-100' >
                                                                 <tr>
                                                                     <td colSpan={6} style={{ backgroundColor: "#FFF" }} >
@@ -212,27 +232,27 @@ export const ClientAllHistory = () => {
 
                                                                 </tr>
                                                                 <tr style={{ backgroundColor: "#C0C0C0" }}>
-                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                    <td className='text-center fw-bold cn' style={{ border: "1px solid #000" }}>
                                                                         №
                                                                     </td>
-                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                                    <td className={alltablecolumns && alltablecolumns[i][index] && checkClassHead(alltablecolumns[i][index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                                         {alltablecolumns && alltablecolumns[i][index] && alltablecolumns[i][index].col1}
                                                                     </td>
-                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                                    <td className={alltablecolumns && alltablecolumns[i][index] && checkClassHead(alltablecolumns[i][index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                                         {alltablecolumns && alltablecolumns[i][index] && alltablecolumns[i][index].col2}
                                                                     </td>
-                                                                    <td className='text-center fw-bold' style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
+                                                                    <td className={alltablecolumns && alltablecolumns[i][index] && checkClassHead(alltablecolumns[i][index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
                                                                         {alltablecolumns && alltablecolumns[i][index] && alltablecolumns[i][index].col3}
                                                                     </td>
                                                                     {
                                                                         alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col4).length > 1 ?
-                                                                            <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                            <td className={alltablecolumns && alltablecolumns[i][index] && checkClassHead(alltablecolumns[i][index])} style={{ border: "1px solid #000" }}>
                                                                                 {alltablecolumns[i][index].col4}
                                                                             </td> : ""
                                                                     }
                                                                     {
                                                                         alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col5).length > 1 ?
-                                                                            <td className='text-center fw-bold' style={{ border: "1px solid #000" }}>
+                                                                            <td className={alltablecolumns && alltablecolumns[i][index] && checkClassHead(alltablecolumns[i][index])} style={{ border: "1px solid #000" }}>
                                                                                 {alltablecolumns[i][index].col5}
                                                                             </td> : ""
                                                                     }
@@ -244,24 +264,24 @@ export const ClientAllHistory = () => {
                                                                                 <td style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                     {key + 1}
                                                                                 </td>
-                                                                                <td className='px-3' style={{ border: "1px solid #000", padding: "10px" }}>
+                                                                                <td className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])} style={{ border: "1px solid #000", padding: "10px" }}>
                                                                                     {tablesection.name}
                                                                                 </td>
-                                                                                <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                                <td className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                     {tablesection.result}
                                                                                 </td>
-                                                                                <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                                <td className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                     {tablesection.norma}
                                                                                 </td>
                                                                                 {
                                                                                     alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col4).length > 1 ?
-                                                                                        <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                                        <td className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                             {tablesection.additionalone}
                                                                                         </td> : ""
                                                                                 }
                                                                                 {
                                                                                     alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col5).length > 1 ?
-                                                                                        <td className='p-0' style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                                        <td className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])} style={{ textAlign: "center", border: "1px solid #000" }}>
                                                                                             {tablesection.additionaltwo}
                                                                                         </td> : ""
                                                                                 }
