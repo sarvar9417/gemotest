@@ -1870,6 +1870,7 @@ router.get('/reseption', async (req, res) => {
         let clients = []
         let sections = []
         let services = []
+        let countsection = []
         for (let i = 0; i < connectors.length; i++) {
             const client = await Clients.findById(connectors[i].client)
             const sec = await Section.find({
@@ -1879,11 +1880,22 @@ router.get('/reseption', async (req, res) => {
             const service = await Service.find({
                 connector: connectors[i]._id
             })
+            let c = {
+                accept: 0,
+                all: 0
+            }
+            sec.map(section => {
+                c.all = c.all + 1
+                if (section.accept) {
+                    c.accept = c.accept + 1
+                }
+            })
+            countsection.push(c)
             services.push(service)
             clients.push(client)
             sections.push(sec)
         }
-        res.json({ connectors, clients, sections, services })
+        res.json({ connectors, clients, sections, services, countsection })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -1982,10 +1994,12 @@ router.patch('/labaratoriya/:id', async (req, res) => {
         const id = req.params.id
         const edit = await Connector.findById(id, req.body)
         edit.accept = true
+        edit.position = " "
         await edit.save()
         const sections = await Section.find({
             probirka: true,
-            connector: id
+            connector: id,
+
         })
         for (let i = 0; i < sections.length; i++) {
             const section = await Section.findById(sections[i]._id)
@@ -1994,6 +2008,29 @@ router.patch('/labaratoriya/:id', async (req, res) => {
         }
         res.json(edit);
 
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+router.patch('/labaratoriyadontcome/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const edit = await Connector.findById(id, req.body)
+        edit.accept = false
+        edit.position = "kelmagan"
+        await edit.save()
+        const sections = await Section.find({
+            probirka: true,
+            connector: id,
+
+        })
+        for (let i = 0; i < sections.length; i++) {
+            const section = await Section.findById(sections[i]._id)
+            section.checkup = "kelmagan"
+            await section.save()
+        }
+        res.json(edit);
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }

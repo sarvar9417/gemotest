@@ -146,9 +146,21 @@ export const ClientsLabaratoriya = () => {
     const [connectorId, setConnectorId] = useState()
     const [key, setKey] = useState()
     const [modal, setModal] = useState(false)
+    const [modal2, setModal2] = useState(false)
     const Accept = useCallback(async () => {
         try {
             const fetch = await request(`/api/connector/labaratoriya/${connectorId}`, 'PATCH', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            window.location.reload()
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, auth, connectorId])
+
+    const dontCome = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/connector/labaratoriyadontcome/${connectorId}`, 'PATCH', null, {
                 Authorization: `Bearer ${auth.token}`
             })
             window.location.reload()
@@ -205,7 +217,17 @@ export const ClientsLabaratoriya = () => {
                 <div className='col-1'>
                     <button onClick={(event) => (searchName((event.target.value)))} className="btn text-white" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
                 </div>
-                <div className="offset-6  col-1 ">
+                <div className='col-6'>
+                    <button
+                        disabled={loading}
+                        onClick={getConnectors}
+                        className="btn text-white w-100"
+                        style={{ backgroundColor: "#45D3D3" }}
+                    >
+                        <FontAwesomeIcon icon={faSyncAlt} />
+                    </button>
+                </div>
+                <div className=" col-1 ">
                     <ReactHTMLTableToExcel
                         className="btn text-white mb-2 btn-success"
                         table="reseptionReport"
@@ -228,6 +250,7 @@ export const ClientsLabaratoriya = () => {
                                 <th style={{ width: "250px" }} className=" text-center">ID <FontAwesomeIcon icon={faSort} /></th>
                                 <th style={{ width: "250px" }} className=" text-center">Probirka <FontAwesomeIcon icon={faSort} /></th>
                                 <th style={{ width: "250px" }} className=" text-center">Qabul qilish <FontAwesomeIcon icon={faSort} /></th>
+                                <th style={{ width: "250px" }} className=" text-center">Kelmagan <FontAwesomeIcon icon={faSort} /></th>
                             </tr>
                         </thead>
                     </table>
@@ -243,6 +266,7 @@ export const ClientsLabaratoriya = () => {
                             <th style={{ width: "250px" }} className="id text-center">ID <FontAwesomeIcon icon={faSort} /></th>
                             <th style={{ width: "250px" }} className="phone text-center">Probirka <FontAwesomeIcon icon={faSort} /></th>
                             <th style={{ width: "250px" }} className="prices text-center">Qabul qilish <FontAwesomeIcon icon={faSort} /></th>
+                            <th style={{ width: "250px" }} className="prices text-center">Kelmagan <FontAwesomeIcon icon={faSort} /></th>
                         </tr>
                     </thead>
                     <tbody className="" >
@@ -262,11 +286,12 @@ export const ClientsLabaratoriya = () => {
                                         </td>
                                         <td style={{ width: "100px" }} className='text-center'>
                                             {
-                                                all.connectors[index].accept ?
-                                                    <span className='text-primary fw-bold' >Qabul qilingan</span> :
-                                                    <span className='text-primary fw-bold' >Qabul qilinmagan</span>
+                                                all.connectors[index].position === "kelmagan" ?
+                                                    <span className='text-primary fw-bold' >Kelmagan</span> :
+                                                    <span className='text-primary fw-bold' ></span>
                                             }
                                         </td>
+
                                     </tr>
                                 )
                             })
@@ -299,6 +324,13 @@ export const ClientsLabaratoriya = () => {
                                                     <button onClick={() => { setKey(index); setConnectorId(all.connectors[index]._id); setModal(true) }} className='btn button-success'>Qabul qilish</button>
                                             }
                                         </td>
+                                        <td style={{ width: "250px" }} className='text-center'>
+                                            {
+                                                all.connectors[index].position === "kelmagan" ?
+                                                    <span className='text-danger fw-bold' >Kelmagan</span> :
+                                                    <button onClick={() => { setKey(index); setConnectorId(all.connectors[index]._id); setModal2(true) }} className='btn button-danger'>Kelmagan</button>
+                                            }
+                                        </td>
                                     </tr>
                                 )
                             })
@@ -323,6 +355,27 @@ export const ClientsLabaratoriya = () => {
                             <div className="col-12 text-center ">
                                 <button onClick={Accept} disabled={loading} className="btn button-success fs-5" style={{ marginRight: "30px" }}>Tasdiqlash</button>
                                 <button onClick={() => setModal(false)} className="btn button-danger fs-5" >Qaytish</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            {/* Modal oynaning ochilishi */}
+            <div className={modal2 ? "modal" : "d-none"}>
+                <div className="modal-card">
+                    <div className="card p-4" style={{ fontFamily: "times" }}>
+                        <div className='fs-3 py-4'>
+                            Mijoz <span className='fw-bold'>
+                                {all && key !== undefined && all.clients[key].lastname + " " + all.clients[key].firstname
+                                } - {all && key !== undefined && all.connectors[key].probirka}
+                            </span> kelmaganini tasdiqlaysizmi?
+                        </div>
+                        <div className="row m-1">
+                            <div className="col-12 text-center ">
+                                <button onClick={dontCome} disabled={loading} className="btn button-success fs-5" style={{ marginRight: "30px" }}>Tasdiqlash</button>
+                                <button onClick={() => setModal2(false)} className="btn button-danger fs-5" >Qaytish</button>
                             </div>
                         </div>
 

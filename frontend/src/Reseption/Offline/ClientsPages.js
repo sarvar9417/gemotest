@@ -677,6 +677,7 @@ export const ClientsPages = () => {
                                                                 <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all.clients[key]._id}`} >
                                                                     <FontAwesomeIcon icon={faPenAlt} />
                                                                 </Link>
+                                                                <span className='ps-3 fs-5'> <span className='text-success fw-bold'>{all.countsection[key].accept}</span> / <span className='text-danger fw-bold'>{all.countsection[key].all}</span>  </span>
                                                             </td>
                                                             <td
                                                                 className="id"

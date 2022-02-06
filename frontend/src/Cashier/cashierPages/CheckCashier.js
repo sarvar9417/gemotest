@@ -594,6 +594,7 @@ export const CheckCashier = () => {
                             <th style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>Hisob</th>
                             <th style={{ width: "25%", textAlign: "center", padding: "10px 0" }}>To'lov <input disabled={loading} onChange={paymenteds} type="checkbox" className="check" /></th>
                             <th style={{ width: "10%", textAlign: "center", padding: "10px 0" }}>Sabab</th>
+                            <th style={{ width: "10%", textAlign: "center", padding: "10px 0" }}>O'chirish</th>
                         </tr>
                     </thead>
                     <tbody style={{ borderBottom: "1px solid #999" }}>
@@ -619,6 +620,15 @@ export const CheckCashier = () => {
 
                                         <td style={{ textAlign: "center", padding: "10px 0", color: "green" }}>
                                             {section.price !== section.priceCashier ? <textarea value={section.commentCashier} onChange={(event) => inputCommentSection(event, key)} key={key} placeholder="To'lov bajarilmagan holatda sababini ko'rsating" className="addDirection" minLength="6" ></textarea> : "To'langan"}
+                                        </td>
+                                        <td>
+                                            <button
+                                                onClick={() => { setDelSection(section); setModal3(true) }}
+                                                className='btn btn-danger p-0 fw-bold'
+                                                style={{ width: "30px", height: "30px" }}
+                                            >
+                                                x
+                                            </button>
                                         </td>
                                     </tr>
                                 )
@@ -903,7 +913,7 @@ export const CheckCashier = () => {
                             <div className="text-center fs-4 fw-bold text-secondary">
                                 <span className="text-dark">Mijoz: </span>
                                 {client && client.lastname} {client && client.firstname} {client && client.fathername}ga ko'rsatilayotgan
-                                <span className='text-danger'> {delSection && delSection.name + " " + delSection.subname}</span> xizmati(yoki ashyosi) mijozning xizmatlar bo'limidan o'chiriladi. O'chirishni tasdiqlaysizmi?
+                                <span className='text-danger'> {delSection && delSection.subname}</span> xizmati(yoki ashyosi) mijozning xizmatlar bo'limidan o'chiriladi. O'chirishni tasdiqlaysizmi?
                             </div>
                         </div>
                         <div className="card-footer">
