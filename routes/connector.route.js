@@ -569,6 +569,7 @@ router.get('/reseptionoffline/:start/:end/:fish', async (req, res) => {
         let clients = []
         let sections = []
         let services = []
+        let countsection = []
         for (let i = 0; i < connectors.length; i++) {
             const client = await Clients.findById(connectors[i].client)
             const sec = await Section.find({
@@ -578,11 +579,22 @@ router.get('/reseptionoffline/:start/:end/:fish', async (req, res) => {
             const service = await Service.find({
                 connector: connectors[i]._id
             })
+            let c = {
+                accept: 0,
+                all: 0
+            }
+            sec.map(section => {
+                c.all = c.all + 1
+                if (section.accept) {
+                    c.accept = c.accept + 1
+                }
+            })
+            countsection.push(c)
             services.push(service)
             clients.push(client)
             sections.push(sec)
         }
-        res.json({ connectors, clients, sections, services })
+        res.json({ connectors, clients, sections, services, countsection })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -713,6 +725,7 @@ router.get('/reseptiononline/:start/:end/:fish', async (req, res) => {
         let clients = []
         let sections = []
         let services = []
+        let countsection = []
         for (let i = 0; i < connectors.length; i++) {
             const client = await Clients.findById(connectors[i].client)
             const sec = await Section.find({
@@ -721,11 +734,22 @@ router.get('/reseptiononline/:start/:end/:fish', async (req, res) => {
             const service = await Service.find({
                 connector: connectors[i]._id
             })
+            let c = {
+                accept: 0,
+                all: 0
+            }
+            sec.map(section => {
+                c.all = c.all + 1
+                if (section.accept) {
+                    c.accept = c.accept + 1
+                }
+            })
+            countsection.push(c)
             services.push(service)
             clients.push(client)
             sections.push(sec)
         }
-        res.json({ connectors, clients, sections, services })
+        res.json({ connectors, clients, sections, services, countsection })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -803,6 +827,7 @@ router.get('/reseption/:start/:end', async (req, res) => {
         let clients = []
         let sections = []
         let services = []
+        let countsection = []
         for (let i = 0; i < connectors.length; i++) {
             const client = await Clients.findById(connectors[i].client)
             const sec = await Section.find({
@@ -812,11 +837,22 @@ router.get('/reseption/:start/:end', async (req, res) => {
             const service = await Service.find({
                 connector: connectors[i]._id
             })
+            let c = {
+                accept: 0,
+                all: 0
+            }
+            sec.map(section => {
+                c.all = c.all + 1
+                if (section.accept) {
+                    c.accept = c.accept + 1
+                }
+            })
+            countsection.push(c)
             services.push(service)
             clients.push(client)
             sections.push(sec)
         }
-        res.json({ connectors, clients, sections, services })
+        res.json({ connectors, clients, sections, services, countsection })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -1145,6 +1181,7 @@ router.get('/reseption/:id', async (req, res) => {
         let clients = []
         let sections = []
         let services = []
+        let countsection = []
         for (let i = 0; i < connectors.length; i++) {
             const client = await Clients.findById(connectors[i].client)
             const sec = await Section.find({
@@ -1154,11 +1191,22 @@ router.get('/reseption/:id', async (req, res) => {
             const service = await Service.find({
                 connector: connectors[i]._id
             })
+            let c = {
+                accept: 0,
+                all: 0
+            }
+            sec.map(section => {
+                c.all = c.all + 1
+                if (section.accept) {
+                    c.accept = c.accept + 1
+                }
+            })
+            countsection.push(c)
             services.push(service)
             clients.push(client)
             sections.push(sec)
         }
-        res.json({ connectors, clients, sections, services })
+        res.json({ connectors, clients, sections, services, countsection })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -1337,6 +1385,7 @@ router.get('/reseptionborn/:born', async (req, res) => {
         let clients = []
         let sections = []
         let services = []
+        let countsection = []
         for (let i = 0; i < connectors.length; i++) {
             const client = await Clients.findById(connectors[i].client)
             const sec = await Section.find({
@@ -1346,11 +1395,22 @@ router.get('/reseptionborn/:born', async (req, res) => {
             const service = await Service.find({
                 connector: connectors[i]._id
             })
+            let c = {
+                accept: 0,
+                all: 0
+            }
+            sec.map(section => {
+                c.all = c.all + 1
+                if (section.accept) {
+                    c.accept = c.accept + 1
+                }
+            })
+            countsection.push(c)
             services.push(service)
             clients.push(client)
             sections.push(sec)
         }
-        res.json({ connectors, clients, sections, services })
+        res.json({ connectors, clients, sections, services, countsection })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
