@@ -31,7 +31,7 @@ export const DirectionTurn = ({ section, id }) => {
         // window.localStorage.clear()
         getOffline()
 
-    }, 2000)
+    }, 5000)
 
 
     return (

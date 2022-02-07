@@ -2,5 +2,5 @@
     "PORT": 80,
     "mongoUri": "mongodb://localhost/gemotest",
     "jwtSecret": "sarvar9417",
-    "baseUrl": "http://193.3.168.33"
+    "baseUrl": "http://gemo-test.uz"
 }

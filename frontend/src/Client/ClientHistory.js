@@ -184,7 +184,7 @@ export const ClientHistory = () => {
                                     </div>
                                     <div className="col-7">
                                         <p className='p-2 m-0 text-end pr-5'>
-                                            Xizmatlar litsenziyalangan.   LITSENZIYA №01419   28.02.2019y. SSV RU
+                                            Xizmatlar litsenziyalangan.   LITSENZIYA №21830906  03.09.2020. SSV RU
                                         </p>
                                     </div>
                                 </div>

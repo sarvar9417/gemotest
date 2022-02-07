@@ -31,14 +31,14 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                         <th className="report-header-cell">
                             <div style={{ borderTop: "30px" }}>
                                 <div className="row" style={{ fontSize: "10pt" }}>
-                                    <div className="col-6" style={{ border: "1px solid", textAlign: "center" }}>
+                                    <div className="col-4" style={{ border: "1px solid", textAlign: "center" }}>
                                         <p className='pt-2'>
                                             O'zbekiston Respublikasi Sog'liqni Saqlash Vazirligi
                                         </p>
                                     </div>
-                                    <div className="col-2" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
+                                    <div className="col-4" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
                                         <p className='pt-2'>
-                                            ОКED 86900
+                                            IFUD: 86900
                                         </p>
                                     </div>
                                     <div className="col-4" style={{ border: "1px solid", textAlign: "center", borderLeft: "none" }}>
@@ -48,16 +48,13 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                     </div>
                                 </div>
                                 <div className="row" style={{ fontSize: "20pt" }}>
-                                    <div className="col-3 pt-3">
-                                        <img width="200" src={logo && logo.logo} alt='Logo' />
-                                    </div>
                                     <div className="col-6 pt-2" style={{ textAlign: "center" }}>
                                         <p className='pt-4' style={{ fontFamily: "-moz-initial" }}>
                                             "GEMO-TEST" <br />
                                             MARKAZIY LABARATORIYA
                                         </p>
                                     </div>
-                                    <div className="col-3" style={{ textAlign: "center" }}>
+                                    <div className="col-6" style={{ textAlign: "center" }}>
                                         <p className='text-end m-0'>
                                             <img width="140" src={qr && qr} alt="QR" />
                                         </p>
@@ -67,32 +64,40 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                     <div className="col-12" style={{ padding: "0" }}>
                                         <table style={{ width: "100%", border: "2px solid", borderTop: "3px solid" }}>
                                             <tr style={{ textAlign: "center" }}>
-                                                <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                                <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
                                                     Mijozning F.I.SH
                                                 </td>
-                                                <td className='p-0 py-1' style={{ width: "33%", border: "1px solid #000" }}>
+                                                <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
                                                     <h4>{client && client.lastname + " " + client.firstname}</h4>
                                                 </td>
-                                                <td rowSpan="3" style={{ width: "33%" }}>
+                                                <td rowSpan="4" style={{ width: "33%" }}>
                                                     <p className='fw-bold fs-4'>
                                                         TAHLIL <br /> NATIJALARI
                                                     </p>
                                                 </td>
                                             </tr>
                                             <tr style={{ textAlign: "center" }}>
-                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
                                                     Tug'ilgan yili
                                                 </td>
-                                                <td className='p-0 py-2' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
+                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
                                                     {client && new Date(client.born).toLocaleDateString()}
                                                 </td>
                                             </tr>
                                             <tr style={{ textAlign: "center" }}>
-                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "#808080", color: "#fff", border: "1px solid #000" }}>
+                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
                                                     Sana
                                                 </td>
-                                                <td className='p-0 py-2' style={{ width: "33%", border: "1px solid #000", fontSize: "20px" }}>
+                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
                                                     {connector && new Date(connector.bronDay).toLocaleDateString()}
+                                                </td>
+                                            </tr>
+                                            <tr style={{ textAlign: "center" }}>
+                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
+                                                    ID
+                                                </td>
+                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
+                                                    {client && client.id}
                                                 </td>
                                             </tr>
                                         </table>
@@ -106,7 +111,7 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                     </div>
                                     <div className="col-8">
                                         <p className='p-2 m-0 text-end pr-5'>
-                                            Xizmatlar litsenziyalangan.   LITSENZIYA №01419   28.02.2019y. SSV RU
+                                            Xizmatlar litsenziyalangan.   LITSENZIYA №21830906  03.09.2020. SSV RU
                                         </p>
                                     </div>
                                 </div>
@@ -243,15 +248,19 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                     <tr>
                         <td className="report-footer-cell">
                             <div className='row'>
-                                <div className='col-6'>
+                                <div className='col-4'>
                                     <div className="footer-info">
                                         <p className='text-start'> Manzil: {logo && logo.address} </p>
                                         <p className='text-start'> Telefon: +{logo && logo.phone1}, +{logo && logo.phone2}, +{logo && logo.phone3} </p>
-                                        <p className='text-start'> <FontAwesomeIcon icon={faTelegram} /> http://t.me/gemotest.uz </p>
+                                        {/* <p className='text-start'> <FontAwesomeIcon icon={faTelegram} /> http://t.me/gemotest.uz </p> */}
+                                        <p className='text-start'> Pochta indeksi: 210100 </p>
                                     </div>
                                 </div>
-                                <div className='col-6'>
-                                    <p className='text-start'> Vrach: Iydiyev B.  ________ </p>
+                                <div className='col-4'>
+                                    <p className='text-center' style={{ paddingTop: "35px" }}> Vrach: Iydiyev B.  __________ </p>
+                                </div>
+                                <div className='col-4'>
+                                    <img width="200" src={logo && logo.logo} />
                                 </div>
                                 <div className='col-12'>
                                     <p className='text-center fs-5' > WWW.GEMO-TEST.UZ </p>

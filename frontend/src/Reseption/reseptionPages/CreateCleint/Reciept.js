@@ -218,7 +218,10 @@ export const Reciept = () => {
                                                 price = price + (section.price)
                                                 return (<tr>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }}>{k}</td>
-                                                    <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-start px-2"> {section.name} {section.subname}</td>
+                                                    <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-start px-2">
+                                                        <span className='text-capitalize'>{section.name} </span>
+                                                        <span className='text-uppercase'>{section.subname}</span>
+                                                    </td>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-center">
                                                         {section.bron === 'offline' ? section.turn : section.bronTime}
 
@@ -326,7 +329,10 @@ export const Reciept = () => {
                                                 price = price + (section.price)
                                                 return (<tr>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }}>{l}</td>
-                                                    <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-start px-2">{section.name} {section.subname}</td>
+                                                    <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-start px-2">
+                                                        <span className='text-capitalize'>{section.name} </span>
+                                                        <span className='text-uppercase'>{section.subname}</span>
+                                                    </td>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-center">
                                                         {section.bron === 'offline' ? section.turn : section.bronTime}
 
@@ -363,6 +369,6 @@ export const Reciept = () => {
                     Print
                 </button>
             </div>
-        </div>
+        </div >
     )
 }

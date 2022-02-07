@@ -52,7 +52,10 @@ export const AddServices = () => {
       const data = await request("/api/direction/", "GET", null, {
         Authorization: `Bearer ${auth.token}`
       })
-      let s = []
+      let s = [{
+        label: "Barcha xizmatlar",
+        value: "all"
+      }]
       let all = []
       data.map((d) => {
         s.push({
@@ -90,12 +93,16 @@ export const AddServices = () => {
 
   const changeTypeOptions = (event) => {
     let s = []
-    alloptions && alloptions.map(op => {
-      if (op.section === event.value) {
-        s.push(op)
-      }
-    })
-    setOptions(s)
+    if (event.value === "all") {
+      setOptions(alloptions)
+    } else {
+      alloptions && alloptions.map(op => {
+        if (op.section === event.value) {
+          s.push(op)
+        }
+      })
+      setOptions(s)
+    }
   }
 
   // Mijoz sxemasi
