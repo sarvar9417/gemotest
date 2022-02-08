@@ -70,7 +70,7 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                                 <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
                                                     <h4>{client && client.lastname + " " + client.firstname}</h4>
                                                 </td>
-                                                <td rowSpan="4" style={{ width: "33%" }}>
+                                                <td rowSpan="2" colSpan={2} style={{ width: "33%" }}>
                                                     <p className='fw-bold fs-4'>
                                                         TAHLIL <br /> NATIJALARI
                                                     </p>
@@ -86,17 +86,30 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                             </tr>
                                             <tr style={{ textAlign: "center" }}>
                                                 <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
+                                                    Telefon
+                                                </td>
+                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
+                                                    +{connector && connector.phone}
+                                                </td>
+                                                <td className='p-0 py-2 fw-bold' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000" }}>
+                                                    Probirka
+                                                </td>
+                                                <td className='p-0 py-2' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
+                                                    {connector && connector.probirka}
+                                                </td>
+                                            </tr>
+
+                                            <tr style={{ textAlign: "center" }}>
+                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
                                                     Sana
                                                 </td>
                                                 <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
                                                     {connector && new Date(connector.bronDay).toLocaleDateString()}
                                                 </td>
-                                            </tr>
-                                            <tr style={{ textAlign: "center" }}>
-                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
+                                                <td className='p-0 py-2 fw-bold' style={{ width: "200px", backgroundColor: "white", border: "1px solid #000" }}>
                                                     ID
                                                 </td>
-                                                <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
+                                                <td className='p-0 py-2' style={{ width: "200px", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
                                                     {client && client.id}
                                                 </td>
                                             </tr>

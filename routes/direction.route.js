@@ -35,6 +35,8 @@ router.post('/register', auth, async (req, res) => {
             result,
             additionalone,
             additionaltwo,
+            table,
+            tableturn
         } = req.body
         const direction = new Direction({
             value,
@@ -52,6 +54,8 @@ router.post('/register', auth, async (req, res) => {
             result,
             additionalone,
             additionaltwo,
+            table,
+            tableturn
         })
         await direction.save()
         res.status(201).send(direction)

@@ -45,7 +45,6 @@ export const PaymentsCounterAgents = () => {
 
     const getPaymentType = useCallback(async (doctorId) => {
         try {
-            console.log(doctorId);
             const fetch = await request(`/api/counteragentpayment/doctor/${startDate}/${endDate}/${doctorId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
@@ -72,7 +71,7 @@ export const PaymentsCounterAgents = () => {
             setAll(fetch)
         } catch (e) {
         }
-    }, [request, auth, setAll, startDate, endDate,counteragentId])
+    }, [request, auth, setAll, startDate, endDate, counteragentId])
 
     const getDoctors = useCallback(async () => {
         try {
@@ -83,18 +82,17 @@ export const PaymentsCounterAgents = () => {
                 label: "Barchasi",
                 value: "all",
             }]
-            fetch.map((doctor)=>{
+            fetch.map((doctor) => {
                 o.push({
                     id: doctor._id,
                     label: doctor.lastname + " " + doctor.firstname,
                     value: doctor.lastname + " " + doctor.firstname,
                 })
             })
-            console.log(o);
             setOptions(o)
         } catch (e) {
         }
-    }, [request, auth, setOptions, startDate, endDate,counteragentId])
+    }, [request, auth, setOptions, startDate, endDate, counteragentId])
 
     useEffect(() => {
         if (error) {
@@ -157,12 +155,12 @@ export const PaymentsCounterAgents = () => {
                                 {
                                     all && all.sections.map((sectionss, index) => {
                                         return sectionss.map((section, key) => {
-                                            if (all.directions[index][key].counterDoctor > 100) {
+                                            if (all.directions[index][key].counterDoctor && all.directions[index][key].counterDoctor > 100) {
                                                 doctor = doctor + all.directions[index][key].counterDoctor
                                             } else {
                                                 doctor = doctor + all.directions[index][key].counterDoctor * section.price / 100
                                             }
-                                            if (all.directions[index][key].counteragentProcient > 100) {
+                                            if (all.directions[index][key].counteragentProcient && all.directions[index][key].counteragentProcient > 100) {
                                                 counterAgent = counterAgent + all.directions[index][key].counteragentProcient
                                             } else {
                                                 counterAgent = counterAgent + all.directions[index][key].counteragentProcient * section.price / 100
@@ -181,7 +179,7 @@ export const PaymentsCounterAgents = () => {
                                                     <td className='phone text-center fw-bold text-primary'>{section.price}</td>
                                                     <td className='phone text-center fw-bold text-success'>
                                                         {
-                                                            all.directions[index][key].counteragentProcient > 100
+                                                            all.directions[index][key].counteragentProcient && all.directions[index][key].counteragentProcient > 100
                                                                 ?
                                                                 all.directions[index][key].counteragentProcient
                                                                 :

@@ -623,16 +623,16 @@ router.get('/advertisement/:agent', async (req, res) => {
 // ===================================================================================
 // ===================================================================================
 
-
-
-
 router.get('/table/:start/:end/:section', async (req, res) => {
     try {
         const start = new Date(req.params.start)
         const end = new Date(req.params.end)
         const directions = await Direction.find({
-            section: req.params.section
+            section: req.params.section,
+            table: true,
+            tableturn: { $ne: 0 }
         })
+            .sort({ tableturn: 1 })
 
         let allsections = []
         for (let i = 0; i < directions.length; i++) {

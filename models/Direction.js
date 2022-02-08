@@ -17,6 +17,8 @@ const direction = new Schema({
     result: String,
     additionalone: String,
     additionaltwo: String,
+    table: Boolean,
+    tableturn: Number
 })
 
 function validateDirection(direction) {
@@ -36,6 +38,8 @@ function validateDirection(direction) {
         result: Joi.string(),
         additionalone: Joi.string(),
         additionaltwo: Joi.string(),
+        table: Joi.boolean(),
+        tableturn: Joi.number()
 
     })
     return schema.validate(direction)
