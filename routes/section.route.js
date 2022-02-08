@@ -697,7 +697,7 @@ router.get('/table/:start/:end/:section', async (req, res) => {
             tables.push(table)
         }
 
-        res.send({ clients, datas, directions, tables })
+        res.send({ clients, datas, directions, tables, connectors })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }

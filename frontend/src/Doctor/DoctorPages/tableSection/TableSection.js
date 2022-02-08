@@ -48,6 +48,7 @@ export const TableSection = () => {
     const [directions, setDirections] = useState()
     const [sections, setSections] = useState()
     const [tables, setTables] = useState()
+    const [connectors, setConnectors] = useState()
     const getSections = useCallback(async (section) => {
         try {
             const data = await request(`/api/section/table/${startDate}/${endDate}/${section}`, "GET", null, {
@@ -57,10 +58,11 @@ export const TableSection = () => {
             setClients(data.clients)
             setDirections(data.directions)
             setSections(data.datas)
+            setConnectors(data.connectors)
         } catch (e) {
             notify(e)
         }
-    }, [auth, request, setSections, setTables, setDirections, setClients, startDate, endDate])
+    }, [auth, request, setSections, setTables, setDirections, setClients, startDate, endDate, setConnectors])
 
 
     const editTables = (event, index, key) => {
@@ -120,6 +122,7 @@ export const TableSection = () => {
                     <thead style={{ backgroundColor: "#6c7ae0", color: "white", position: "sticky", top: "0" }}>
                         <tr>
                             <th style={{ width: "50px" }} >№</th>
+                            <th className='text-center'>Probirka</th>
                             <th className='text-center'>F.I.O</th>
                             <th className='text-center'>Tug'ilgan yili</th>
                             {
@@ -137,6 +140,7 @@ export const TableSection = () => {
                                 return (
                                     <tr>
                                         <td>{index + 1}</td>
+                                        <td className='text-center fw-bold'>{connectors && connectors[index].probirka}</td>
                                         <td className='fish fw-bold px-2'>{client.lastname + " " + client.firstname}</td>
                                         <td className='fw-bold px-2'>{new Date(client.born).toLocaleDateString()}</td>
                                         {sections && sections[index] && sections[index].map((section, key) => {
@@ -148,7 +152,7 @@ export const TableSection = () => {
                                                             <input
                                                                 onChange={(event) => editTables(event, index, key)}
                                                                 defaultValue={tables[index][key].result}
-                                                                style={{ width: "100px" }} />
+                                                                style={{ width: "70px" }} />
                                                             : ""
                                                         }
                                                     </td>
@@ -172,6 +176,7 @@ export const TableSection = () => {
                     <thead style={{ backgroundColor: "#6c7ae0", color: "white", position: "sticky", top: "0" }}>
                         <tr>
                             <th style={{ width: "50px" }} >№</th>
+                            <th className='text-center fw-bold'>Probirka</th>
                             <th className='text-center'>F.I.O</th>
                             <th className='text-center'>Tug'ilgan yili</th>
                             {
@@ -189,6 +194,7 @@ export const TableSection = () => {
                                 return (
                                     <tr>
                                         <td>{index + 1}</td>
+                                        <td>{connectors && connectors[index].probirka}</td>
                                         <td className='fish fw-bold px-2'>{client.lastname + " " + client.firstname}</td>
                                         <td className='fw-bold px-2'>{new Date(client.born).toLocaleDateString()}</td>
                                         {sections && sections[index] && sections[index].map((section, key) => {
@@ -196,9 +202,9 @@ export const TableSection = () => {
                                                 <>
                                                     <td className='text-center fw-bold text-success' style={{ width: "20px" }} key={key}>{section} </td>
                                                     <td className={`text-center px-0`} >
-                                                        {tables && tables[index]&& tables[index][key] ?
-                                                        tables[index][key].result
-                                                        : ""
+                                                        {tables && tables[index] && tables[index][key] ?
+                                                            tables[index][key].result
+                                                            : ""
                                                         }
                                                     </td>
                                                 </>
