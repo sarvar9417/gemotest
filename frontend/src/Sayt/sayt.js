@@ -18,6 +18,7 @@ import { Labaratoriya } from './Sections/Labaratoriya'
 export const Sayt = () => {
 
     const [loader, setLoader] = useState(true)
+    
 
     useEffect(() => {
         setLoader(false)
@@ -34,6 +35,8 @@ export const Sayt = () => {
         </>
     }
 
+
+
     return (
         <div className="body">
             <div className="header">
@@ -46,7 +49,7 @@ export const Sayt = () => {
                 <Doctor />
             </div>
             <div className='row'>
-                <Labaratoriya/>
+                <Labaratoriya />
             </div>
             {/* <div className='row mt-5'>
                 <Medsestra />
@@ -59,6 +62,8 @@ export const Sayt = () => {
             </div> */}
             <Turn />
             <CallCenter />
+
+            
         </div>
 
     )

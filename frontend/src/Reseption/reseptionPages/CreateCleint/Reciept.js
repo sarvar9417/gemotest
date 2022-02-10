@@ -168,7 +168,7 @@ export const Reciept = () => {
                                             connector && connector.probirka ?
                                                 <h6
                                                     className='d-inline-block'
-                                                    style={{ fontSize: "27pt", fontFamily: "times", paddingTop: "180px" }}>
+                                                    style={{ fontSize: "27pt", fontFamily: "times", paddingTop: "100px" }}>
                                                     PROBIRKA: {connector && connector.probirka}
                                                 </h6> :
                                                 ""
@@ -184,7 +184,7 @@ export const Reciept = () => {
                         </table>
                     </div>
                     <div className="row">
-                        <div className="col-4">
+                        <div className="col-2">
                             <div className="invoice-from ps-4">
                                 <h6 className='d-inline-block' style={{ textTransform: "uppercase", fontFamily: "times", fontSize: "17pt" }} >ID: {client && client.id}</h6>
                             </div>
@@ -194,9 +194,14 @@ export const Reciept = () => {
                                 <h6 className='d-inline-block' style={{ fontSize: "17pt", fontFamily: "times" }}>F.I.O: {client && client.lastname} {client && client.firstname} {client && client.fathername}</h6>
                             </div>
                         </div>
-                        <div className="col-4">
-                            <div className="invoice-from text-end pe-4">
+                        <div className="col-3">
+                            <div className="invoice-from text-center">
                                 <h6 className='d-inline-block' style={{ fontSize: "17pt", fontFamily: "times" }}>Yil: {client && new Date(client.born).toLocaleDateString()}</h6>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="invoice-from text-end pe-4">
+                                <h6 className='d-inline-block' style={{ fontSize: "17pt", fontFamily: "times" }}>Tel: {client && "+" + client.phone}</h6>
                             </div>
                         </div>
 
@@ -221,7 +226,7 @@ export const Reciept = () => {
                                                 return (<tr>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }}>{k}</td>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-start px-2">
-                                                        <span className='text-capitalize'>{section.name} </span>
+                                                        <span className=''>{section.name} </span>
                                                         <span className='text-uppercase fw-bold'>{section.subname}</span>
                                                     </td>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-center">
@@ -281,7 +286,7 @@ export const Reciept = () => {
                                             connector && connector.probirka ?
                                                 <h6
                                                     className='d-inline-block'
-                                                    style={{ fontSize: "27pt", fontFamily: "times", paddingTop: "180px" }}>
+                                                    style={{ fontSize: "27pt", fontFamily: "times", paddingTop: "100px" }}>
                                                     PROBIRKA: {connector && connector.probirka}
                                                 </h6> :
                                                 ""
@@ -297,7 +302,7 @@ export const Reciept = () => {
                         </table>
                     </div>
                     <div className="row">
-                        <div className="col-4">
+                        <div className="col-2">
                             <div className="invoice-from ps-4">
                                 <h6 className='d-inline-block' style={{ textTransform: "uppercase", fontFamily: "times", fontSize: "17pt" }} >ID: {client && client.id}</h6>
                             </div>
@@ -307,9 +312,14 @@ export const Reciept = () => {
                                 <h6 className='d-inline-block' style={{ fontSize: "17pt", fontFamily: "times" }}>F.I.O: {client && client.lastname} {client && client.firstname} {client && client.fathername}</h6>
                             </div>
                         </div>
-                        <div className="col-4">
-                            <div className="invoice-from text-end pe-4">
+                        <div className="col-3">
+                            <div className="invoice-from text-center">
                                 <h6 className='d-inline-block' style={{ fontSize: "17pt", fontFamily: "times" }}>Yil: {client && new Date(client.born).toLocaleDateString()}</h6>
+                            </div>
+                        </div>
+                        <div className="col-3">
+                            <div className="invoice-from text-end pe-4">
+                                <h6 className='d-inline-block' style={{ fontSize: "17pt", fontFamily: "times" }}>Tel: {client && "+" + client.phone}</h6>
                             </div>
                         </div>
 
@@ -334,7 +344,7 @@ export const Reciept = () => {
                                                 return (<tr>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }}>{l}</td>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-start px-2">
-                                                        <span className='text-capitalize'>{section.name} </span>
+                                                        <span className=''>{section.name} </span>
                                                         <span className='text-uppercase fw-bold'>{section.subname}</span>
                                                     </td>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-center">

@@ -1,6 +1,7 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const config = require('config')
+const fileupload = require("express-fileupload");
 
 const app = express()
 
@@ -8,6 +9,7 @@ const PORT = config.get("PORT")
 
 const path = require('path')
 
+app.use(fileupload())
 app.use(express.json({ extended: true }))
 app.use(express.urlencoded({ extended: true }))
 // Director
@@ -72,6 +74,8 @@ app.use('/api/headsection', require('./routes/headsection.route'))
 app.use('/api/tabledirection', require('./routes/tabledirection.route'))
 // TableColumn
 app.use('/api/tablecolumn', require('./routes/tablecolumn.route'))
+// FileSave
+app.use('/api/file', require('./routes/filesave.route'))
 if (process.env.NODE_ENV === "production") {
     app.use('/', express.static(path.join(__dirname, 'frontend', 'build')))
 

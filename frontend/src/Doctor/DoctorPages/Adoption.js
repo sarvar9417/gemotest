@@ -6,6 +6,8 @@ import { toast } from 'react-toastify'
 import { useHttp } from '../hooks/http.hook'
 import { Print } from './Print'
 import QRCode from 'qrcode'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTrashAlt, faSave } from "@fortawesome/free-solid-svg-icons"
 
 toast.configure()
 export const Adoption = () => {
@@ -28,6 +30,7 @@ export const Adoption = () => {
     const [sections, setSections] = useState()
     const [tablesections, setTableSections] = useState()
     const [tablecolumns, setTableColumns] = useState()
+    const [sectionFiles, setSectionFiles] = useState()
 
     const getClient = useCallback(async () => {
         try {
@@ -49,10 +52,11 @@ export const Adoption = () => {
             setSections(fetch.sections)
             setTableSections(fetch.tablesections)
             setTableColumns(fetch.tablecolumns)
+            setSectionFiles(fetch.sectionFiles)
         } catch (e) {
             notify(e)
         }
-    }, [request, auth, setTableColumns, connectorId, setConnector, setSections, setTableSections, setTableColumns])
+    }, [request, auth, setTableColumns, connectorId, setConnector, setSections, setTableSections, setTableColumns, setSectionFiles])
 
     const changeNorma = (event, index, key) => {
         let t = [...tablesections]
@@ -206,11 +210,51 @@ export const Adoption = () => {
         return "text-center cw30"
     }
 
+    const uploadImage = useCallback(async (e, index, section) => {
+        const files = e.target.files[0]
+        const data = new FormData()
+        data.append('file', files)
+        data.append('upload_preset', "mv6ddmzc")
+        const res = await fetch("https://api.cloudinary.com/v1_1/gemotest-uz/image/upload", { method: 'POST', body: data })
+            // .then(() => )
+            .catch(() => toast.error("Fayl yuklashda xatolik yuz berdi"))
+        const file = await res.json()
+        toast.success("Fayl muvaffaqqiyatli yuklandi")
+        let f = [...sectionFiles]
+        f[index].push({
+            imageurl: file.secure_url,
+            section: section._id,
+            imageid: file.public_id
+        })
+        setSectionFiles(f)
+    }, [setSectionFiles, sectionFiles, toast])
+
+    const Delete = useCallback(async (f) => {
+        const fetch = await request(`/api/file/${f._id}`, 'DELETE', null, {
+            Authorization: `Bearer ${auth.token}`
+        })
+        toast.success(fetch.message)
+        getConnector()
+    }, [setSectionFiles, sectionFiles, toast, getConnector])
+    console.log(sectionFiles);
+    const patchFiles = useCallback(async (index) => {
+        try {
+            console.log(index);
+            const fetch = await request(`/api/file`, 'POST', [...sectionFiles[index]], {
+                Authorization: `Bearer ${auth.token}`
+            })
+            toast.success(fetch.message)
+            history.push(`/doctor/adoption/${clientId}/${connectorId}`)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, auth, sectionFiles])
+
     return (
         <>
             <div className='d-none'>
                 <div ref={componentRef} className="container p-4" style={{ fontFamily: "times" }}>
-                    <Print tablecolumns={tablecolumns} qr={qr} logo={logo} connector={connector} client={client} sections={sections} tablesections={tablesections} />
+                    <Print sectionFiles={sectionFiles} tablecolumns={tablecolumns} qr={qr} logo={logo} connector={connector} client={client} sections={sections} tablesections={tablesections} />
                 </div>
             </div>
             <div className="container p-4" style={{ fontFamily: "times" }}>
@@ -392,7 +436,47 @@ export const Adoption = () => {
                                                         </tr>
                                                     )
                                                 })
+
                                             }
+                                            <tr className='w-100'>
+                                                <td className='no' style={{ border: "1px solid black" }}>Fayl</td>
+                                                <td
+                                                    style={{ border: "1px solid black" }}
+                                                    colSpan={
+                                                        tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
+                                                            4 : `${tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
+                                                                3 : 2
+                                                            }`
+                                                    }
+                                                >
+                                                    {
+                                                        sectionFiles && sectionFiles[index] && sectionFiles[index].map((file) => {
+                                                            return (
+                                                                <div className='row'>
+                                                                    <div className='col-10 p-3'>
+                                                                        <img className='m-auto' width="90%" src={file.imageurl} alt="result" />
+
+                                                                    </div>
+                                                                    <div className='col-2'>
+                                                                        <button onClick={() => { Delete(file) }} className='btn button-danger'>
+                                                                            <FontAwesomeIcon icon={faTrashAlt} />
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            )
+                                                        })
+
+                                                    }
+                                                </td>
+                                                <td style={{ border: "1px solid black" }} className="text-center px-3">
+                                                    <input onChange={(event) => uploadImage(event, index, section)} type="file" className='form-control' />
+                                                </td>
+                                                <td style={{ border: "1px solid black" }} className="text-center">
+                                                    <button id={index} onClick={() => patchFiles(index)} className='btn btn-info'>
+                                                        <FontAwesomeIcon icon={faSave} />
+                                                    </button>
+                                                </td>
+                                            </tr>
                                         </table>
                                         <br />
                                         {
@@ -412,7 +496,8 @@ export const Adoption = () => {
                                                         <td style={{ border: "1px solid #000", padding: "10px" }}>
                                                             <textarea defaultValue={section.comment} onChange={(event) => { sectionComment(event, index) }} className='form-control text-center' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
                                                         </td>
-                                                    </tr></table>) : ""
+                                                    </tr>
+                                                </table>) : ""
                                         }
                                     </div>
                                 )

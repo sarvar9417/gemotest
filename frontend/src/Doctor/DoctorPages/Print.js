@@ -3,7 +3,7 @@ import './tableStyle.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTelegram } from '@fortawesome/free-brands-svg-icons'
 
-export const Print = ({ client, connector, sections, tablesections, logo, qr, tablecolumns }) => {
+export const Print = ({sectionFiles, client, connector, sections, tablesections, logo, qr, tablecolumns }) => {
     const checkClassHead = (data) => {
         if (data.col5.length > 1) {
             return "text-center fw-bold cw18"
@@ -207,6 +207,31 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                                             )
                                                         })
                                                     }
+                                                    <tr className='w-100'>
+                                                        <td className='no' style={{ border: "1px solid black" }}>Fayl</td>
+                                                        <td
+                                                            style={{ border: "1px solid black" }}
+                                                            colSpan={
+                                                                tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
+                                                                    5 : `${tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
+                                                                        4 : 3
+                                                                    }`
+                                                            }
+                                                        >
+                                                            {
+                                                                sectionFiles && sectionFiles[index] && sectionFiles[index].map((file) => {
+                                                                    return (
+                                                                        <div className='row'>
+                                                                            <div className='col-12 p-3'>
+                                                                                <img className='m-auto' width="90%" src={file.imageurl} alt="result" />
+                                                                            </div>
+                                                                        </div>
+                                                                    )
+                                                                })
+
+                                                            }
+                                                        </td>
+                                                    </tr>
                                                 </table>
                                                 <br />
                                                 {
@@ -265,7 +290,7 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                     <div className="footer-info">
                                         <p className='text-start'> Manzil: {logo && logo.address} </p>
                                         <p className='text-start'> Telefon: +{logo && logo.phone1}, +{logo && logo.phone2}, +{logo && logo.phone3} </p>
-                                        {/* <p className='text-start'> <FontAwesomeIcon icon={faTelegram} /> http://t.me/gemotest.uz </p> */}
+                                        <p className='text-start'> <FontAwesomeIcon icon={faTelegram} /> http://t.me/gemotest.uz </p>
                                         <p className='text-start'> Pochta indeksi: 210100 </p>
                                     </div>
                                 </div>

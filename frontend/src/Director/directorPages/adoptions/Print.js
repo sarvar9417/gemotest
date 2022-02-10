@@ -252,7 +252,7 @@ export const Print = ({ client, connector, sections, tablesections, logo, qr, ta
                                     <div className="footer-info">
                                         <p className='text-start'> Manzil: {logo && logo.address} </p>
                                         <p className='text-start'> Telefon: +{logo && logo.phone1}, +{logo && logo.phone2}, +{logo && logo.phone3} </p>
-                                        {/* <p className='text-start'> <FontAwesomeIcon icon={faTelegram} /> http://t.me/gemotest.uz </p> */}
+                                        <p className='text-start'> <FontAwesomeIcon icon={faTelegram} /> http://t.me/gemotest.uz </p>
                                         <p className='text-start'> Pochta indeksi: 210100 </p>
                                     </div>
                                 </div>

@@ -12,6 +12,7 @@ const { Room } = require('../models/Rooms')
 const { TableSection } = require('../models/TableSection')
 const { HeadSection } = require('../models/HeadSection')
 const { TableColumn } = require('../models/Tablecolumn')
+const { FileSave } = require('../models/FileSave')
 
 
 // /api/auth/connector/register
@@ -1101,6 +1102,7 @@ router.get('/doctorconnector/:section/:id', async (req, res) => {
         })
         let tablesections = []
         let tablecolumns = []
+        let sectionFiles = []
         for (let i = 0; i < sections.length; i++) {
             const tablesection = await TableSection.find({
                 sectionid: sections[i]._id
@@ -1110,8 +1112,12 @@ router.get('/doctorconnector/:section/:id', async (req, res) => {
                 direction: sections[i].nameid
             })
             tablecolumns.push(tablecolumn)
+            const f = await FileSave.find({
+                section: sections[i]._id
+            })
+            sectionFiles.push(f)
         }
-        res.json({ connector, sections, tablesections, tablecolumns })
+        res.json({ connector, sections, tablesections, tablecolumns, sectionFiles })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
