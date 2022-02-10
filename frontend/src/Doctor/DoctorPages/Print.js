@@ -3,7 +3,7 @@ import './tableStyle.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTelegram } from '@fortawesome/free-brands-svg-icons'
 
-export const Print = ({sectionFiles, client, connector, sections, tablesections, logo, qr, tablecolumns }) => {
+export const Print = ({ sectionFiles, client, connector, sections, tablesections, logo, qr, tablecolumns }) => {
     const checkClassHead = (data) => {
         if (data.col5.length > 1) {
             return "text-center fw-bold cw18"
@@ -223,7 +223,7 @@ export const Print = ({sectionFiles, client, connector, sections, tablesections,
                                                                     return (
                                                                         <div className='row'>
                                                                             <div className='col-12 p-3'>
-                                                                                <img className='m-auto' width="90%" src={file.imageurl} alt="result" />
+                                                                                <img className='m-auto' width="100%" src={file.imageurl} alt="result" />
                                                                             </div>
                                                                         </div>
                                                                     )
