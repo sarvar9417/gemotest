@@ -1100,6 +1100,9 @@ router.get('/doctorconnector/:section/:id', async (req, res) => {
             headsectionid: req.params.section,
             connector: connector._id
         })
+            .sort({
+                name: 1
+            })
         let tablesections = []
         let tablecolumns = []
         let sectionFiles = []

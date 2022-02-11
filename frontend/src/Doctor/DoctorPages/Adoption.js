@@ -11,6 +11,7 @@ import { faTrashAlt, faSave } from "@fortawesome/free-solid-svg-icons"
 
 toast.configure()
 export const Adoption = () => {
+    let k = 0
     const history = useHistory()
     const componentRef = useRef()
     const handlePrint = useReactToPrint({
@@ -57,7 +58,7 @@ export const Adoption = () => {
             notify(e)
         }
     }, [request, auth, setTableColumns, connectorId, setConnector, setSections, setTableSections, setTableColumns, setSectionFiles])
-
+    console.log(tablesections);
     const changeNorma = (event, index, key) => {
         let t = [...tablesections]
         t[index][key].norma = event.target.value
@@ -236,10 +237,9 @@ export const Adoption = () => {
         toast.success(fetch.message)
         getConnector()
     }, [setSectionFiles, sectionFiles, toast, getConnector])
-    console.log(sectionFiles);
+
     const patchFiles = useCallback(async (index) => {
         try {
-            console.log(index);
             const fetch = await request(`/api/file`, 'POST', [...sectionFiles[index]], {
                 Authorization: `Bearer ${auth.token}`
             })
@@ -258,7 +258,7 @@ export const Adoption = () => {
                 </div>
             </div>
             <div className="container p-4" style={{ fontFamily: "times" }}>
-                <div style={{ borderTop: "30px" }}>
+                <div>
                     <div className="row" style={{ fontSize: "10pt" }}>
                         <div className="col-4" style={{ border: "1px solid", textAlign: "center" }}>
                             <p className='pt-2'>
@@ -278,14 +278,14 @@ export const Adoption = () => {
                     </div>
                     <div className="row" style={{ fontSize: "20pt" }}>
                         <div className="col-6 pt-2" style={{ textAlign: "center" }}>
-                            <p className='pt-4' style={{ fontFamily: "-moz-initial" }}>
+                            <p className='pt-2' style={{ fontFamily: "-moz-initial" }}>
                                 "GEMO-TEST" <br />
                                 MARKAZIY LABARATORIYA
                             </p>
                         </div>
                         <div className="col-6" style={{ textAlign: "center" }}>
                             <p className='text-end m-0'>
-                                <img width="140" src={qr && qr} alt="QR" />
+                                <img width="120" src={qr && qr} alt="QR" />
                             </p>
                         </div>
                     </div>
@@ -293,52 +293,52 @@ export const Adoption = () => {
                         <div className="col-12" style={{ padding: "0" }}>
                             <table style={{ width: "100%", border: "2px solid", borderTop: "3px solid" }}>
                                 <tr style={{ textAlign: "center" }}>
-                                    <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
+                                    <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
                                         Mijozning F.I.SH
                                     </td>
-                                    <td className='p-0 py-1' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
+                                    <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
                                         <h4>{client && client.lastname + " " + client.firstname}</h4>
                                     </td>
                                     <td rowSpan="2" colSpan={2} style={{ width: "33%" }}>
-                                        <p className='fw-bold fs-4'>
+                                        <p className='fw-bold fs-5 m-0'>
                                             TAHLIL <br /> NATIJALARI
                                         </p>
                                     </td>
                                 </tr>
                                 <tr style={{ textAlign: "center" }}>
-                                    <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
+                                    <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
                                         Tug'ilgan yili
                                     </td>
-                                    <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
+                                    <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
                                         {client && new Date(client.born).toLocaleDateString()}
                                     </td>
                                 </tr>
                                 <tr style={{ textAlign: "center" }}>
-                                    <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
-                                        Telefon
+                                    <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
+                                        Telefon raqami
                                     </td>
-                                    <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
-                                        +{connector && connector.phone}
+                                    <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
+                                        +{client && client.phone}
                                     </td>
-                                    <td className='p-0 py-2 fw-bold' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000" }}>
+                                    <td className='p-0 fw-bold' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000" }}>
                                         Probirka
                                     </td>
-                                    <td className='p-0 py-2' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
+                                    <td className='p-0' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
                                         {connector && connector.probirka}
                                     </td>
                                 </tr>
 
                                 <tr style={{ textAlign: "center" }}>
-                                    <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
+                                    <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
                                         Sana
                                     </td>
-                                    <td className='p-0 py-2' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
+                                    <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
                                         {connector && new Date(connector.bronDay).toLocaleDateString()}
                                     </td>
-                                    <td className='p-0 py-2 fw-bold' style={{ width: "200px", backgroundColor: "white", border: "1px solid #000" }}>
+                                    <td className='p-0 fw-bold' style={{ width: "200px", backgroundColor: "white", border: "1px solid #000" }}>
                                         ID
                                     </td>
-                                    <td className='p-0 py-2' style={{ width: "200px", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
+                                    <td className='p-0' style={{ width: "200px", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
                                         {client && client.id}
                                     </td>
                                 </tr>
@@ -347,12 +347,12 @@ export const Adoption = () => {
                     </div>
                     <div className="row mt-3" style={{ backgroundColor: "#C0C0C0" }}>
                         <div className="col-4">
-                            <p className='p-2 m-0'>
+                            <p className='px-2 m-0'>
                                 "GEMO-TEST" х/к
                             </p>
                         </div>
                         <div className="col-8">
-                            <p className='p-2 m-0 text-end pr-5'>
+                            <p className='px-2 m-0 text-end pr-5'>
                                 Xizmatlar litsenziyalangan.   LITSENZIYA №21830906  03.09.2020. SSV RU
                             </p>
                         </div>
@@ -366,71 +366,81 @@ export const Adoption = () => {
                                 tablesections && tablesections[index].length > 0
                             ) {
                                 return (
-                                    <div className='p-0'>
+                                    <>
                                         <table style={{ width: "100%" }}>
-                                            <tr>
-                                                <td colSpan={6} style={{ backgroundColor: "#FFF" }} >
-                                                    {section.name + " " + section.subname}
-                                                </td>
-                                            </tr>
-                                            <tr style={{ backgroundColor: "#C0C0C0" }}>
-                                                <td className='text-center fw-bold cn' style={{ border: "1px solid #000" }}>
-                                                    №
-                                                </td>
-                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
-                                                    {tablecolumns && tablecolumns[index] && tablecolumns[index].col1}
-                                                </td>
-                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
-                                                    {tablecolumns && tablecolumns[index] && tablecolumns[index].col2}
-                                                </td>
-                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
-                                                    {tablecolumns && tablecolumns[index] && tablecolumns[index].col3}
-                                                </td>
-                                                {
-                                                    tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
-                                                            {tablecolumns[index].col4}
-                                                        </td> : ""
-                                                }
-                                                {
-                                                    tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
-                                                            {tablecolumns[index].col5}
-                                                        </td> : ""
-                                                }
-                                                <td className='text-center px-2' style={{ border: "1px solid #000" }}>
-                                                    <input checked={section.accept} onChange={(event) => changeSectionaccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} />
-                                                </td>
-                                            </tr>
+                                            {
+                                                (sections[index - 1] && sections[index - 1].name !== section.name) || index === 0
+                                                    || tablesections[index - 1].length === 0 ?
+                                                    <>
+                                                        <span className='d-none'>{k = 0}</span>
+                                                        <tr>
+                                                            <td className='text-center' colSpan={6} style={{ backgroundColor: "#FFF" }} >
+                                                                {section.name}
+                                                            </td>
+                                                        </tr>
+                                                        <tr style={{ backgroundColor: "#C0C0C0" }}>
+                                                            <td className='text-center fw-bold cn' style={{ border: "1px solid #000" }}>
+                                                                №
+                                                            </td>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                {tablecolumns && tablecolumns[index] && tablecolumns[index].col1}
+                                                            </td>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                {tablecolumns && tablecolumns[index] && tablecolumns[index].col2}
+                                                            </td>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                {tablecolumns && tablecolumns[index] && tablecolumns[index].col3}
+                                                            </td>
+                                                            {
+                                                                tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                        {tablecolumns[index].col4}
+                                                                    </td> : ""
+                                                            }
+                                                            {
+                                                                tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                        {tablecolumns[index].col5}
+                                                                    </td> : ""
+                                                            }
+                                                            <td className='text-center px-2' style={{ border: "1px solid #000" }}>
+                                                                <input checked={section.accept} onChange={(event) => changeSectionaccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} />
+                                                            </td>
+                                                        </tr>
+                                                    </>
+                                                    : ""
+
+                                            }
+
                                             {
                                                 tablesections && tablesections[index].map((tablesection, key) => {
                                                     return (
                                                         <tr style={{ backgroundColor: "white" }}>
-                                                            <td className='cn' style={{ textAlign: "center", border: "1px solid #000" }}>
-                                                                {key + 1}
+                                                            <td className='cn' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
+                                                                {++k}
                                                             </td>
-                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ border: "1px solid #000", padding: "10px" }}>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ border: "1px solid #000", padding: "10px", borderTop: "0px solid white" }}>
                                                                 {tablesection.name}
                                                             </td>
-                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
                                                                 <textarea style={{ border: "none" }} onChange={(event) => { changeResult(event, index, key) }} name='result' className='form-control text-center' defaultValue={tablesection.result}></textarea>
                                                             </td>
-                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
                                                                 <textarea style={{ border: "none" }} onChange={(event) => { changeNorma(event, index, key) }} name='norma' className='form-control text-center' defaultValue={tablesection.norma} ></textarea>
                                                             </td>
                                                             {
                                                                 tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
                                                                         <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionalone(event, index, key) }} name='additionalone' className='form-control text-center' defaultValue={tablesection.additionalone}></textarea>
                                                                     </td> : ""
                                                             }
                                                             {
                                                                 tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
                                                                         <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionaltwo(event, index, key) }} name='additionaltwo' className='form-control text-center' defaultValue={tablesection.additionaltwo}></textarea>
                                                                     </td> : ""
                                                             }
-                                                            <td className='text-center px-2' style={{ border: "1px solid #000" }}>
+                                                            <td className='text-center px-2' style={{ border: "1px solid #000", borderTop: "0px solid white" }}>
                                                                 <input checked={tablesection.accept} onChange={(event) => changeAccept(event, index, key)} type="checkbox" style={{ width: "20px", height: "20px" }} />
                                                             </td>
                                                         </tr>
@@ -438,45 +448,7 @@ export const Adoption = () => {
                                                 })
 
                                             }
-                                            <tr className='w-100'>
-                                                <td className='no' style={{ border: "1px solid black" }}>Fayl</td>
-                                                <td
-                                                    style={{ border: "1px solid black" }}
-                                                    colSpan={
-                                                        tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                            4 : `${tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                3 : 2
-                                                            }`
-                                                    }
-                                                >
-                                                    {
-                                                        sectionFiles && sectionFiles[index] && sectionFiles[index].map((file) => {
-                                                            return (
-                                                                <div className='row'>
-                                                                    <div className='col-10 p-3'>
-                                                                        <img className='m-auto' width="90%" src={file.imageurl} alt="result" />
 
-                                                                    </div>
-                                                                    <div className='col-2'>
-                                                                        <button onClick={() => { Delete(file) }} className='btn button-danger'>
-                                                                            <FontAwesomeIcon icon={faTrashAlt} />
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            )
-                                                        })
-
-                                                    }
-                                                </td>
-                                                <td style={{ border: "1px solid black" }} className="text-center px-3">
-                                                    <input onChange={(event) => uploadImage(event, index, section)} type="file" className='form-control' />
-                                                </td>
-                                                <td style={{ border: "1px solid black" }} className="text-center">
-                                                    <button id={index} onClick={() => patchFiles(index)} className='btn btn-info'>
-                                                        <FontAwesomeIcon icon={faSave} />
-                                                    </button>
-                                                </td>
-                                            </tr>
                                         </table>
                                         <br />
                                         {
@@ -485,7 +457,7 @@ export const Adoption = () => {
                                                     <tr style={{ backgroundColor: "white" }}>
                                                         <th style={{ border: "1px solid #000", padding: "10px" }} > Xulosa </th>
                                                         <td style={{ border: "1px solid #000", padding: "10px" }} colSpan="5">
-                                                            <textarea defaultValue={section.summary} onChange={(event) => { sectionSummary(event, index) }} className='form-control text-center' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
+                                                            <textarea defaultValue={section.summary} onChange={(event) => { sectionSummary(event, index) }} className='form-control' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
                                                         </td>
                                                         <td rowSpan="2" className='text-center' style={{ border: "1px solid #000", padding: "10px" }}>
                                                             <input checked={section.accept} onChange={(event) => sectionAccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} />
@@ -494,12 +466,12 @@ export const Adoption = () => {
                                                     <tr style={{ backgroundColor: "white" }}>
                                                         <th style={{ border: "1px solid #000", padding: "10px" }}> Izoh </th>
                                                         <td style={{ border: "1px solid #000", padding: "10px" }}>
-                                                            <textarea defaultValue={section.comment} onChange={(event) => { sectionComment(event, index) }} className='form-control text-center' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
+                                                            <textarea defaultValue={section.comment} onChange={(event) => { sectionComment(event, index) }} className='form-control' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
                                                         </td>
                                                     </tr>
                                                 </table>) : ""
                                         }
-                                    </div>
+                                    </>
                                 )
                             } else {
                                 if (!section.probirka) {
@@ -513,7 +485,7 @@ export const Adoption = () => {
                                             <tr style={{ backgroundColor: "white" }}>
                                                 <th style={{ border: "1px solid #000", padding: "10px" }} > Xulosa </th>
                                                 <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
-                                                    <textarea defaultValue={section.summary} onChange={(event) => { sectionSummary(event, index) }} className='form-control text-center' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
+                                                    <textarea defaultValue={section.summary} onChange={(event) => { sectionSummary(event, index) }} className='form-control' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
                                                 </td>
                                                 <td rowSpan="2" className='text-center' style={{ border: "1px solid #000", padding: "10px" }}>
                                                     <input checked={section.accept} onChange={(event) => sectionAccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} />
@@ -522,7 +494,7 @@ export const Adoption = () => {
                                             <tr style={{ backgroundColor: "white" }}>
                                                 <th style={{ border: "1px solid #000", padding: "10px" }}> Izoh </th>
                                                 <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
-                                                    <textarea defaultValue={section.comment} onChange={(event) => { sectionComment(event, index) }} className='form-control text-center' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
+                                                    <textarea defaultValue={section.comment} onChange={(event) => { sectionComment(event, index) }} className='form-control' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
                                                 </td>
                                             </tr>
                                         </table>
@@ -532,6 +504,72 @@ export const Adoption = () => {
 
                         })
 
+                    }
+
+                    {
+                        sections && sections.map((section, index) => {
+                            return (
+                                <>
+                                    <div className='row mt-4'>
+                                        <div className='col-12 text-center border border-dark w-100 py-1'>
+                                            {section.name + " " + section.subname}
+                                        </div>
+                                    </div>
+                                    <div className='row'>
+                                        <div
+                                            className='col-1 text-center w-100 py-1'
+                                            style={{ border: "1px solid black", borderTop: "0" }}
+                                        >
+                                            <span className='d-inline-block mt-2'>Fayl</span>
+                                        </div>
+                                        <div
+                                            className='col-8'
+                                            style={{ border: "1px solid black", borderTop: "0", borderLeft: "0" }}
+                                        >
+                                            {
+                                                sectionFiles && sectionFiles[index] && sectionFiles[index].map((file) => {
+                                                    return (
+                                                        <div className='row'>
+                                                            <div className='col-10 p-3'>
+                                                                <img className='m-auto' width="90%" src={file.imageurl} alt="result" />
+
+                                                            </div>
+                                                            <div className='col-2'>
+                                                                <button onClick={() => { Delete(file) }} className='btn button-danger'>
+                                                                    <FontAwesomeIcon icon={faTrashAlt} />
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    )
+                                                })
+
+                                            }
+                                        </div>
+                                        <div
+                                            className='col-2'
+                                            style={{ border: "1px solid black", borderTop: "0", borderLeft: "0" }}
+                                        >
+                                            <input
+                                                onChange={(event) => uploadImage(event, index, section)}
+                                                type="file"
+                                                className='form-control mt-2'
+
+                                            />
+                                        </div>
+                                        <div
+                                            className='col-1 text-center py-2'
+                                            style={{ border: "1px solid black", borderTop: "0", borderLeft: "0" }}
+                                        >
+                                            <button
+                                                id={index} onClick={() => patchFiles(index)}
+                                                className='btn btn-info'>
+                                                <FontAwesomeIcon icon={faSave} />
+                                            </button>
+                                        </div>
+                                    </div>
+                                </>
+                            )
+                        })
                     }
 
                 </div>

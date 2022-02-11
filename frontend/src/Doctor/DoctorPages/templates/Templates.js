@@ -6,22 +6,42 @@ import { Loader } from '../../components/Loader'
 import { Link, useHistory } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPenAlt, faSearch, faSort, faPrint, faSyncAlt, faSave } from '@fortawesome/free-solid-svg-icons'
+import { types } from 'joi'
+import Select from "react-select"
+import makeAnimated from "react-select/animated"
+const animatedComponents = makeAnimated()
 
 toast.configure()
 export const Templates = () => {
     const auth = useContext(AuthContext)
     const { request, loading, error, clearError } = useHttp()
     const [templates, setTemplates] = useState()
+    const [alltemplates, setAllTemplates] = useState()
+    const [types, setTypes] = useState()
     const getTemplates = useCallback(async () => {
         try {
             const fetch = await request(`/api/direction/doctor/${auth.doctor.section}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
             setTemplates(fetch)
+            let s = [{
+                label: "Barcha xizmatlar",
+                value: "all"
+            }]
+            fetch.map((d) => {
+                s.push({
+                    label: d.section,
+                    value: d.section,
+                })
+            })
+            const ids = s.map(o => o.label)
+            const filtered = s.filter(({ label }, index) => !ids.includes(label, index + 1))
+            setTypes(filtered)
+            setAllTemplates(fetch)
         } catch (error) {
             notify(error)
         }
-    }, [request, auth, setTemplates])
+    }, [request, auth, setTypes, setTemplates, setAllTemplates])
 
     const notify = (e) => {
         toast(e)
@@ -34,17 +54,14 @@ export const Templates = () => {
     }
 
     const setTable = (index, event) => {
-        console.log(event.target.checked);
         let t = [...templates]
         t[index].table = event.target.checked
         setTemplates(t)
     }
 
-    console.log(templates);
 
     const patchDirection = useCallback(async (index) => {
         try {
-            console.log(index);
             const fetch = await request(`/api/direction/${templates[index]._id}`, 'PATCH', templates[index], {
                 Authorization: `Bearer ${auth.token}`
             })
@@ -64,14 +81,60 @@ export const Templates = () => {
         }
     }, [notify, clearError])
 
+    //=================================================================================
+    //=================================================================================
+    //=================================================================================
+    // FISH bilan qidirish
+    const [fish, setFish] = useState()
+    const searchName = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/direction/doctor/${auth.doctor.section}/${fish}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setTemplates(fetch)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, auth, setTemplates, fish])
+
+    const changeTypeOptions = (event) => {
+        let s = []
+        if (event.value === "all") {
+            setTemplates(alltemplates)
+        } else {
+            alltemplates && alltemplates.map(op => {
+                if (op.section === event.value) {
+                    s.push(op)
+                }
+            })
+            setTemplates(s)
+        }
+    }
+
+
     if (loading) {
         return <Loader />
     }
 
     return (
         <div className="container" style={{ marginTop: "90px" }}>
-            <div>
-                <h4 className="text-center py-3"> Barcha xizmatlar </h4>
+            <div className='row' >
+                <div className='col-3'>
+                    <input onChange={(event) => { setFish(event.target.value) }} className='form-control w-75 d-inline-block me-2' placeholder='Xizmat nomini kiriting' />
+                    <button onClick={searchName} className="btn text-white float-end" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
+                </div>
+                <div className='col-6'>
+                    <h4 className="text-center py-3"> Barcha xizmatlar </h4>
+                </div>
+                <div className='col-3'>
+                    <Select
+                        className=""
+                        onChange={changeTypeOptions}
+                        closeMenuOnSelect={false}
+                        components={animatedComponents}
+                        options={types && types}
+                    />
+                </div>
             </div>
             <div>
                 <table class="table table-hover table-bordered " style={{ borderRadius: "15px !important" }}>

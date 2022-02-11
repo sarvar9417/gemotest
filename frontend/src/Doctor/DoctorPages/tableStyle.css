@@ -79,6 +79,7 @@ td:nth-child(1) {
     color: #e63c3c !important;
 }
 
+
 table.report-container {
     page-break-after: always;
 }
@@ -96,6 +97,17 @@ tfoot.report-footer {
 
 table.report-container .box {
     page-break-inside: avoid;
+}
+
+@media print {
+    thead img {
+        page-break-inside: auto !important;
+    }
+
+    thead.report-header {
+        display: table-header-group;
+
+    }
 }
 
 
