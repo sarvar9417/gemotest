@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTelegram } from '@fortawesome/free-brands-svg-icons'
 
 export const Print = ({ sectionFiles, client, connector, sections, tablesections, logo, qr, tablecolumns }) => {
+    let k = 0
     const checkClassHead = (data) => {
         if (data.col5.length > 1) {
             return "text-center fw-bold cw18"
@@ -11,7 +12,7 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
         if (data.col4.length > 1) {
             return "text-center fw-bold   cw22"
         }
-        return "text-center fw-bold  cw30"
+        return "text-center fw-bold  cw30 "
     }
 
     const checkClassFoot = (data) => {
@@ -19,9 +20,9 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
             return "text-center cw18"
         }
         if (data.col4.length > 1) {
-            return "text-center  cw22"
+            return "text-center  cw22 "
         }
-        return "text-center cw30"
+        return "text-center cw30 "
     }
     return (
         <div >
@@ -141,70 +142,88 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                         tablesections && tablesections[index].length > 0
                                     ) {
                                         return (
-                                            <div className='p-0 box'>
-                                                <table style={{ width: "100%" }} className='m-0'>
+                                            <>
+                                                <table style={{ width: "100%" }}>
                                                     {
-                                                        index === 0 || section.name !== sections[index - 1] ?
-                                                            <tr>
-                                                                <td colSpan={4} style={{ backgroundColor: "#FFF" }} >
-                                                                    {section.name + " " + section.subname}
-                                                                </td>
-
-                                                            </tr>
+                                                        (sections[index - 1] && sections[index - 1].name !== section.name) || index === 0
+                                                            || tablesections[index - 1].length === 0 ?
+                                                            <>
+                                                                <span className='d-none'>{k = 0}</span>
+                                                                <tr>
+                                                                    <td className='text-center' colSpan={6} style={{ backgroundColor: "#FFF" }} >
+                                                                        {section.name}
+                                                                    </td>
+                                                                </tr>
+                                                                <tr style={{ backgroundColor: "#C0C0C0" }}>
+                                                                    <td className='text-center fw-bold cn' style={{ border: "1px solid #000" }}>
+                                                                        №
+                                                                    </td>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                        {tablecolumns && tablecolumns[index] && tablecolumns[index].col1}
+                                                                    </td>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                        {tablecolumns && tablecolumns[index] && tablecolumns[index].col2}
+                                                                    </td>
+                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                        {tablecolumns && tablecolumns[index] && tablecolumns[index].col3}
+                                                                    </td>
+                                                                    {
+                                                                        tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
+                                                                            <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                                {tablecolumns[index].col4}
+                                                                            </td> : ""
+                                                                    }
+                                                                    {
+                                                                        tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
+                                                                            <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                                {tablecolumns[index].col5}
+                                                                            </td> : ""
+                                                                    }
+                                                                </tr>
+                                                            </>
                                                             : ""
-                                                    }
 
-                                                    <tr style={{ backgroundColor: "#C0C0C0" }}>
-                                                        <td className='text-center fw-bold cn' style={{ border: "1px solid #000" }}>
-                                                            №
-                                                        </td>
-                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
-                                                            {tablecolumns && tablecolumns[index] && tablecolumns[index].col1}
-                                                        </td>
-                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
-                                                            {tablecolumns && tablecolumns[index] && tablecolumns[index].col2}
-                                                        </td>
-                                                        <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000", maxWidth: "33%", minWidth: "19%" }}>
-                                                            {tablecolumns && tablecolumns[index] && tablecolumns[index].col3}
-                                                        </td>
-                                                        {
-                                                            tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
-                                                                    {tablecolumns[index].col4}
-                                                                </td> : ""
-                                                        }
-                                                        {
-                                                            tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
-                                                                    {tablecolumns[index].col5}
-                                                                </td> : ""
-                                                        }
-                                                    </tr>
+                                                    }
                                                     {
                                                         tablesections && tablesections[index].map((tablesection, key) => {
                                                             return (
-                                                                <tr style={{ backgroundColor: "white" }}>
-                                                                    <td className='cn' style={{ textAlign: "center", border: "1px solid #000" }}>
-                                                                        {key + 1}
+                                                                <tr style={{ backgroundColor: "white", marginTop: "10px !important" }}>
+                                                                    <td className='cn' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
+                                                                        {++k}
                                                                     </td>
-                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ border: "1px solid #000", padding: "10px", minWidth: "20%", maxWidth: "33%" }}>
+                                                                    <td
+                                                                        className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                        style={{ border: "1px solid #000", padding: "10px", borderTop: "0px solid white" }}
+                                                                    >
                                                                         {tablesection.name}
                                                                     </td>
-                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", minWidth: "20%", maxWidth: "33%" }}>
+                                                                    <td
+                                                                        className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                        style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                    >
                                                                         {tablesection.result}
                                                                     </td>
-                                                                    <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", minWidth: "20%", maxWidth: "33%" }}>
+                                                                    <td
+                                                                        className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                        style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                    >
                                                                         {tablesection.norma}
                                                                     </td>
                                                                     {
                                                                         tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                            <td
+                                                                                className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                                style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                            >
                                                                                 {tablesection.additionalone}
                                                                             </td> : ""
                                                                     }
                                                                     {
                                                                         tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000" }}>
+                                                                            <td
+                                                                                className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                                style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                            >
                                                                                 {tablesection.additionaltwo}
                                                                             </td> : ""
                                                                     }
@@ -212,33 +231,7 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                             )
                                                         })
                                                     }
-                                                    <tr className='w-100'>
-                                                        <td className='no' style={{ border: "1px solid black" }}>Fayl</td>
-                                                        <td
-                                                            style={{ border: "1px solid black" }}
-                                                            colSpan={
-                                                                tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                    5 : `${tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                        4 : 3
-                                                                    }`
-                                                            }
-                                                        >
-                                                            {
-                                                                sectionFiles && sectionFiles[index] && sectionFiles[index].map((file) => {
-                                                                    return (
-                                                                        <div className='row'>
-                                                                            <div className='col-12 p-3'>
-                                                                                <img className='m-auto' width="100%" src={file.imageurl} alt="result" />
-                                                                            </div>
-                                                                        </div>
-                                                                    )
-                                                                })
-
-                                                            }
-                                                        </td>
-                                                    </tr>
                                                 </table>
-                                                <br />
                                                 {
                                                     !section.probirka ?
                                                         (<table style={{ width: "100%" }}>
@@ -255,7 +248,7 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                                 </td>
                                                             </tr></table>) : ""
                                                 }
-                                            </div>
+                                            </>
                                         )
                                     } else {
                                         if (!section.probirka) {
@@ -314,6 +307,42 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                     </tr>
                 </tfoot>
             </table>
+            {
+                sections && sections.map((section, index) => {
+                    if (sectionFiles && sectionFiles[index].length > 0) {
+                        return (
+                            <>
+                                <div className='row mt-4'>
+                                    <div className='col-12 text-center w-100 py-1'>
+                                        {section.name + " " + section.subname}
+                                    </div>
+                                </div>
+
+                                {
+                                    sectionFiles && sectionFiles[index] && sectionFiles[index].map((file) => {
+                                        return (
+                                            <div className='row'>
+                                                <div
+                                                    className='col-12 w-100'
+                                                >
+                                                    <img
+                                                        className='img m-auto'
+                                                        src={file.imageurl}
+                                                        alt="result"
+                                                        width="100%"
+                                                    />
+                                                </div>
+                                            </div>
+                                        )
+                                    })
+
+                                }
+
+                            </>
+                        )
+                    }
+                })
+            }
         </div>
     )
 };

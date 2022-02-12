@@ -1639,12 +1639,14 @@ router.get('/clientallhistory/:id', async (req, res) => {
         let allsections = []
         let alltablesections = []
         let alltablecolumns = []
+        let allsectionFiles = []
         for (let i = 0; i < connectors.length; i++) {
             const sections = await Section.find({
                 connector: connectors[i]._id
             })
             let tablesections = []
             let tablecolumns = []
+            let sectionFiles = []
             for (let j = 0; j < sections.length; j++) {
                 const t = await TableSection.find({
                     sectionid: sections[j]._id
@@ -1653,13 +1655,18 @@ router.get('/clientallhistory/:id', async (req, res) => {
                 const tablecolumn = await TableColumn.findOne({
                     direction: sections[j].nameid
                 })
+                const f = await FileSave.find({
+                    section: sections[j]._id
+                })
+                sectionFiles.push(f)
                 tablecolumns.push(tablecolumn)
             }
             allsections.push(sections)
             alltablesections.push(tablesections)
             alltablecolumns.push(tablecolumns)
+            allsectionFiles.push(sectionFiles)
         }
-        res.send({ connectors, allsections, alltablesections, alltablecolumns })
+        res.send({ connectors, allsections, alltablesections, alltablecolumns, allsectionFiles })
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })

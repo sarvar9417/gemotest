@@ -127,6 +127,13 @@ table.report-container .box {
     width: 5%;
 }
 
+@media print {
+    .img {
+        /* width: 900px !important; */
+        margin: 0 auto !important;
+    }
+}
+
 /* 
 @page {
     size: 180mm 250mm;

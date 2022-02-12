@@ -58,7 +58,7 @@ export const Adoption = () => {
             notify(e)
         }
     }, [request, auth, setTableColumns, connectorId, setConnector, setSections, setTableSections, setTableColumns, setSectionFiles])
-    console.log(tablesections);
+
     const changeNorma = (event, index, key) => {
         let t = [...tablesections]
         t[index][key].norma = event.target.value
@@ -102,7 +102,7 @@ export const Adoption = () => {
         setTableSections(t)
 
     }, [sections, setSections, setTableSections, tablesections])
-
+    
     const changeSectionaccept = useCallback((event, index) => {
         let t = [...tablesections]
         t[index].map(tablesection => {
@@ -404,14 +404,13 @@ export const Adoption = () => {
                                                                     </td> : ""
                                                             }
                                                             <td className='text-center px-2' style={{ border: "1px solid #000" }}>
-                                                                <input checked={section.accept} onChange={(event) => changeSectionaccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} />
+                                                                {/* <input checked={section.accept} onChange={(event) => changeSectionaccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} /> */}
                                                             </td>
                                                         </tr>
                                                     </>
                                                     : ""
 
                                             }
-
                                             {
                                                 tablesections && tablesections[index].map((tablesection, key) => {
                                                     return (
@@ -532,10 +531,12 @@ export const Adoption = () => {
                                                         <div className='row'>
                                                             <div className='col-10 p-3'>
                                                                 <img className='m-auto' width="90%" src={file.imageurl} alt="result" />
-
                                                             </div>
                                                             <div className='col-2'>
-                                                                <button onClick={() => { Delete(file) }} className='btn button-danger'>
+                                                                <button
+                                                                    onClick={() => { Delete(file) }}
+                                                                    className='btn button-danger mt-3'
+                                                                >
                                                                     <FontAwesomeIcon icon={faTrashAlt} />
                                                                 </button>
                                                             </div>
@@ -546,14 +547,13 @@ export const Adoption = () => {
                                             }
                                         </div>
                                         <div
-                                            className='col-2'
+                                            className='col-2 px-4'
                                             style={{ border: "1px solid black", borderTop: "0", borderLeft: "0" }}
                                         >
                                             <input
                                                 onChange={(event) => uploadImage(event, index, section)}
                                                 type="file"
                                                 className='form-control mt-2'
-
                                             />
                                         </div>
                                         <div

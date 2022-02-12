@@ -140,7 +140,7 @@ export const TableSection = () => {
                                 return (
                                     <tr>
                                         <td>{index + 1}</td>
-                                        <td className='text-center fw-bold'>{connectors && connectors[index].probirka}</td>
+                                        <td className='text-center fw-bold'>{connectors && connectors[index] && connectors[index].probirka && connectors[index].probirka}</td>
                                         <td className='fish fw-bold px-2'>{client.lastname + " " + client.firstname}</td>
                                         <td className='fw-bold px-2'>{new Date(client.born).toLocaleDateString()}</td>
                                         {sections && sections[index] && sections[index].map((section, key) => {
@@ -194,7 +194,7 @@ export const TableSection = () => {
                                 return (
                                     <tr>
                                         <td>{index + 1}</td>
-                                        <td>{connectors && connectors[index].probirka}</td>
+                                        <td>{connectors && connectors[index] && connectors[index].probirka && connectors[index].probirka}</td>
                                         <td className='fish fw-bold px-2'>{client.lastname + " " + client.firstname}</td>
                                         <td className='fw-bold px-2'>{new Date(client.born).toLocaleDateString()}</td>
                                         {sections && sections[index] && sections[index].map((section, key) => {

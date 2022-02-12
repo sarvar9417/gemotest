@@ -630,7 +630,7 @@ router.get('/table/:start/:end/:section', async (req, res) => {
         const directions = await Direction.find({
             section: req.params.section,
             table: true,
-            tableturn: { $ne: 0 }
+            tableturn: { $gt: 0 }
         })
             .sort({ tableturn: 1 })
 

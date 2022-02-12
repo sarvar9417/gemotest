@@ -163,20 +163,20 @@ export const Reciept = () => {
                                                 {logo && logo.phone3 !== null ? "+" + logo.phone3 : ""} <br /></li>
                                         </ul>
                                     </td>
-                                    <td>
+                                    <td className=''>
+                                        <img className='me-3' width="200" src={logo && logo.logo} alt="logo" /><br />
                                         {
                                             connector && connector.probirka ?
                                                 <h6
                                                     className='d-inline-block'
-                                                    style={{ fontSize: "27pt", fontFamily: "times", paddingTop: "100px" }}>
+                                                    style={{ fontSize: "27pt", fontFamily: "times" }}>
                                                     PROBIRKA: {connector && connector.probirka}
                                                 </h6> :
                                                 ""
                                         }
                                     </td>
                                     <td className="text-end">
-                                        <img className='me-3' width="150" src={logo && logo.logo} alt="logo" /><br />
-                                        <img width="140" className='me-3' src={qr && qr} alt="QR" /><br />
+                                        <img width="140" className='me-3 mt-4' src={qr && qr} alt="QR" /><br />
                                         <p className="pe-3 me-1" style={{ fontSize: "10pt" }}>Bu yerni skanerlang</p>
                                     </td>
                                 </tr>
@@ -256,6 +256,9 @@ export const Reciept = () => {
                                         }
                                     </tbody>
                                 </table>
+                                <div className=' fs-5'>
+                                    Mijoz imzosi: ________________
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -281,20 +284,20 @@ export const Reciept = () => {
                                                 {logo && logo.phone3 !== null ? "+" + logo.phone3 : ""} <br /></li>
                                         </ul>
                                     </td>
-                                    <td>
+                                    <td className=''>
+                                        <img className='me-3' width="200" src={logo && logo.logo} alt="logo" /><br />
                                         {
                                             connector && connector.probirka ?
                                                 <h6
                                                     className='d-inline-block'
-                                                    style={{ fontSize: "27pt", fontFamily: "times", paddingTop: "100px" }}>
+                                                    style={{ fontSize: "27pt", fontFamily: "times" }}>
                                                     PROBIRKA: {connector && connector.probirka}
                                                 </h6> :
                                                 ""
                                         }
                                     </td>
                                     <td className="text-end">
-                                        <img className='me-3' width="150" src={logo && logo.logo} alt="logo" /><br />
-                                        <img width="140" className='me-3' src={qr && qr} alt="QR" /><br />
+                                        <img width="140" className='me-3 mt-4' src={qr && qr} alt="QR" /><br />
                                         <p className="pe-3 me-1" style={{ fontSize: "10pt" }}>Bu yerni skanerlang</p>
                                     </td>
                                 </tr>
@@ -373,6 +376,9 @@ export const Reciept = () => {
                                         }
                                     </tbody>
                                 </table>
+                                <div className=' fs-5 mb-5'>
+                                    Mijoz imzosi: ________________
+                                </div>
                             </div>
                         </div>
                     </div>

@@ -305,11 +305,11 @@ export const ClientsPages = () => {
                     </thead>
                     <tbody className="" >
                         {
-                            all &&
+                            all && all.connectors &&
                             all.connectors.map((connector, key) => {
                                 if (type === "all") {
                                     return (<>
-                                        {all && all.sections[key].map((section, index) => {
+                                        {all && all.sections[key] && all.sections[key].map((section, index) => {
                                             if (index === 0) {
                                                 if (section.payment !== "to'lanmagan") {
                                                     paid = paid + section.priceCashier
@@ -327,25 +327,25 @@ export const ClientsPages = () => {
                                                             className="fish text-uppercase ps-3 fw-bold text-success"
                                                             rowSpan={all.sections[key].length + all.services[key].length}
                                                         >
-                                                            {all.clients[key].lastname} {all.clients[key].firstname} {all.clients[key].fathername}
+                                                            {all.clients[key].lastname && all.clients[key].lastname} {all.clients[key].firstname && all.clients[key].firstname} {all.clients[key].fathername && all.clients[key].fathername}
                                                         </td>
                                                         <td
                                                             className="id"
                                                             rowSpan={all.sections[key].length + all.services[key].length}
                                                         >
-                                                            {new Date(all.clients[key].born).toLocaleDateString()}
+                                                            {all.clients[key] && new Date(all.clients[key].born).toLocaleDateString()}
                                                         </td>
                                                         <td
                                                             className="id"
                                                             rowSpan={all.sections[key].length + all.services[key].length}
                                                         >
-                                                            {all.clients[key].id}
+                                                            {all.clients[key] && all.clients[key].id}
                                                         </td>
                                                         <td
                                                             className="phone"
                                                             rowSpan={all.sections[key].length + all.services[key].length}
                                                         >
-                                                            +{all.clients[key].phone}
+                                                            +{all.clients[key] && all.clients[key].phone}
                                                         </td>
                                                         <td className="date text-center" >{new mongoose.Types.ObjectId(section._id).getTimestamp().toLocaleDateString()} {new mongoose.Types.ObjectId(section._id).getTimestamp().toLocaleTimeString()}</td>
                                                         <td className="section text-uppercase">  {section.name}  <span style={{ fontSize: "10pt" }}>{section.subname}</span></td>
@@ -372,9 +372,9 @@ export const ClientsPages = () => {
                                                 )
                                             }
                                         })}
-                                        {all && all.sections[key].length === 0 ?
+                                        {all && all.sections[key] && all.sections[key].length === 0 ?
                                             <>{
-                                                all && all.services[key].map((service, index) => {
+                                                all && all.services[key] && all.services[key].map((service, index) => {
                                                     if (index === 0) {
                                                         if (service.payment !== "to'lanmagan") {
                                                             paid = paid + service.priceCashier
@@ -384,16 +384,16 @@ export const ClientsPages = () => {
                                                             <tr className=' border-top border-success' >
                                                                 <td
                                                                     className="no border-right border-success"
-                                                                    rowSpan={all && all.services[key].length}
+                                                                    rowSpan={all && all.services[key] && all.services[key].length}
                                                                 >
                                                                     {++k}
                                                                 </td>
                                                                 <td
                                                                     className="fish text-uppercase ps-3"
-                                                                    rowSpan={all && all.services[key].length}
+                                                                    rowSpan={all && all.services[key] && all.services[key].length}
                                                                 >
                                                                     <Link className='text-success' style={{ fontWeight: "600" }} to={`/reseption/clientallhistory/${all.clients[key]._id}`} >
-                                                                        {all && all.clients[key].lastname} {all && all.clients[key].firstname} {all && all.clients[key].fathername}
+                                                                        {all && all.clients[key].lastname && all.clients[key].lastname} {all && all.clients[key].firstname && all.clients[key].firstname}  {all && all.clients[key].fathername && all.clients[key].fathername}
                                                                     </Link>
                                                                     <br />
                                                                     <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all && all.clients[key]._id}`} >
@@ -402,21 +402,21 @@ export const ClientsPages = () => {
                                                                 </td>
                                                                 <td
                                                                     className="id"
-                                                                    rowSpan={all.services[key].length}
+                                                                    rowSpan={all.services[key] && all.services[key].length}
                                                                 >
-                                                                    {all && new Date(all.clients[key].born).toLocaleDateString()}
+                                                                    {all.clients[key] && new Date(all.clients[key].born).toLocaleDateString()}
                                                                 </td>
                                                                 <td
                                                                     className="id"
-                                                                    rowSpan={all && all.services[key].length}
+                                                                    rowSpan={all && all.services[key] && all.services[key].length}
                                                                 >
-                                                                    {all && all.clients[key].id}
+                                                                    {all && all.clients[key] && all.clients[key].id}
                                                                 </td>
                                                                 <td
                                                                     className="phone"
-                                                                    rowSpan={all && all.services[key].length}
+                                                                    rowSpan={all && all.services[key] && all.services[key].length}
                                                                 >
-                                                                    +{all && all.clients[key].phone}
+                                                                    +{all && all.clients[key] && all.clients[key].phone}
                                                                 </td>
                                                                 <td className="date fw-normal border-left border-success "  >{new mongoose.Types.ObjectId(service._id).getTimestamp().toLocaleDateString()} {new mongoose.Types.ObjectId(service._id).getTimestamp().toLocaleTimeString()}</td>
                                                                 <td className="section text-uppercase"> {service.name} {service.type}</td>
@@ -448,7 +448,7 @@ export const ClientsPages = () => {
                                             }
                                             </> :
                                             <>{
-                                                all && all.services[key].map((service, index) => {
+                                                all && all.services[key] && all.services[key].map((service, index) => {
                                                     if (service.payment !== "to'lanmagan") {
                                                         paid = paid + service.priceCashier
                                                         unpaid = unpaid + (service.price - service.priceCashier)
@@ -471,7 +471,7 @@ export const ClientsPages = () => {
                                 } else {
                                     if (type === connector.type) {
                                         return (<>
-                                            {all && all.sections[key].map((section, index) => {
+                                            {all && all.sections[key] && all.sections[key].map((section, index) => {
                                                 if (index === 0) {
                                                     if (section.payment !== "to'lanmagan") {
                                                         paid = paid + section.priceCashier
@@ -489,25 +489,25 @@ export const ClientsPages = () => {
                                                                 className="fish text-uppercase ps-3 fw-bold text-success"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                {all.clients[key].lastname} {all.clients[key].firstname} {all.clients[key].fathername}
+                                                                {all.clients[key].lastname && all.clients[key].lastname} {all.clients[key].firstname && all.clients[key].firstname} {all.clients[key].fathername && all.clients[key].fathername}
                                                             </td>
                                                             <td
                                                                 className="id"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                {new Date(all.clients[key].born).toLocaleDateString()}
+                                                                {all.clients[key] && new Date(all.clients[key].born).toLocaleDateString()}
                                                             </td>
                                                             <td
                                                                 className="id"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                {all.clients[key].id}
+                                                                {all.clients[key] && all.clients[key].id}
                                                             </td>
                                                             <td
                                                                 className="phone"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                +{all.clients[key].phone}
+                                                                +{all.clients[key] && all.clients[key].phone}
                                                             </td>
                                                             <td className="date text-center" >{new mongoose.Types.ObjectId(section._id).getTimestamp().toLocaleDateString()} {new mongoose.Types.ObjectId(section._id).getTimestamp().toLocaleTimeString()}</td>
                                                             <td className="section text-uppercase">  {section.name}  <span style={{ fontSize: "10pt" }}>{section.subname}</span></td>
@@ -536,7 +536,7 @@ export const ClientsPages = () => {
                                             })}
                                             {all && all.sections[key].length === 0 ?
                                                 <>{
-                                                    all && all.services[key].map((service, index) => {
+                                                    all && all.services[key] && all.services[key].map((service, index) => {
                                                         if (index === 0) {
                                                             if (service.payment !== "to'lanmagan") {
                                                                 paid = paid + service.priceCashier
@@ -546,39 +546,39 @@ export const ClientsPages = () => {
                                                                 <tr className=' border-top border-success' >
                                                                     <td
                                                                         className="no border-right border-success"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all && all.services[key] && all.services[key].length}
                                                                     >
                                                                         {++k}
                                                                     </td>
                                                                     <td
                                                                         className="fish text-uppercase ps-3"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all && all.services[key] && all.services[key].length}
                                                                     >
                                                                         <Link className='text-success' style={{ fontWeight: "600" }} to={`/reseption/clientallhistory/${all.clients[key]._id}`} >
-                                                                            {all && all.clients[key].lastname} {all && all.clients[key].firstname} {all && all.clients[key].fathername}
+                                                                            {all && all.clients[key].lastname && all.clients[key].lastname} {all && all.clients[key].firstname && all.clients[key].firstname} {all && all.clients[key].fathername && all.clients[key].fathername}
                                                                         </Link>
                                                                         <br />
-                                                                        <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all && all.clients[key]._id}`} >
+                                                                        <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all && all.clients[key]._id && all.clients[key]._id}`} >
                                                                             <FontAwesomeIcon icon={faPenAlt} />
                                                                         </Link>
                                                                     </td>
                                                                     <td
                                                                         className="id"
-                                                                        rowSpan={all.services[key].length}
+                                                                        rowSpan={all.services[key].length && all.services[key].length}
                                                                     >
-                                                                        {all && new Date(all.clients[key].born).toLocaleDateString()}
+                                                                        {all && all.clients[key] && new Date(all.clients[key].born).toLocaleDateString()}
                                                                     </td>
                                                                     <td
                                                                         className="id"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all && all.services[key] && all.services[key].length}
                                                                     >
-                                                                        {all && all.clients[key].id}
+                                                                        {all && all.clients[key] && all.clients[key].id}
                                                                     </td>
                                                                     <td
                                                                         className="phone"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all && all.services[key] && all.services[key].length}
                                                                     >
-                                                                        +{all && all.clients[key].phone}
+                                                                        +{all && all.clients[key] && all.clients[key].phone}
                                                                     </td>
                                                                     <td className="date fw-normal border-left border-success "  >{new mongoose.Types.ObjectId(service._id).getTimestamp().toLocaleDateString()} {new mongoose.Types.ObjectId(service._id).getTimestamp().toLocaleTimeString()}</td>
                                                                     <td className="section text-uppercase"> {service.name} {service.type}</td>
@@ -610,7 +610,7 @@ export const ClientsPages = () => {
                                                 }
                                                 </> :
                                                 <>{
-                                                    all && all.services[key].map((service, index) => {
+                                                    all && all.services[key] && all.services[key].map((service, index) => {
                                                         if (service.payment !== "to'lanmagan") {
                                                             paid = paid + service.priceCashier
                                                             unpaid = unpaid + (service.price - service.priceCashier)
@@ -651,12 +651,12 @@ export const ClientsPages = () => {
             <div className="overflow-auto" style={{ height: "60vh", minWidth: "1100px" }}>
                 <table className=" table-hover"  >
                     <tbody className="" >
-                        {all &&
+                        {all && all.connectors &&
                             all.connectors.map((connector, key) => {
                                 if (type === "all") {
                                     return (
                                         <>
-                                            {all && all.sections[key].map((section, index) => {
+                                            {all && all.sections[key] && all.sections[key].map((section, index) => {
                                                 if (index === 0) {
                                                     return (
                                                         <tr key={index} className=' border-top border-success' >
@@ -671,37 +671,37 @@ export const ClientsPages = () => {
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
                                                                 <Link className='text-success' style={{ fontWeight: "600" }} to={`/reseption/clientallhistory/${all.clients[key]._id}`} >
-                                                                    {all.clients[key].lastname} {all.clients[key].firstname} {all.clients[key].fathername}
+                                                                    {all.clients[key].lastname && all.clients[key].lastname} {all.clients[key].firstname && all.clients[key].firstname} {all.clients[key].fathername && all.clients[key].fathername}
                                                                 </Link>
                                                                 <br />
-                                                                <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all.clients[key]._id}`} >
+                                                                <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all.clients[key]._id && all.clients[key]._id}`} >
                                                                     <FontAwesomeIcon icon={faPenAlt} />
                                                                 </Link>
-                                                                <span className='ps-3 fs-5'> <span className='text-success fw-bold'>{all.countsection[key].accept}</span> / <span className='text-danger fw-bold'>{all.countsection[key].all}</span>  </span>
+                                                                <span className='ps-3 fs-5'> <span className='text-success fw-bold'>{all.countsection[key] && all.countsection[key].accept}</span> / <span className='text-danger fw-bold'>{all.countsection[key] && all.countsection[key].all}</span>  </span>
                                                             </td>
                                                             <td
                                                                 className="id"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                {new Date(all.clients[key].born).toLocaleDateString()}
+                                                                {all.clients[key] && new Date(all.clients[key].born).toLocaleDateString()}
                                                             </td>
                                                             <td
                                                                 className="id"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                {all.clients[key].id}
+                                                                {all.clients[key] && all.clients[key].id}
                                                             </td>
                                                             <td
                                                                 className="phone"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                +{all.clients[key].phone}
+                                                                +{all.clients[key] && all.clients[key].phone}
                                                             </td>
                                                             <td
                                                                 className="edit"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                <Link className='btn button-success text-success' to={`/reseption/addservices/${all.clients[key]._id}/${connector._id}`} >
+                                                                <Link className='btn button-success text-success' to={`/reseption/addservices/${all.clients[key]._id && all.clients[key]._id}/${connector._id}`} >
                                                                     +
                                                                 </Link>
                                                             </td>
@@ -709,7 +709,7 @@ export const ClientsPages = () => {
                                                                 className="cek"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                <Link to={`/reseption/reciept/${all.clients[key]._id}/${section.connector}`} >
+                                                                <Link to={`/reseption/reciept/${all.clients[key] && all.clients[key]._id}/${section.connector}`} >
                                                                     <FontAwesomeIcon icon={faPrint} className="fa-2x" />
                                                                 </Link>
                                                             </td>
@@ -730,61 +730,61 @@ export const ClientsPages = () => {
                                                     )
                                                 }
                                             })}
-                                            {all && all.sections[key].length === 0 ?
+                                            {all && all.sections[key] && all.sections[key].length === 0 ?
                                                 <>{
-                                                    all && all.services[key].map((service, index) => {
+                                                    all && all.services[key] && all.services[key].map((service, index) => {
                                                         if (index === 0) {
                                                             return (
                                                                 <tr className=' border-top border-success' >
                                                                     <td
                                                                         className="no border-right border-success"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all  && all.services[key].length}
                                                                     >
                                                                         {++kk}
                                                                     </td>
                                                                     <td
                                                                         className="fish text-uppercase ps-3"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all  && all.services[key].length}
                                                                     >
                                                                         <Link className='text-success' style={{ fontWeight: "600" }} to={`/reseption/clientallhistory/${all.clients[key]._id}`} >
-                                                                            {all && all.clients[key].lastname} {all && all.clients[key].firstname} {all && all.clients[key].fathername}
+                                                                            {all && all.clients[key].lastname && all.clients[key].lastname} {all && all.clients[key].firstname && all && all.clients[key].firstname} {all && all.clients[key].fathername && all.clients[key].fathername}
                                                                         </Link>
                                                                         <br />
-                                                                        <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all && all.clients[key]._id}`} >
+                                                                        <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all && all.clients[key]._id && all.clients[key]._id}`} >
                                                                             <FontAwesomeIcon icon={faPenAlt} />
                                                                         </Link>
                                                                     </td>
                                                                     <td
                                                                         className="id"
-                                                                        rowSpan={all.services[key].length}
+                                                                        rowSpan={ all.services[key].length}
                                                                     >
-                                                                        {all && new Date(all.clients[key].born).toLocaleDateString()}
+                                                                        {all && all.clients[key] && new Date(all.clients[key].born).toLocaleDateString()}
                                                                     </td>
                                                                     <td
                                                                         className="id"
                                                                         rowSpan={all && all.services[key].length}
                                                                     >
-                                                                        {all && all.clients[key].id}
+                                                                        {all && all.clients[key] && all.clients[key].id}
                                                                     </td>
                                                                     <td
                                                                         className="phone"
                                                                         rowSpan={all && all.services[key].length}
                                                                     >
-                                                                        +{all && all.clients[key].phone}
+                                                                        +{all && all.clients[key] && all.clients[key].phone}
                                                                     </td>
                                                                     <td
                                                                         className="edit"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all  && all.services[key].length}
                                                                     >
-                                                                        <Link className='btn button-success text-success' to={`/reseption/addservices/${all && all.clients[key]._id}/${connector._id}`} >
+                                                                        <Link className='btn button-success text-success' to={`/reseption/addservices/${all && all.clients[key]._id && all.clients[key]._id}/${connector._id}`} >
                                                                             +
                                                                         </Link>
                                                                     </td>
                                                                     <td
                                                                         className="cek"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all  && all.services[key].length}
                                                                     >
-                                                                        <Link to={`/reseption/reciept/${all && all.clients[key]._id}/${connector._id}`} >
+                                                                        <Link to={`/reseption/reciept/${all && all.clients[key] && all.clients[key]._id}/${connector._id}`} >
                                                                             <FontAwesomeIcon icon={faPrint} className="fa-2x" />
                                                                         </Link>
                                                                     </td>
@@ -810,7 +810,7 @@ export const ClientsPages = () => {
                                                 }
                                                 </> :
                                                 <>{
-                                                    all && all.services[key].map((service, index) => {
+                                                    all && all.services[key] && all.services[key].map((service, index) => {
                                                         return (
                                                             <tr key={index}  >
                                                                 <td className="date fw-normal border-left border-success "  >{new mongoose.Types.ObjectId(service._id).getTimestamp().toLocaleDateString()} {new mongoose.Types.ObjectId(service._id).getTimestamp().toLocaleTimeString()}</td>
@@ -829,7 +829,7 @@ export const ClientsPages = () => {
                                 } else {
                                     if (type === connector.type) {
                                         return (<>
-                                            {all && all.sections[key].map((section, index) => {
+                                            {all && all.sections[key] && all.sections[key].map((section, index) => {
                                                 if (index === 0) {
                                                     return (
                                                         <tr key={index} className=' border-top border-success' >
@@ -844,10 +844,10 @@ export const ClientsPages = () => {
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
                                                                 <Link className='text-success' style={{ fontWeight: "600" }} to={`/reseption/clientallhistory/${all.clients[key]._id}`} >
-                                                                    {all.clients[key].lastname} {all.clients[key].firstname} {all.clients[key].fathername}
+                                                                    {all.clients[key].lastname && all.clients[key].lastname} {all.clients[key].firstname && all.clients[key].firstname} {all.clients[key].fathername && all.clients[key].fathername}
                                                                 </Link>
                                                                 <br />
-                                                                <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all.clients[key]._id}`} >
+                                                                <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all.clients[key] && all.clients[key]._id}`} >
                                                                     <FontAwesomeIcon icon={faPenAlt} />
                                                                 </Link>
                                                             </td>
@@ -855,25 +855,25 @@ export const ClientsPages = () => {
                                                                 className="id"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                {new Date(all.clients[key].born).toLocaleDateString()}
+                                                                {all.clients[key] && new Date(all.clients[key].born).toLocaleDateString()}
                                                             </td>
                                                             <td
                                                                 className="id"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                {all.clients[key].id}
+                                                                {all.clients[key] && all.clients[key].id}
                                                             </td>
                                                             <td
                                                                 className="phone"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                +{all.clients[key].phone}
+                                                                +{all.clients[key] && all.clients[key].phone}
                                                             </td>
                                                             <td
                                                                 className="edit"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                <Link className='btn button-success text-success' to={`/reseption/addservices/${all.clients[key]._id}/${connector._id}`} >
+                                                                <Link className='btn button-success text-success' to={`/reseption/addservices/${all.clients[key]._id && all.clients[key]._id}/${connector._id}`} >
                                                                     +
                                                                 </Link>
                                                             </td>
@@ -881,7 +881,7 @@ export const ClientsPages = () => {
                                                                 className="cek"
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
-                                                                <Link to={`/reseption/reciept/${all.clients[key]._id}/${section.connector}`} >
+                                                                <Link to={`/reseption/reciept/${all.clients[key] && all.clients[key]._id}/${section.connector}`} >
                                                                     <FontAwesomeIcon icon={faPrint} className="fa-2x" />
                                                                 </Link>
                                                             </td>
@@ -902,61 +902,61 @@ export const ClientsPages = () => {
                                                     )
                                                 }
                                             })}
-                                            {all && all.sections[key].length === 0 ?
+                                            {all && all.sections[key] && all.sections[key].length === 0 ?
                                                 <>{
-                                                    all && all.services[key].map((service, index) => {
+                                                    all && all.services[key] && all.services[key].map((service, index) => {
                                                         if (index === 0) {
                                                             return (
                                                                 <tr className=' border-top border-success' >
                                                                     <td
                                                                         className="no border-right border-success"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all && all.services[key] && all.services[key].length}
                                                                     >
                                                                         {++kk}
                                                                     </td>
                                                                     <td
                                                                         className="fish text-uppercase ps-3"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all && all.services[key] && all.services[key].length}
                                                                     >
                                                                         <Link className='text-success' style={{ fontWeight: "600" }} to={`/reseption/clientallhistory/${all.clients[key]._id}`} >
-                                                                            {all && all.clients[key].lastname} {all && all.clients[key].firstname} {all && all.clients[key].fathername}
+                                                                            {all && all.clients[key].lastname && all.clients[key].lastname} {all && all.clients[key].firstname && all.clients[key].firstname} {all && all.clients[key].fathername && all.clients[key].fathername}
                                                                         </Link>
                                                                         <br />
-                                                                        <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all && all.clients[key]._id}`} >
+                                                                        <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all && all.clients[key] && all.clients[key]._id}`} >
                                                                             <FontAwesomeIcon icon={faPenAlt} />
                                                                         </Link>
                                                                     </td>
                                                                     <td
                                                                         className="id"
-                                                                        rowSpan={all.services[key].length}
+                                                                        rowSpan={all.services[key] && all.services[key].length}
                                                                     >
-                                                                        {all && new Date(all.clients[key].born).toLocaleDateString()}
+                                                                        {all && all.clients[key] && new Date(all.clients[key].born).toLocaleDateString()}
                                                                     </td>
                                                                     <td
                                                                         className="id"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all && all.services[key] && all.services[key].length}
                                                                     >
-                                                                        {all && all.clients[key].id}
+                                                                        {all && all.clients[key] && all.clients[key].id}
                                                                     </td>
                                                                     <td
                                                                         className="phone"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all && all.services[key] && all.services[key].length}
                                                                     >
-                                                                        +{all && all.clients[key].phone}
+                                                                        +{all && all.clients[key] && all.clients[key].phone}
                                                                     </td>
                                                                     <td
                                                                         className="edit"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all && all.services[key] && all.services[key].length}
                                                                     >
-                                                                        <Link className='btn button-success text-success' to={`/reseption/addservices/${all && all.clients[key]._id}/${connector._id}`} >
+                                                                        <Link className='btn button-success text-success' to={`/reseption/addservices/${all && all.clients[key]._id && all.clients[key]._id}/${connector._id}`} >
                                                                             +
                                                                         </Link>
                                                                     </td>
                                                                     <td
                                                                         className="cek"
-                                                                        rowSpan={all && all.services[key].length}
+                                                                        rowSpan={all && all.services[key] && all.services[key].length}
                                                                     >
-                                                                        <Link to={`/reseption/reciept/${all && all.clients[key]._id}/${connector._id}`} >
+                                                                        <Link to={`/reseption/reciept/${all && all.clients[key] && all.clients[key]._id}/${connector._id}`} >
                                                                             <FontAwesomeIcon icon={faPrint} className="fa-2x" />
                                                                         </Link>
                                                                     </td>
@@ -982,7 +982,7 @@ export const ClientsPages = () => {
                                                 }
                                                 </> :
                                                 <>{
-                                                    all && all.services[key].map((service, index) => {
+                                                    all && all.services[key] && all.services[key].map((service, index) => {
                                                         return (
                                                             <tr key={index}  >
                                                                 <td className="date fw-normal border-left border-success "  >{new mongoose.Types.ObjectId(service._id).getTimestamp().toLocaleDateString()} {new mongoose.Types.ObjectId(service._id).getTimestamp().toLocaleTimeString()}</td>
