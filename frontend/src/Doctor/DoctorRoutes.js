@@ -10,6 +10,7 @@ import { Templates } from './DoctorPages/templates/Templates'
 import { CreateTemplate } from './DoctorPages/templates/CreateTemplate'
 import { EditTemplate } from './DoctorPages/templates/EditTemplate'
 import { TableSection } from './DoctorPages/tableSection/TableSection'
+import { TemplateSummary } from './DoctorPages/templates/TemplateSummary'
 
 export const DoctorRoutes = (isAuthenticated) => {
     if (isAuthenticated) {
@@ -30,6 +31,9 @@ export const DoctorRoutes = (isAuthenticated) => {
                     </Route>
                     <Route path="/doctor/templates" >
                         <Templates />
+                    </Route>
+                    <Route path="/doctor/templatesummary" >
+                        <TemplateSummary />
                     </Route>
                     <Route path="/doctor/tables" >
                         <TableSection />

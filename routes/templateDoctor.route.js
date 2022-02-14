@@ -12,10 +12,33 @@ router.post('/register', async (req, res) => {
                 message: error.message
             })
         }
-        const { section, subsection, template } = req.body
-        const templateDoctor = new TemplateDoctor({ section, subsection, template })
+        const { headsection, template, section } = req.body
+        const templateDoctor = new TemplateDoctor({ headsection, template, section })
         await templateDoctor.save()
         res.status(201).json({ message: "Xarajat qo'shildi" })
+
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+router.get('/section/:section', async (req, res) => {
+    try {
+        const templateDoctor = await TemplateDoctor.find({
+            headsection: req.params.section
+        })
+        res.json(templateDoctor)
+
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+
+router.get('/:id', async (req, res) => {
+    try {
+        const templateDoctor = await TemplateDoctor.findById(req.params.id)
+        res.json(templateDoctor)
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
@@ -27,16 +50,6 @@ router.get('/', async (req, res) => {
     try {
         const templateDoctors = await TemplateDoctor.find({}).sort({ _id: -1 })
         res.json(templateDoctors);
-
-    } catch (e) {
-        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
-    }
-})
-
-router.get('/:id', async (req, res) => {
-    try {
-        const templateDoctor = await TemplateDoctor.findById(req.params.id)
-        res.json(templateDoctor)
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })

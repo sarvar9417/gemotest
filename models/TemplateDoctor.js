@@ -1,17 +1,17 @@
-const { Schema, model } = require('mongoose')
+const { Schema, model, Types } = require('mongoose')
 const Joi = require('joi')
 
 const templateDoctor = new Schema({
-    section: {type: String},
-    subsection: { type: String },
-    template: { type: String }
+    headsection: { type: Types.ObjectId, ref: "HeadSection" },
+    template: { type: String },
+    section: { type: String },
 })
 
 function validateTemplateDoctor(templateDoctor) {
     const schema = Joi.object({
-        section: Joi.string(),
-        subsection: Joi.string(),
-        template: Joi.string()
+        headsection: Joi.string(),
+        template: Joi.string(),
+        section: Joi.string()
     })
     return schema.validate(templateDoctor)
 }

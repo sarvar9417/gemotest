@@ -1,6 +1,6 @@
 const { Router } = require("express")
 const { HeadSection, validateHeadSection } = require("../models/HeadSection")
-const {Direction} = require('../models/Direction')
+const { Direction } = require('../models/Direction')
 const router = Router()
 
 router.post("/register", async (req, res) => {
@@ -21,6 +21,15 @@ router.post("/register", async (req, res) => {
     }
 })
 
+router.get("/", async (req, res) => {
+    try {
+        const headsections = await HeadSection.find().sort({ _id: -1 })
+        res.json(headsections)
+    } catch (error) {
+        res.json({ error: "Serverda xatolik yuz berdi" })
+    }
+})
+
 router.get("/:id", async (req, res) => {
     try {
         const headsection = await HeadSection.findById(req.params.id)
@@ -30,14 +39,6 @@ router.get("/:id", async (req, res) => {
     }
 })
 
-router.get("/", async (req, res) => {
-    try {
-        const headsections = await HeadSection.find().sort({ _id: -1 })
-        res.json(headsections)
-    } catch (error) {
-        res.json({ error: "Serverda xatolik yuz berdi" })
-    }
-})
 
 router.patch("/:id", async (req, res) => {
     try {
@@ -50,7 +51,7 @@ router.patch("/:id", async (req, res) => {
 
 router.delete("/:id", async (req, res) => {
     try {
-        const directions= await Direction.find({
+        const directions = await Direction.find({
             headsection: req.params.id
         })
 

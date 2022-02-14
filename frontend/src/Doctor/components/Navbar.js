@@ -58,7 +58,13 @@ export const Navbar = () => {
                             <Link className="nav-link a aktive" to="/doctor">Mijozlar</Link>
                         </li>
                         <li className="nav-item" >
-                            <Link className="nav-link a" to="/doctor/templates">Shablonlar</Link>
+                            {
+                                direction && direction.probirka ?
+                                    <Link className="nav-link a" to="/doctor/templates">Shablonlar</Link>
+                                    :
+                                    <Link className="nav-link a" to="/doctor/templatesummary">Shablonlar</Link>
+                            }
+
                         </li>
 
                         <li className="nav-item ll" >

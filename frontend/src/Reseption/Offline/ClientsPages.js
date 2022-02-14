@@ -183,7 +183,7 @@ export const ClientsPages = () => {
 
     const getSortSection = useCallback(async (section) => {
         try {
-            const fetch = await request(`/api/connector/director/${startDate}/${endDate}/${section}`, 'GET', null, {
+            const fetch = await request(`/api/connector/reseption/${startDate}/${endDate}/${section}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
             setAll(fetch)
@@ -196,7 +196,7 @@ export const ClientsPages = () => {
         if (event.value === "all") {
             getConnectors()
         } else {
-            getSortSection(event.label)
+            getSortSection(event.value)
         }
     }
 
@@ -327,7 +327,7 @@ export const ClientsPages = () => {
                                                             className="fish text-uppercase ps-3 fw-bold text-success"
                                                             rowSpan={all.sections[key].length + all.services[key].length}
                                                         >
-                                                            {all.clients[key].lastname && all.clients[key].lastname} {all.clients[key].firstname && all.clients[key].firstname} {all.clients[key].fathername && all.clients[key].fathername}
+                                                            {all.clients[key] && all.clients[key].lastname && all.clients[key].lastname} {all.clients[key] && all.clients[key].firstname && all.clients[key].firstname} {all.clients[key].fathername && all.clients[key].fathername}
                                                         </td>
                                                         <td
                                                             className="id"
@@ -738,13 +738,13 @@ export const ClientsPages = () => {
                                                                 <tr className=' border-top border-success' >
                                                                     <td
                                                                         className="no border-right border-success"
-                                                                        rowSpan={all  && all.services[key].length}
+                                                                        rowSpan={all && all.services[key].length}
                                                                     >
                                                                         {++kk}
                                                                     </td>
                                                                     <td
                                                                         className="fish text-uppercase ps-3"
-                                                                        rowSpan={all  && all.services[key].length}
+                                                                        rowSpan={all && all.services[key].length}
                                                                     >
                                                                         <Link className='text-success' style={{ fontWeight: "600" }} to={`/reseption/clientallhistory/${all.clients[key]._id}`} >
                                                                             {all && all.clients[key].lastname && all.clients[key].lastname} {all && all.clients[key].firstname && all && all.clients[key].firstname} {all && all.clients[key].fathername && all.clients[key].fathername}
@@ -756,7 +756,7 @@ export const ClientsPages = () => {
                                                                     </td>
                                                                     <td
                                                                         className="id"
-                                                                        rowSpan={ all.services[key].length}
+                                                                        rowSpan={all.services[key].length}
                                                                     >
                                                                         {all && all.clients[key] && new Date(all.clients[key].born).toLocaleDateString()}
                                                                     </td>
@@ -774,7 +774,7 @@ export const ClientsPages = () => {
                                                                     </td>
                                                                     <td
                                                                         className="edit"
-                                                                        rowSpan={all  && all.services[key].length}
+                                                                        rowSpan={all && all.services[key].length}
                                                                     >
                                                                         <Link className='btn button-success text-success' to={`/reseption/addservices/${all && all.clients[key]._id && all.clients[key]._id}/${connector._id}`} >
                                                                             +
@@ -782,7 +782,7 @@ export const ClientsPages = () => {
                                                                     </td>
                                                                     <td
                                                                         className="cek"
-                                                                        rowSpan={all  && all.services[key].length}
+                                                                        rowSpan={all && all.services[key].length}
                                                                     >
                                                                         <Link to={`/reseption/reciept/${all && all.clients[key] && all.clients[key]._id}/${connector._id}`} >
                                                                             <FontAwesomeIcon icon={faPrint} className="fa-2x" />

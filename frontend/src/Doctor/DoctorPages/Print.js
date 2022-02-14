@@ -139,14 +139,14 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                             {
                                 sections && sections.map((section, index) => {
                                     if (
-                                        tablesections && tablesections[index].length > 0
+                                        tablesections && tablesections[index].length > 0 && section.probirka
                                     ) {
                                         return (
                                             <>
                                                 <table style={{ width: "100%" }}>
                                                     {
                                                         (sections[index - 1] && sections[index - 1].name !== section.name) || index === 0
-                                                            || tablesections[index - 1].length === 0 ?
+                                                            || tablesections[index - 1].length === 0 || tablesections[index].length > 5 ?
                                                             <>
                                                                 <span className='d-none'>{k = 0}</span>
                                                                 <tr>
@@ -234,43 +234,72 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                 </table>
                                                 {
                                                     !section.probirka ?
-                                                        (<table style={{ width: "100%" }}>
-                                                            <tr style={{ backgroundColor: "white" }}>
-                                                                <th style={{ border: "1px solid #000", padding: "10px", width: "100px" }} > Xulosa </th>
-                                                                <td style={{ border: "1px solid #000", padding: "10px" }} colSpan="5" className='px-2'>
-                                                                    {section.summary}
+                                                        (<table className='mt-4 w-100'>
+                                                            <tr>
+                                                                <td colSpan={3} className="text-uppercase">
+                                                                    {section.subname}
                                                                 </td>
                                                             </tr>
                                                             <tr style={{ backgroundColor: "white" }}>
-                                                                <th style={{ border: "1px solid #000", padding: "10px", width: "200px" }}> Izoh </th>
-                                                                <td style={{ border: "1px solid #000", padding: "10px" }} className='px-2'>
-                                                                    {section.comment}
+                                                                <th
+                                                                    style={{ border: "1px solid #000", padding: "10px" }}
+                                                                >
+                                                                    Xulosa
+                                                                </th>
+                                                                <td
+                                                                    style={{ border: "1px solid #000", padding: "10px" }}
+                                                                    className='p-0'
+                                                                >
+                                                                    <pre style={{ border: "none" }} >{sections[index].summary}</pre>
                                                                 </td>
-                                                            </tr></table>) : ""
+                                                            </tr>
+                                                            <tr style={{ backgroundColor: "white" }}>
+                                                                <th style={{ border: "1px solid #000", padding: "10px" }}> Izoh </th>
+                                                                <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
+                                                                    <pre style={{ border: "none" }} >{sections[index].comment}</pre>
+                                                                </td>
+                                                            </tr>
+                                                        </table>) : ""
                                                 }
                                             </>
                                         )
                                     } else {
                                         if (!section.probirka) {
                                             return (
-                                                <table>
-                                                    <tr style={{ backgroundColor: "white" }}>
-                                                        <td colSpan={6} style={{ backgroundColor: "#FFF" }} >
-                                                            {section.name + " " + section.subname}
+                                                <table className='mt-4 w-100'>
+                                                    <tr>
+                                                        <td colSpan={3} className="text-uppercase">
+                                                            {section.subname}
                                                         </td>
                                                     </tr>
-                                                    <tr style={{ backgroundColor: "white" }}>
-                                                        <th style={{ border: "1px solid #000", padding: "10px", width: "100px" }} > Xulosa </th>
-                                                        <td style={{ border: "1px solid #000", padding: "10px" }} className='p-2'>
-                                                            {section.summary}
-                                                        </td>
-                                                    </tr>
-                                                    <tr style={{ backgroundColor: "white" }}>
-                                                        <th style={{ border: "1px solid #000", padding: "10px", width: "100px" }}> Izoh </th>
-                                                        <td style={{ border: "1px solid #000", padding: "10px" }} className='p-2'>
-                                                            {section.comment}
-                                                        </td>
-                                                    </tr>
+                                                    {
+                                                        section.summary.length > 1 ?
+                                                            <tr style={{ backgroundColor: "white" }}>
+                                                                <th
+                                                                    className='text-center'
+                                                                    style={{ border: "1px solid #000", padding: "10px", width: "100px" }}
+                                                                >
+                                                                    Xulosa
+                                                                </th>
+                                                                <td
+                                                                    style={{ border: "1px solid #000", padding: "10px" }}
+                                                                    className='p-0 fw-normal text-start'
+                                                                >
+                                                                    <pre style={{ border: "none" }} >{section.summary}</pre>
+                                                                </td>
+                                                            </tr> : ""
+                                                    }
+                                                    {
+                                                        section.comment.length > 1 ?
+                                                            <tr style={{ backgroundColor: "white" }}>
+                                                                <th style={{ border: "1px solid #000", padding: "10px", textAlign: "center", width: "100px" }}> Izoh </th>
+                                                                <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
+                                                                    <pre style={{ border: "none" }} >{sections[index].comment}</pre>
+                                                                </td>
+                                                            </tr>
+                                                            : ""
+                                                    }
+
                                                 </table>
                                             )
                                         }
@@ -343,6 +372,6 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                     }
                 })
             }
-        </div>
+        </div >
     )
 };

@@ -469,6 +469,57 @@ router.get('/director/:start/:end/:section', async (req, res) => {
     }
 })
 
+// /api/auth/connector/
+router.get('/reseption/:start/:end/:section', async (req, res) => {
+    try {
+        const start = new Date(req.params.start)
+        const end = new Date(req.params.end)
+        const section = req.params.section
+        const connectors = await Connector.find({
+            bronDay: {
+                $gte:
+                    new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
+                $lt: new Date(new Date(end).getFullYear(),
+                    new Date(end).getMonth(), new Date(end).getDate() + 1)
+            }
+        })
+            .or([{ type: "offline" }, { type: "online" }, { type: "callcenter" }])
+            .sort({ _id: -1 })
+        let clients = []
+        let sections = []
+        let services = []
+        let countsection = []
+        for (let i = 0; i < connectors.length; i++) {
+            const client = await Clients.findById(connectors[i].client)
+            const sec = await Section.find({
+                connector: connectors[i]._id,
+                name: section
+            })
+                .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
+            const service = await Service.find({
+                connector: connectors[i]._id
+            })
+            let c = {
+                accept: 0,
+                all: 0
+            }
+            sec.map(section => {
+                c.all = c.all + 1
+                if (section.accept) {
+                    c.accept = c.accept + 1
+                }
+            })
+            countsection.push(c)
+            services.push(service)
+            clients.push(client)
+            sections.push(sec)
+        }
+        res.json({ connectors, clients, sections, services, countsection })
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
 
 // /api/auth/connector/
 router.get('/directorfish/:start/:end/:fish', async (req, res) => {

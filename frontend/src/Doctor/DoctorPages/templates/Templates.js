@@ -3,9 +3,9 @@ import { AuthContext } from '../../context/AuthContext'
 import { useHttp } from '../../hooks/http.hook'
 import { toast } from 'react-toastify'
 import { Loader } from '../../components/Loader'
-import { Link, useHistory } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faPenAlt, faSearch, faSort, faPrint, faSyncAlt, faSave } from '@fortawesome/free-solid-svg-icons'
+import { faPenAlt, faSearch, faSave } from '@fortawesome/free-solid-svg-icons'
 import { types } from 'joi'
 import Select from "react-select"
 import makeAnimated from "react-select/animated"
