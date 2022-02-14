@@ -207,7 +207,7 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                                         className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
                                                                         style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
                                                                     >
-                                                                        <pre className='pretable' >{tablesection.norma}</pre>
+                                                                        {tablesection.norma}
                                                                     </td>
                                                                     {
                                                                         tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?

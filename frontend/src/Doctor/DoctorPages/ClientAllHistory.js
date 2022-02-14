@@ -299,7 +299,7 @@ export const ClientAllHistory = () => {
                                                                                 alltablesections && alltablesections[i][index].map((tablesection, key) => {
                                                                                     return (
                                                                                         <tr style={{ backgroundColor: "white", marginTop: "10px !important" }}>
-                                                                                            <td className='py-0' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
+                                                                                            <td className='py-0 cn' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
                                                                                                 {++k}
                                                                                             </td>
                                                                                             <td
@@ -318,7 +318,7 @@ export const ClientAllHistory = () => {
                                                                                                 className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
                                                                                                 style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
                                                                                             >
-                                                                                                <pre className='pretable' >{tablesection.norma}</pre>
+                                                                                                {tablesection.norma}
                                                                                             </td>
                                                                                             {
                                                                                                 alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col4).length > 1 ?
