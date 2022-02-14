@@ -157,16 +157,16 @@ export const PaymentsCounterAgents = () => {
                                             if (all.directions[index] && all.directions[index][key] && all.directions[index][key].price) {
                                                 price += all.directions[index][key].price
                                             }
-                                            if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counterDoctor && all.directions[index][key].counterDoctor > 100) {
+                                            if (all.directions[index] && all.directions[index][key] && all.directions[index][key] !== null && all.directions[index][key].counterDoctor > 100) {
                                                 doctor = doctor + all.directions[index][key].counterDoctor
                                             } else {
-                                                if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counterDoctor && all.directions[index][key].counterDoctor <= 100)
+                                                if (all.directions[index] && all.directions[index][key] && all.directions[index][key] !== null && all.directions[index][key].counterDoctor <= 100)
                                                     doctor = doctor + all.directions[index][key].counterDoctor * section.price / 100
                                             }
-                                            if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counteragentProcient && all.directions[index][key].counteragentProcient > 100) {
+                                            if (all.directions[index] && all.directions[index][key] && all.directions[index][key] !== null && all.directions[index][key].counteragentProcient > 100) {
                                                 counterAgent = counterAgent + all.directions[index][key].counteragentProcient
                                             } else {
-                                                if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counteragentProcient && all.directions[index][key].counteragentProcient <= 100)
+                                                if (all.directions[index] && all.directions[index][key] && all.directions[index][key] !== null && all.directions[index][key].counteragentProcient <= 100)
                                                     counterAgent = counterAgent + all.directions[index][key].counteragentProcient * section.price / 100
                                             }
                                             return (
