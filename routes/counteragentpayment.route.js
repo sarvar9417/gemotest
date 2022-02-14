@@ -78,11 +78,10 @@ router.get('/doctor/:start/:end/:id', auth, async (req, res) => {
             })
             let dir = []
             for (let k = 0; k < sec.length; k++) {
-                const d = await Direction.find({
-                    section: sec[k].name,
-                    subsection: sec[k].subname
+                const d = await Direction.findById({
+                    _id: sec[k].nameid
                 })
-                dir.push(d[0])
+                dir.push(d)
             }
             directions.push(dir)
             sections.push(sec)

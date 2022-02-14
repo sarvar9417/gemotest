@@ -154,19 +154,19 @@ export const PaymentsCounterAgents = () => {
                                 {
                                     all && all.sections && all.sections.map((sectionss, index) => {
                                         return sectionss.map((section, key) => {
-                                            if (all.directions[index] && all.directions[index][key]) {
+                                            if (all.directions[index] && all.directions[index][key] && all.directions[index][key].price) {
                                                 price += all.directions[index][key].price
                                             }
-                                            if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counterDoctor > 100) {
+                                            if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counterDoctor && all.directions[index][key].counterDoctor > 100) {
                                                 doctor = doctor + all.directions[index][key].counterDoctor
                                             } else {
-                                                if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counterDoctor <= 100)
+                                                if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counterDoctor && all.directions[index][key].counterDoctor <= 100)
                                                     doctor = doctor + all.directions[index][key].counterDoctor * section.price / 100
                                             }
-                                            if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counteragentProcient > 100) {
+                                            if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counteragentProcient && all.directions[index][key].counteragentProcient > 100) {
                                                 counterAgent = counterAgent + all.directions[index][key].counteragentProcient
                                             } else {
-                                                if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counteragentProcient <= 100)
+                                                if (all.directions[index] && all.directions[index][key] && all.directions[index][key].counteragentProcient && all.directions[index][key].counteragentProcient <= 100)
                                                     counterAgent = counterAgent + all.directions[index][key].counteragentProcient * section.price / 100
                                             }
                                             return (
@@ -183,11 +183,13 @@ export const PaymentsCounterAgents = () => {
                                                     <td className='phone text-center fw-bold text-primary'>{section.price}</td>
                                                     <td className='phone text-center fw-bold text-success'>
                                                         {
-                                                            all.directions[index] && all.directions[index][key] && all.directions[index][key].counteragentProcient > 100
+                                                            all.directions[index] && all.directions[index][key] && all.directions[index][key] && all.directions[index][key].counteragentProcient > 100
                                                                 ?
                                                                 all.directions[index][key].counteragentProcient
                                                                 :
-                                                                all.directions[index][key].counteragentProcient * section.price / 100
+                                                                ` ${all.directions[index] && all.directions[index][key] && all.directions[index][key] && all.directions[index][key].counteragentProcient <= 100 ?
+                                                                    all.directions[index][key].counteragentProcient * section.price / 100
+                                                                    : "Xizmat o'chirilgan"}`
                                                         }
                                                     </td>
                                                     <td className='diagnos text-center'>{all.counterdoctors[index] && all.counterdoctors[index].lastname} {all.counterdoctors[index] && all.counterdoctors[index].firstname}</td>
@@ -197,7 +199,8 @@ export const PaymentsCounterAgents = () => {
                                                                 ?
                                                                 all.directions[index][key].counterDoctor
                                                                 :
-                                                                all.directions[index][key].counterDoctor * section.price / 100
+                                                                `${all.directions[index] && all.directions[index][key] && all.directions[index][key].counterDoctor <= 100 ?
+                                                                    all.directions[index][key].counterDoctor * section.price / 100 : "Xizmat o'chirilgan"}`
                                                         }</td>
                                                 </tr>
                                             )
