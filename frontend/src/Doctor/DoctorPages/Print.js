@@ -150,7 +150,7 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                             <>
                                                                 <span className='d-none'>{k = 0}</span>
                                                                 <tr>
-                                                                    <td className='text-center py-0' colSpan={6} style={{ backgroundColor: "#FFF" }} >
+                                                                    <td className='text-center py-0 pt-2' colSpan={6} style={{ backgroundColor: "#FFF" }} >
                                                                         {tablesections[index].length > 5 ? section.subname : section.name}
                                                                     </td>
                                                                 </tr>

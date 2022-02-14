@@ -226,7 +226,7 @@ export const Reciept = () => {
                                                 return (<tr>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }}>{k}</td>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-start px-2">
-                                                        <span className=''>{section.name} </span>
+                                                        {/* <span className=''>{section.name} </span> */}
                                                         <span className='text-uppercase fw-bold'>{section.subname}</span>
                                                     </td>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-center">
@@ -347,7 +347,7 @@ export const Reciept = () => {
                                                 return (<tr>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }}>{l}</td>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-start px-2">
-                                                        <span className=''>{section.name} </span>
+                                                        {/* <span className=''>{section.name} </span> */}
                                                         <span className='text-uppercase fw-bold'>{section.subname}</span>
                                                     </td>
                                                     <td style={{ fontSize: "15pt", fontFamily: "times" }} className="text-center">
