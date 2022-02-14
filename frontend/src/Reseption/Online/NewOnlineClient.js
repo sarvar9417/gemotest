@@ -207,6 +207,7 @@ export const NewOnlineClient = () => {
     const changeSections = (event) => {
         s = []
         let i = []
+        let prob = false
         event.map((section) => {
             i.push(section._id)
             let turn = 0
@@ -221,6 +222,7 @@ export const NewOnlineClient = () => {
                 if (h._id === section.headsection) {
                     headname = h.name
                     if (h.probirka) {
+                        prob = true
                         p = true
                     }
                 }
@@ -255,6 +257,7 @@ export const NewOnlineClient = () => {
         })
         setSections(s)
         setIds(i)
+        setCheckProbirka(prob)
     }
 
     const createSections = event => {
@@ -285,6 +288,7 @@ export const NewOnlineClient = () => {
         } catch (e) { }
     }
 
+    const [checkProbirka, setCheckProbirka] = useState(false)
     const createConnector = async (client) => {
         try {
             const connector = await request("/api/connector/register", "POST", {
@@ -298,7 +302,7 @@ export const NewOnlineClient = () => {
                 bronDay: new Date(),
                 prepaymentCashier: 0,
                 accept: false,
-                probirka: probirka && probirka
+                probirka: checkProbirka && probirka ? probirka : 0
             }, {
                 Authorization: `Bearer ${auth.token}`
             })
@@ -317,7 +321,7 @@ export const NewOnlineClient = () => {
         WareUseds(connector)
         counteragent && createPaymentCounteragent(id, connector)
         toast.success("Mijoz ro'yxatga olindi.")
-        history.push(`/reseption/onlineclients`)
+        history.push(`/reseption/reciept/${id}/${connector}`)
     }
 
     const create = async (id, section, connector) => {

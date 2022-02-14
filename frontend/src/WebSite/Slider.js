@@ -10,7 +10,7 @@ export const Slider = () => {
                     <div className="carousel-item active" style={{ backgroundImage: 'url(assets/img/slide/slide-1.jpeg)' }}>
                         <div className="container">
                             <h2> <span className='text-danger'>GEMO-</span><span className='text-info'>TEST</span> ga xush kelibsiz</h2>
-                            <p>Ut velit est quam dolor ad a aliquid qui aliquid. Sequi ea ut et est quaerat sequi nihil ut aliquam. Occaecati alias dolorem mollitia ut. Similique ea voluptatem. Esse doloremque accusamus repellendus deleniti vel.</p>
+                            <p> “GEMO-TEST” xususiy korxonasi 2018-yil O'zbekiston Respublikasining "Xususiy korxona to'g'risida"gi qonun va boshqa qonun hujjatlariga asosan tashkil qilingan va hozirgi kungacha sifatli xizmat ko'rsatib kelmoqda.</p>
                             <a href="#about" className="btn-get-started scrollto">Biz bilan bog'laning</a>
                         </div>
                     </div>
@@ -18,7 +18,7 @@ export const Slider = () => {
                     <div className="carousel-item" style={{ backgroundImage: 'url(assets/img/slide/slide-2.jpeg)' }}>
                         <div className="container">
                             <h2> <span className='text-danger'>GEMO-</span><span className='text-info'>TEST</span> ga xush kelibsiz</h2>
-                            <p>Ut velit est quam dolor ad a aliquid qui aliquid. Sequi ea ut et est quaerat sequi nihil ut aliquam. Occaecati alias dolorem mollitia ut. Similique ea voluptatem. Esse doloremque accusamus repellendus deleniti vel.</p>
+                            <p>“GEMO-TEST” xususiy korxonasi 2018-yil O'zbekiston Respublikasining "Xususiy korxona to'g'risida"gi qonun va boshqa qonun hujjatlariga asosan tashkil qilingan va hozirgi kungacha sifatli xizmat ko'rsatib kelmoqda.</p>
                             <a href="#about" className="btn-get-started scrollto">Biz bilan bog'laning</a>
                         </div>
                     </div>
@@ -26,7 +26,7 @@ export const Slider = () => {
                     <div className="carousel-item" style={{ backgroundImage: 'url(assets/img/slide/slide-3.gif)' }}>
                         <div className="container">
                             <h2> <span className='text-danger'>GEMO-</span><span className='text-info'>TEST</span> ga xush kelibsiz</h2>
-                            <p>Ut velit est quam dolor ad a aliquid qui aliquid. Sequi ea ut et est quaerat sequi nihil ut aliquam. Occaecati alias dolorem mollitia ut. Similique ea voluptatem. Esse doloremque accusamus repellendus deleniti vel.</p>
+                            <p>“GEMO-TEST” xususiy korxonasi 2018-yil O'zbekiston Respublikasining "Xususiy korxona to'g'risida"gi qonun va boshqa qonun hujjatlariga asosan tashkil qilingan va hozirgi kungacha sifatli xizmat ko'rsatib kelmoqda.</p>
                             <a href="#about" className="btn-get-started scrollto">Biz bilan bog'laning</a>
                         </div>
                     </div>

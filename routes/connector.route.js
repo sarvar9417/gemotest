@@ -1207,6 +1207,7 @@ router.get('/directorconnector/:id', async (req, res) => {
         const sections = await Section.find({
             connector: connector._id
         })
+
         let tablesections = []
         let tablecolumns = []
         for (let i = 0; i < sections.length; i++) {
@@ -2065,7 +2066,8 @@ router.get('/probirka', async (req, res) => {
                     new Date(new Date().getFullYear(), new Date().getMonth(), 1),
                 $lt: new Date(new Date().getFullYear(),
                     new Date().getMonth(), new Date().getDate() + 1)
-            }
+            },
+            probirka: { $gt: 0 }
         }).sort({ _id: -1 })
         res.json(connectors.length);
 
@@ -2175,5 +2177,15 @@ router.patch('/cashier/:id', async (req, res) => {
     }
 })
 
+router.patch('/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const edit = await Connector.findByIdAndUpdate(id, req.body)
+        res.json(edit);
+
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
 
 module.exports = router

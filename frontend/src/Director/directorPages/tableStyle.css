@@ -79,3 +79,20 @@ td:nth-child(1) {
     top: 0;
     z-index: 1;
 }
+
+
+.cw30 {
+    width: 30%;
+}
+
+.cw22 {
+    width: 22%;
+}
+
+.cw18 {
+    width: 18%;
+}
+
+.cn {
+    width: 5%;
+}

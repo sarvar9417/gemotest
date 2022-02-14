@@ -71,10 +71,14 @@ router.get('/doctor/:section/:fish', auth, async (req, res) => {
         const name = new RegExp('.*' + fish[0] + ".*", "i")
         const directions = await Direction.find({
             headsection: req.params.section,
-            section: name
+
         })
+            .or([
+                { section: name },
+                { subsection: name },
+                { shortname: name }
+            ])
             .sort({ section: 1 })
-        console.log(directions)
         res.json(directions)
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })

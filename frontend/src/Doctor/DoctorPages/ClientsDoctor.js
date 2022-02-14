@@ -219,7 +219,7 @@ export const ClientsDoctor = () => {
             </div>
             <div>
                 <div style={{ minWidth: "1100px" }} >
-                    <table id="" className="table-striped table-hover" style={{ borderBottom: "1px solid #aaa", marginBottom: "10px" }} >
+                    <table id="" className="table-striped table-hover w-100" style={{ borderBottom: "1px solid #aaa", marginBottom: "10px" }} >
                         <thead>
                             <tr>
                                 <th style={{ width: "100px" }} className='text-center' >№ <FontAwesomeIcon icon={faSort} /> </th>
@@ -287,7 +287,7 @@ export const ClientsDoctor = () => {
             </div>
 
             <div className="overflow-auto" style={{ height: "60vh", minWidth: "1100px" }}>
-                <table className=" table-hover"  >
+                <table className=" table-hover w-100"  >
                     <tbody className="" >
                         {
                             all && all.clients.map((client, index) => {

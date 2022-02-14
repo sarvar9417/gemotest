@@ -1,5 +1,5 @@
 import React from 'react';
-import './tableStyle.css'
+// import './tableStyle.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTelegram } from '@fortawesome/free-brands-svg-icons'
 
@@ -7,22 +7,22 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
     let k = 0
     const checkClassHead = (data) => {
         if (data.col5.length > 1) {
-            return "text-center fw-bold cw18"
+            return "text-center fw-bold cw18 py-0"
         }
         if (data.col4.length > 1) {
-            return "text-center fw-bold   cw22"
+            return "text-center fw-bold   cw22 py-0"
         }
-        return "text-center fw-bold  cw30 "
+        return "text-center fw-bold  cw30 py-0"
     }
 
     const checkClassFoot = (data) => {
         if (data.col5.length > 1) {
-            return "text-center cw18"
+            return "text-center cw18 py-0"
         }
         if (data.col4.length > 1) {
-            return "text-center  cw22 "
+            return "text-center  cw22 py-0"
         }
-        return "text-center cw30 "
+        return "text-center cw30 py-0"
     }
     return (
         <div >
@@ -50,9 +50,9 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                 </div>
                                 <div className="row" style={{ fontSize: "20pt" }}>
                                     <div className="col-6 pt-2" style={{ textAlign: "center" }}>
-                                        <p className='pt-2' style={{ fontFamily: "-moz-initial" }}>
+                                        <p className='pt-3' style={{ fontFamily: "-moz-initial" }}>
                                             "GEMO-TEST" <br />
-                                            MARKAZIY LABARATORIYA
+                                            MARKAZIY LABORATORIYA
                                         </p>
                                     </div>
                                     <div className="col-6" style={{ textAlign: "center" }}>
@@ -150,12 +150,12 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                             <>
                                                                 <span className='d-none'>{k = 0}</span>
                                                                 <tr>
-                                                                    <td className='text-center' colSpan={6} style={{ backgroundColor: "#FFF" }} >
-                                                                        {section.name}
+                                                                    <td className='text-center py-0' colSpan={6} style={{ backgroundColor: "#FFF" }} >
+                                                                        {tablesections[index].length > 5 ? section.subname : section.name}
                                                                     </td>
                                                                 </tr>
                                                                 <tr style={{ backgroundColor: "#C0C0C0" }}>
-                                                                    <td className='text-center fw-bold cn' style={{ border: "1px solid #000" }}>
+                                                                    <td className='text-center fw-bold cn py-1' style={{ border: "1px solid #000" }}>
                                                                         №
                                                                     </td>
                                                                     <td className={tablecolumns && tablecolumns[index] && checkClassHead(tablecolumns[index])} style={{ border: "1px solid #000" }}>
@@ -188,26 +188,26 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                         tablesections && tablesections[index].map((tablesection, key) => {
                                                             return (
                                                                 <tr style={{ backgroundColor: "white", marginTop: "10px !important" }}>
-                                                                    <td className='cn' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
+                                                                    <td className='cn py-0' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
                                                                         {++k}
                                                                     </td>
                                                                     <td
                                                                         className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
                                                                         style={{ border: "1px solid #000", padding: "10px", borderTop: "0px solid white" }}
                                                                     >
-                                                                        {tablesection.name}
+                                                                        <p className='py-0 m-0 ps-2 text-start'>{tablesection.name}</p>
                                                                     </td>
                                                                     <td
                                                                         className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
                                                                         style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
                                                                     >
-                                                                        {tablesection.result}
+                                                                        <pre className='pretable fw-bold fs-6' >{tablesection.result}</pre>
                                                                     </td>
                                                                     <td
                                                                         className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
                                                                         style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
                                                                     >
-                                                                        {tablesection.norma}
+                                                                        <pre className='pretable' >{tablesection.norma}</pre>
                                                                     </td>
                                                                     {
                                                                         tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
@@ -215,7 +215,7 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                                                 className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
                                                                                 style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
                                                                             >
-                                                                                {tablesection.additionalone}
+                                                                                <pre className='pretable' >{tablesection.additionalone}</pre>
                                                                             </td> : ""
                                                                     }
                                                                     {
@@ -224,7 +224,7 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                                                 className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
                                                                                 style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
                                                                             >
-                                                                                {tablesection.additionaltwo}
+                                                                                <pre className='pretable' >{tablesection.additionaltwo}</pre>
                                                                             </td> : ""
                                                                     }
                                                                 </tr>
@@ -315,10 +315,10 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                             <div className='row'>
                                 <div className='col-4'>
                                     <div className="footer-info">
-                                        <p className='text-start'> Manzil: {logo && logo.address} </p>
-                                        <p className='text-start'> Telefon: +{logo && logo.phone1}, +{logo && logo.phone2}, +{logo && logo.phone3} </p>
-                                        <p className='text-start'> <FontAwesomeIcon icon={faTelegram} /> http://t.me/gemotest.uz </p>
-                                        <p className='text-start'> Pochta indeksi: 210100 </p>
+                                        <p className='text-start py-0 m-0'> Manzil: {logo && logo.address} </p>
+                                        <p className='text-start  py-0 m-0'> Telefon: +{logo && logo.phone1}, +{logo && logo.phone2} </p>
+                                        <p className='text-start  py-0 m-0'> <FontAwesomeIcon icon={faTelegram} /> http://t.me/gemotestuz </p>
+                                        <p className='text-start  py-0 m-0'> Pochta indeksi: 210100 </p>
                                     </div>
                                 </div>
                                 <div className='col-4'>

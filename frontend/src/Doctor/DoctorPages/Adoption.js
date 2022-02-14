@@ -134,8 +134,6 @@ export const Adoption = () => {
         setSections(s)
     }, [setSections, sections])
 
-    console.log(sections);
-
     const changeSectionaccept = useCallback((event, index) => {
         let t = [...tablesections]
         t[index].map(tablesection => {
@@ -176,7 +174,6 @@ export const Adoption = () => {
             notify(e)
         }
     }, [request, auth, sections, tablesections, toast])
-
 
     const [logo, setLogo] = useState()
     const getLogo = useCallback(async () => {
@@ -315,9 +312,9 @@ export const Adoption = () => {
                     </div>
                     <div className="row" style={{ fontSize: "20pt" }}>
                         <div className="col-6 pt-2" style={{ textAlign: "center" }}>
-                            <p className='pt-2' style={{ fontFamily: "-moz-initial" }}>
+                            <p className='pt-3' style={{ fontFamily: "-moz-initial" }}>
                                 "GEMO-TEST" <br />
-                                MARKAZIY LABARATORIYA
+                                MARKAZIY LABORATORIYA
                             </p>
                         </div>
                         <div className="col-6" style={{ textAlign: "center" }}>
@@ -412,7 +409,7 @@ export const Adoption = () => {
                                                         <span className='d-none'>{k = 0}</span>
                                                         <tr>
                                                             <td className='text-center' colSpan={6} style={{ backgroundColor: "#FFF" }} >
-                                                                {section.name}
+                                                                {tablesections[index].length > 5 ? section.subname : section.name}
                                                             </td>
                                                         </tr>
                                                         <tr style={{ backgroundColor: "#C0C0C0" }}>
@@ -452,28 +449,65 @@ export const Adoption = () => {
                                                 tablesections && tablesections[index].map((tablesection, key) => {
                                                     return (
                                                         <tr style={{ backgroundColor: "white" }}>
-                                                            <td className='cn' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
+                                                            <td className='cn py-0' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
                                                                 {++k}
                                                             </td>
-                                                            <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ border: "1px solid #000", padding: "10px", borderTop: "0px solid white" }}>
-                                                                {tablesection.name}
+                                                            <td
+                                                                className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                style={{
+                                                                    border: "1px solid #000",
+                                                                    padding: "10px",
+                                                                    borderTop: "0px solid white",
+                                                                    textAlign: "right !important"
+                                                                }}>
+                                                                <p className='text-start m-0 py-0 ps-2 '>{tablesection.name}</p>
                                                             </td>
                                                             <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
-                                                                <textarea style={{ border: "none" }} onChange={(event) => { changeResult(event, index, key) }} name='result' className='form-control text-center' defaultValue={tablesection.result}></textarea>
+                                                                <textarea
+                                                                    rows={(tablesection.result).split("\n").length}
+                                                                    style={{ border: "none" }}
+                                                                    onChange={(event) => { changeResult(event, index, key) }}
+                                                                    name='result'
+                                                                    className='form-control text-center fw-bold'
+                                                                    defaultValue={tablesection.result}
+                                                                >
+
+                                                                </textarea>
                                                             </td>
                                                             <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
-                                                                <textarea style={{ border: "none" }} onChange={(event) => { changeNorma(event, index, key) }} name='norma' className='form-control text-center' defaultValue={tablesection.norma} ></textarea>
+                                                                <textarea
+                                                                    rows={(tablesection.norma).split("\n").length}
+                                                                    style={{ border: "none" }}
+                                                                    onChange={(event) => { changeNorma(event, index, key) }}
+                                                                    name='norma' className='form-control text-center'
+                                                                    defaultValue={tablesection.norma} >
+                                                                </textarea>
                                                             </td>
                                                             {
                                                                 tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
                                                                     <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
-                                                                        <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionalone(event, index, key) }} name='additionalone' className='form-control text-center' defaultValue={tablesection.additionalone}></textarea>
+                                                                        <textarea
+                                                                            rows={(tablesection.additionalone).split("\n").length}
+                                                                            style={{ border: "none" }}
+                                                                            onChange={(event) => { changeAdditionalone(event, index, key) }}
+                                                                            name='additionalone'
+                                                                            className='form-control text-center'
+                                                                            defaultValue={tablesection.additionalone}
+                                                                        >
+
+                                                                        </textarea>
                                                                     </td> : ""
                                                             }
                                                             {
                                                                 tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
                                                                     <td className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])} style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
-                                                                        <textarea style={{ border: "none" }} onChange={(event) => { changeAdditionaltwo(event, index, key) }} name='additionaltwo' className='form-control text-center' defaultValue={tablesection.additionaltwo}></textarea>
+                                                                        <textarea
+                                                                            rows={(tablesection.additionaltwo).split("\n").length}
+                                                                            style={{ border: "none" }}
+                                                                            onChange={(event) => { changeAdditionaltwo(event, index, key) }}
+                                                                            name='additionaltwo' className='form-control text-center'
+                                                                            defaultValue={tablesection.additionaltwo}>
+                                                                        </textarea>
                                                                     </td> : ""
                                                             }
                                                             <td className='text-center px-2' style={{ border: "1px solid #000", borderTop: "0px solid white" }}>
@@ -515,6 +549,7 @@ export const Adoption = () => {
                                                                 className='p-0'
                                                             >
                                                                 <textarea
+                                                                    rows={(sections[index].summary).split("\n").length}
                                                                     value={sections[index].summary}
                                                                     onChange={(event) => { sectionSummary(event, index) }}
                                                                     className='form-control'
@@ -536,7 +571,14 @@ export const Adoption = () => {
                                                         <tr style={{ backgroundColor: "white" }}>
                                                             <th style={{ border: "1px solid #000", padding: "10px" }}> Izoh </th>
                                                             <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
-                                                                <textarea contentEditable defaultValue={sections[index].comment} onChange={(event) => { sectionComment(event, index) }} className='form-control' style={{ border: "none" }} placeholder='Xulosa' ></textarea>
+                                                                <textarea
+                                                                    rows={(sections[index].comment).split("\n").length}
+                                                                    defaultValue={sections[index].comment}
+                                                                    onChange={(event) => { sectionComment(event, index) }}
+                                                                    className='form-control' style={{ border: "none" }}
+                                                                    placeholder='Xulosa' >
+
+                                                                </textarea>
                                                             </td>
                                                         </tr>
                                                     </table>
@@ -578,7 +620,6 @@ export const Adoption = () => {
                                                     style={{ border: "none", overflowY: "auto" }}
                                                     placeholder='Xulosa'
                                                     contentEditable>
-
                                                 </textarea>
                                             </td>
                                             <td rowSpan="2" className='text-center' style={{ border: "1px solid #000", padding: "10px" }}>
@@ -600,7 +641,6 @@ export const Adoption = () => {
                                                     placeholder='Xulosa'
                                                     rows={(sections[index].comment).split("\n").length}
                                                 >
-
                                                 </textarea>
                                             </td>
                                         </tr>

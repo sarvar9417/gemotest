@@ -780,9 +780,13 @@ router.put('/:id', auth, async (req, res) => {
 router.patch('/table', auth, async (req, res) => {
     try {
         const alltables = [...req.body]
+        console.log(alltables);
         alltables.map(async (tables) => {
             tables.map(async (table) => {
                 if (table) {
+                    const section = await Section.findById(table.sectionid)
+                    section.accept = true
+                    await section.save()
                     const t = await TableSection.findByIdAndUpdate(table._id, table)
                 }
             })

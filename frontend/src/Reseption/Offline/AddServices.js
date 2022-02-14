@@ -357,12 +357,38 @@ export const AddServices = () => {
 
   const createConnector = async () => {
     try {
+
+      const con = await request(`/api/connector/${connector._id}`, "PATCH", {
+        _id: connector._id,
+        client: connector.client,
+        source: connector.source,
+        counteragent: connector.counteragent,
+        type: connector.type,
+        position: connector.position,
+        doctor: connector.doctor,
+        diagnosis: connector.diagnosis,
+        bronDay: connector.bronDay,
+        prepaymentCashier: connector.prepaymentCashier,
+        accept: connector.accept,
+        probirka: connector.probirka ? connector.probirka : parseInt(`${checkProbirka && probirka ? probirka : 0}`)
+      }, {
+        Authorization: `Bearer ${auth.token}`
+      })
       createAllSections(client._id, connector._id)
-      createAllServices()
+      createAllServices(client, connector._id)
     } catch (e) {
       notify(e)
     }
   }
+
+  // const createConnector = async () => {
+  //   try {
+  //     createAllSections(client._id, connector._id)
+  //     createAllServices()
+  //   } catch (e) {
+  //     notify(e)
+  //   }
+  // }
 
   const createAllSections = (id, connector) => {
     sections.map((section) => {
