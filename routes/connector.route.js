@@ -25,7 +25,7 @@ router.post('/register', async (req, res) => {
                 message: error.message
             })
         }
-        const {
+        let {
             client,
             source,
             counteragent,
@@ -38,6 +38,19 @@ router.post('/register', async (req, res) => {
             probirka,
             accept
         } = req.body
+
+        if (probirka) {
+            const connectors = await Connector.find({
+                bronDay: {
+                    $gte:
+                        new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                    $lt: new Date(new Date().getFullYear(),
+                        new Date().getMonth(), new Date().getDate() + 1)
+                },
+                probirka: { $gt: 0 }
+            })
+            probirka = connectors.length + 1
+        }
         const connector = new Connector({
             client,
             source,
@@ -385,6 +398,7 @@ router.get('/doctor/:start/:end/:section', async (req, res) => {
                     new Date(end).getMonth(), new Date(end).getDate() + 1)
             }
         })
+            .sort({ _id: -1 })
         let connectors = []
         for (let i = 0; i < sections.length; i++) {
             const connector = await Connector.findById(sections[i].connector)
@@ -821,6 +835,7 @@ router.get('/director/:start/:end', async (req, res) => {
                     new Date(end).getMonth(), new Date(end).getDate() + 1)
             }
         })
+            .sort({ _id: -1 })
         let connectors = []
         for (let i = 0; i < sections.length; i++) {
             const connector = await Connector.findById(sections[i].connector)
@@ -831,7 +846,13 @@ router.get('/director/:start/:end', async (req, res) => {
                 }
             })
             if (k) {
-                connectors.push(connector)
+                if (!connector.probirka) {
+                    connectors.push(connector)
+                } else {
+                    if (connector.accept) {
+                        connectors.push(connector)
+                    }
+                }
             }
         }
         let countsection = []
@@ -1152,7 +1173,7 @@ router.get('/doctorconnector/:section/:id', async (req, res) => {
             connector: connector._id
         })
             .sort({
-                name: 1
+                _id: 1
             })
         let tablesections = []
         let tablecolumns = []
@@ -1207,6 +1228,7 @@ router.get('/directorconnector/:id', async (req, res) => {
         const sections = await Section.find({
             connector: connector._id
         })
+            .sort({ _id: 1 })
 
         let tablesections = []
         let tablecolumns = []
@@ -1687,7 +1709,7 @@ router.get('/clientallhistory/:id', async (req, res) => {
         const connectors = await Connector.find({
             client: id
         })
-            .sort({ _id: -1 })
+            .sort({ _id: 1 })
         let allsections = []
         let alltablesections = []
         let alltablecolumns = []
@@ -1696,6 +1718,7 @@ router.get('/clientallhistory/:id', async (req, res) => {
             const sections = await Section.find({
                 connector: connectors[i]._id
             })
+                .sort({ _id: 1 })
             let tablesections = []
             let tablecolumns = []
             let sectionFiles = []
@@ -1850,7 +1873,13 @@ router.get('/directorclients', async (req, res) => {
                 }
             })
             if (k) {
-                connectors.push(connector)
+                if (!connector.probirka) {
+                    connectors.push(connector)
+                } else {
+                    if (connector.accept) {
+                        connectors.push(connector)
+                    }
+                }
             }
         }
         let countsection = []
@@ -2179,8 +2208,21 @@ router.patch('/cashier/:id', async (req, res) => {
 
 router.patch('/:id', async (req, res) => {
     try {
+        let connector = req.body
+        if (connector.probirka) {
+            const connectors = await Connector.find({
+                bronDay: {
+                    $gte:
+                        new Date(new Date().getFullYear(), new Date().getMonth(), 1),
+                    $lt: new Date(new Date().getFullYear(),
+                        new Date().getMonth(), new Date().getDate() + 1)
+                },
+                probirka: { $gt: 0 }
+            })
+            probirka = connectors.length + 1
+        }
         const id = req.params.id
-        const edit = await Connector.findByIdAndUpdate(id, req.body)
+        const edit = await Connector.findByIdAndUpdate(id, connector)
         res.json(edit);
 
     } catch (e) {

@@ -151,6 +151,7 @@ router.get('/reseptionid/:id', async (req, res) => {
     try {
         const id = req.params.id
         const sections = await Section.find({ client: id })
+            .sort({ _id: 1 })
         res.json(sections)
 
     } catch (e) {
@@ -164,6 +165,7 @@ router.get('/reseptionid/:id/:connector', auth, async (req, res) => {
         const id = req.params.id
         const connector = req.params.connector
         const sections = await Section.find({ client: id, connector: connector })
+            .sort({ _id: 1 })
         res.json(sections)
 
     } catch (e) {

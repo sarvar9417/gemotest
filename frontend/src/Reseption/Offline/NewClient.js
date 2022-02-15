@@ -431,7 +431,7 @@ export const NewClient = () => {
       createAllServices(client, connector._id)
       counteragent && createPaymentCounteragent(client, connector._id)
     } catch (e) {
-      notify(e)
+      notify(e.message)
     }
   }
 
