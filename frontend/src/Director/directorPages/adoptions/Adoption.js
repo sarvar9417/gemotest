@@ -125,14 +125,30 @@ export const Adoption = () => {
     }, [setSections, sections])
 
     const changeSectionaccept = useCallback((event, index) => {
-        let t = [...tablesections]
-        t[index].map(tablesection => {
-            tablesection.accept = event.target.checked
-        })
-        let s = [...sections]
-        s[index].accept = event.target.checked
-        setTableSections(t)
-        setSections(s)
+        if (tablesections[index].length > 5) {
+            let t = [...tablesections]
+            t[index].map(tablesection => {
+                tablesection.accept = event.target.checked
+            })
+            let s = [...sections]
+            s[index].accept = event.target.checked
+            setTableSections(t)
+            setSections(s)
+        } else {
+            let s = [...sections]
+            let t = [...tablesections]
+            s.map((section, i) => {
+                if (i >= index && section.name === s[index].name && tablesections[i].length <= 5) {
+                    section.accept = event.target.checked
+                    t[i].map(tablesection => {
+                        tablesection.accept = event.target.checked
+                    })
+                }
+            })
+            setTableSections(t)
+            setSections(s)
+        }
+
     }, [sections, setSections, setTableSections, tablesections])
 
     const sectionAccept = useCallback((event, index) => {
@@ -431,8 +447,12 @@ export const Adoption = () => {
                                     <>
                                         <table style={{ width: "100%" }}>
                                             {
-                                                (sections[index - 1] && sections[index - 1].name !== section.name) || index === 0
-                                                    || tablesections[index - 1].length === 0 || tablesections[index].length > 5 ?
+                                                (sections[index - 1] &&
+                                                    sections[index - 1].name !== section.name) ||
+                                                    index === 0 ||
+                                                    tablesections[index - 1].length === 0 ||
+                                                    tablesections[index].length > 5 ||
+                                                    tablesections[index - 1].length > 5 ?
                                                     <>
                                                         <span className='d-none'>{k = 0}</span>
                                                         <tr>
@@ -466,7 +486,7 @@ export const Adoption = () => {
                                                                     </td> : ""
                                                             }
                                                             <td className='text-center px-2' style={{ border: "1px solid #000" }}>
-                                                                {/* <input checked={section.accept} onChange={(event) => changeSectionaccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} /> */}
+                                                                <input checked={section.accept} onChange={(event) => changeSectionaccept(event, index)} type="checkbox" style={{ width: "20px", height: "20px" }} />
                                                             </td>
                                                         </tr>
                                                     </>
@@ -615,7 +635,7 @@ export const Adoption = () => {
                                     </>
                                 )
                             } else {
-                                if (true) {
+                                if (!section.probirka) {
                                     return <table className='mt-4'>
                                         <tr>
                                             <td colSpan={3} className="text-uppercase">

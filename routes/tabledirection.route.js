@@ -11,14 +11,18 @@ const auth = require('../middleware/auth.middleware')
 
 router.post('/register', auth, async (req, res) => {
     try {
-        const { error } = validateTableDirection(req.body)
-        if (error) {
-            return res.status(400).json({
-                error: error,
-                message: error.message
-            })
+        // const { error } = validateTableDirection(req.body)
+        // if (error) {
+        //     return res.status(400).json({
+        //         error: error,
+        //         message: error.message
+        //     })
+        // }
+        if (req.body._id) {
+            const tabledirection = await TableDirection.findByIdAndUpdate(req.body._id, req.body)
+            return res.status(201).send(tabledirection)
         }
-        
+
         const {
             directionid,
             headsectionid,

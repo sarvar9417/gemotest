@@ -69,7 +69,7 @@ export const Navbar = () => {
                             </ul>
                         </li>
                         <li className="nav-item" >
-                            <Link className="nav-link a text-center" to="/reseption/callcenter">CallCenter</Link>
+                            <Link className="nav-link a text-center" to="/reseption/cashier">Kassa</Link>
                         </li>
                     </ul>
                     <li className="nav-item ll" >

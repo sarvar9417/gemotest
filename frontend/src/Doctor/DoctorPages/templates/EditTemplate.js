@@ -27,6 +27,9 @@ export const EditTemplate = () => {
         accept: false
     })
 
+    console.log(template)
+
+
     const [t, setT] = useState()
     const [tablecolumn, setTableColumn] = useState({
         direction: directionid,
@@ -86,7 +89,6 @@ export const EditTemplate = () => {
         if (template.name === "") {
             return notify("Diqqat! Jadval nomini kiritish majburiy.")
         }
-
         setModal(true)
         window.scrollTo({ top: 0 })
     }
@@ -95,27 +97,30 @@ export const EditTemplate = () => {
         setTemplate({ ...template, [event.target.name]: event.target.value })
     }
 
+
     const createHandler = useCallback(async () => {
         try {
             const fetch = await request(`/api/tabledirection/register`, 'POST', { ...template, headsectionid, directionid }, {
                 Authorization: `Bearer ${auth.token}`
             })
-            window.location.reload()
+            getTemplates()
+            setModal(false)
         } catch (error) {
             notify(error)
         }
-    }, [request, auth, template, headsectionid, directionid])
+    }, [request, auth, template, headsectionid, directionid, getTemplates, setModal])
 
     const Delete = useCallback(async () => {
         try {
             const fetch = await request(`/api/tabledirection/${deletetemplate._id}`, 'Delete', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            window.location.reload()
+            getTemplates()
+            setModal2(false)
         } catch (error) {
             notify(error)
         }
-    }, [request, auth, deletetemplate])
+    }, [request, auth, deletetemplate, getTemplates, setModal2])
 
     const notify = (e) => {
         toast.error(e)
@@ -171,19 +176,19 @@ export const EditTemplate = () => {
 
                     <tr>
                         <td style={{ width: "300px" }} className='text-center fw-bold text-capitalize m-0 p-0'>
-                            <textarea name='name' onChange={inputTemplate} className='form-control border border-white fw-bold' style={{ height: "100px" }} ></textarea>
+                            <textarea value={template.name} name='name' onChange={inputTemplate} className='form-control border border-white fw-bold' style={{ height: "100px" }} ></textarea>
                         </td>
                         <td style={{ width: "300px" }} className='text-center fw-bold text-capitalize m-0 p-0'>
-                            <textarea name='result' onChange={inputTemplate} className='form-control border border-white' style={{ height: "100px" }} ></textarea>
+                            <textarea value={template.result} name='result' onChange={inputTemplate} className='form-control border border-white' style={{ height: "100px" }} ></textarea>
                         </td>
                         <td style={{ width: "300px" }} className='text-center p-0 m-0'>
-                            <textarea name='norma' onChange={inputTemplate} className='form-control border border-white' style={{ height: "100px" }} ></textarea>
+                            <textarea value={template.norma} name='norma' onChange={inputTemplate} className='form-control border border-white' style={{ height: "100px" }} ></textarea>
                         </td>
                         <td style={{ width: "300px" }} className='text-center p-0 m-0'>
-                            <textarea name='additionalone' onChange={inputTemplate} className='form-control border border-white' style={{ height: "100px" }} ></textarea>
+                            <textarea value={template.additionalone} name='additionalone' onChange={inputTemplate} className='form-control border border-white' style={{ height: "100px" }} ></textarea>
                         </td>
                         <td style={{ width: "300px" }} className='text-center p-0 m-0'>
-                            <textarea name='additionaltwo' onChange={inputTemplate} className='form-control border border-white' style={{ height: "100px" }} ></textarea>
+                            <textarea value={template.additionaltwo} name='additionaltwo' onChange={inputTemplate} className='form-control border border-white' style={{ height: "100px" }} ></textarea>
                         </td>
                         <td style={{ width: "100px" }} className='text-center pt-4'>
                             <button onClick={checkTemplate} className='btn btn-info' ><FontAwesomeIcon icon={faSave} /> </button>
@@ -202,6 +207,7 @@ export const EditTemplate = () => {
                         <th className='text-center'>{tablecolumn.col3}</th>
                         <th className='text-center'>{tablecolumn.col4}</th>
                         <th className='text-center'>{tablecolumn.col5}</th>
+                        <th className='text-center'>Tahrirlash</th>
                         <th className='text-center'>O'chirish</th>
                     </tr>
                 </thead>
@@ -225,8 +231,15 @@ export const EditTemplate = () => {
                                     <td style={{ width: "300px" }} className='text-center p-0 m-0 py-3'>
                                         {template.additionaltwo}
                                     </td>
+                                    <td style={{ width: "300px" }} className='text-center p-0 m-0 py-3'>
+                                        <button
+                                            className='btn button-success'
+                                            onClick={() => setTemplate(template)}
+                                        > <FontAwesomeIcon icon={faPenAlt} /> </button>
+                                    </td>
                                     <td style={{ width: "100px" }} className='text-center pt-2'>
-                                        <button onClick={() => { setDeleteTemplate(template); setModal2(true) }} className='btn button-danger' ><FontAwesomeIcon icon={faTrashAlt} /> </button> </td>
+                                        <button onClick={() => { setDeleteTemplate(template); setModal2(true) }} className='btn button-danger' ><FontAwesomeIcon icon={faTrashAlt} /> </button>
+                                    </td>
                                 </tr>
                             )
                         })
@@ -246,8 +259,8 @@ export const EditTemplate = () => {
                             <thead style={{ backgroundColor: "#6c7ae0", color: "white" }}>
                                 <tr>
                                     <th className='text-center'>Jadval nomi</th>
-                                    <th className='text-center'>Norma</th>
                                     <th className='text-center'>Rezultat</th>
+                                    <th className='text-center'>Norma</th>
                                     <th className='text-center'>Qo'shimcha1</th>
                                     <th className='text-center'>Qo'shimcha2</th>
                                 </tr>
@@ -258,11 +271,11 @@ export const EditTemplate = () => {
                                     <td style={{ width: "300px" }} className='text-center fw-bold text-capitalize m-0 p-0 py-3'>
                                         {template.name}
                                     </td>
-                                    <td style={{ width: "300px" }} className='text-center fw-bold text-capitalize m-0 p-0 py-3'>
-                                        {template.norma}
-                                    </td>
                                     <td style={{ width: "300px" }} className='text-center p-0 m-0 py-3'>
                                         {template.result}
+                                    </td>
+                                    <td style={{ width: "300px" }} className='text-center fw-bold text-capitalize m-0 p-0 py-3'>
+                                        {template.norma}
                                     </td>
                                     <td style={{ width: "300px" }} className='text-center p-0 m-0 py-3'>
                                         {template.additionalone}

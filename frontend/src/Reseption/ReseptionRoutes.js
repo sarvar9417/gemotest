@@ -18,6 +18,10 @@ import { CreateStatsionarClient } from './Statsionar/CreateStatsionarClient'
 import { ClientsStatsionarPages } from './Statsionar/ClientsStatsionarPages'
 import { EditStatClient } from './Statsionar/EditStatClient'
 import { RecieptStatsionar } from './Statsionar/RecieptStatsionar'
+import { CashierClientsPages } from './cashierPages/CashierClientsPages'
+import { CreateCheck } from './cashierPages/CreateCheck'
+import { RecieptCheck } from './cashierPages/RecieptCheck'
+
 
 export const ReseptionRoutes = (isAuthenticated) => {
     if (isAuthenticated) {
@@ -71,6 +75,15 @@ export const ReseptionRoutes = (isAuthenticated) => {
                     </Route>
                     <Route path="/reseption/addservices/:client/:connector" >
                         <CreateServiceClient />
+                    </Route>
+                    <Route path="/reseption/cashier" >
+                        <CashierClientsPages />
+                    </Route>
+                    <Route path="/reseption/pay/:id/:connector" >
+                        <CreateCheck />
+                    </Route>
+                    <Route path="/reseption/recieptcheck/:id/:connector" >
+                        <RecieptCheck />
                     </Route>
                     <Route path="/sayt" >
                         <Sayt />
