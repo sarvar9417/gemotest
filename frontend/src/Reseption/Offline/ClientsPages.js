@@ -677,7 +677,8 @@ export const ClientsPages = () => {
                                                                 <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all.clients[key]._id && all.clients[key]._id}`} >
                                                                     <FontAwesomeIcon icon={faPenAlt} />
                                                                 </Link>
-                                                                <span className='ps-3 fs-5'> <span className='text-success fw-bold'>{all.countsection[key] && all.countsection[key].accept}</span> / <span className='text-danger fw-bold'>{all.countsection[key] && all.countsection[key].all}</span>  </span>
+                                                                <span className='ps-3 fs-5'> <span className='text-success fw-bold'>{all.countsection[key] && all.countsection[key].accept}</span> / <span className='text-danger fw-bold'>{all.countsection[key] && all.countsection[key].all}</span>  </span> <br/>
+                                                                <span className='text-info fw-bold'>{all.connectors[key] && all.connectors[key].diagnosis}</span>
                                                             </td>
                                                             <td
                                                                 className="id"
@@ -690,6 +691,7 @@ export const ClientsPages = () => {
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
                                                                 {all.clients[key] && all.clients[key].id}
+                                                                
                                                             </td>
                                                             <td
                                                                 className="phone"

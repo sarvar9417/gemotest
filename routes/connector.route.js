@@ -2230,4 +2230,14 @@ router.patch('/:id', async (req, res) => {
     }
 })
 
+router.patch('/', async (req, res) => {
+    try {
+        const edit = await Connector.findByIdAndUpdate(req.body._id, req.body)
+        res.json({ message: "Izoh muvaffaqqiyatli saqlandi" });
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+
 module.exports = router

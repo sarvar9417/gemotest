@@ -145,8 +145,13 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                             <>
                                                 <table style={{ width: "100%" }}>
                                                     {
-                                                        (sections[index - 1] && sections[index - 1].name !== section.name) || index === 0
-                                                            || tablesections[index - 1].length === 0 || tablesections[index].length > 5 ?
+                                                        (sections[index - 1] &&
+                                                            sections[index - 1].name !== section.name) ||
+                                                            index === 0 ||
+                                                            tablesections[index - 1].length === 0 ||
+                                                            tablesections[index].length > 5 ||
+                                                            tablesections[index - 1].length > 5
+                                                            ?
                                                             <>
                                                                 <span className='d-none'>{k = 0}</span>
                                                                 <tr>

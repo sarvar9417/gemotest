@@ -328,6 +328,27 @@ export const Adoption = () => {
         }
     }, [request, auth, sectionFiles])
 
+    const changeComment = (e) => {
+        if (e.key === "Enter") {
+            updateConnector()
+        } else {
+            setConnector({ ...connector, diagnosis: e.target.value })
+        }
+    }
+
+    const updateConnector = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/connector`, 'PATCH', { ...connector }, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            toast.success(fetch.message)
+            getConnector()
+        } catch (error) {
+            notify(error.message)
+        }
+
+    }, [toast, getConnector, notify])
+
     return (
         <>
             <div className='d-none'>
@@ -700,7 +721,20 @@ export const Adoption = () => {
                         })
 
                     }
+                    <div className='py-3 fs-5'>
+                        <span className='fw-bold me-4'>Qo'shimcha izoh: </span>
+                        <input
+                            defaultValue={connector && connector.diagnosis}
+                            className='form-control w-75 d-inline-block me-2'
+                            onChange={changeComment}
+                            onKeyUp={changeComment}
+                        />
+                        <button
+                            className='btn btn-info'
+                            onClick={updateConnector}
 
+                        > Saqlash</button>
+                    </div>
 
                     {
                         sections && sections.map((section, index) => {

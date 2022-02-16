@@ -152,22 +152,24 @@ export const ClientsLabaratoriya = () => {
             const fetch = await request(`/api/connector/labaratoriya/${connectorId}`, 'PATCH', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            window.location.reload()
+            getConnectors()
+            setModal(false)
         } catch (e) {
             notify(e)
         }
-    }, [request, auth, connectorId])
+    }, [request, auth, connectorId, getConnectors, setModal])
 
     const dontCome = useCallback(async () => {
         try {
             const fetch = await request(`/api/connector/labaratoriyadontcome/${connectorId}`, 'PATCH', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            window.location.reload()
+            getConnectors()
+            setModal2(false)
         } catch (e) {
             notify(e)
         }
-    }, [request, auth, connectorId])
+    }, [request, auth, connectorId, getConnectors, setModal2])
 
     useEffect(() => {
         if (error) {

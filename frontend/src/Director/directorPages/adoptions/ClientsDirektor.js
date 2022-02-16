@@ -226,8 +226,9 @@ export const ClientsDirector = () => {
                                 <th style={{ width: "100px" }} className=" text-center">Tug'ilgan sanasi <FontAwesomeIcon icon={faSort} /></th>
                                 <th style={{ width: "100px" }} className=" text-center">ID <FontAwesomeIcon icon={faSort} /></th>
                                 <th style={{ width: "100px" }} className=" text-center">Probirka <FontAwesomeIcon icon={faSort} /></th>
-                                <th style={{ width: "200px" }} className=" text-center">Qabul qilish <FontAwesomeIcon icon={faSort} /></th>
+                                <th style={{ width: "200px" }} className=" text-center">Qabul <br/> qilish <FontAwesomeIcon icon={faSort} /></th>
                                 <th style={{ width: "100px" }} className=" text-center">Tahrirlash <FontAwesomeIcon icon={faSort} /></th>
+                                <th style={{ width: "100px" }} className=" text-center">Izoh <FontAwesomeIcon icon={faSort} /></th>
                                 <th style={{ width: "100px" }} className=" text-center">Holati <FontAwesomeIcon icon={faSort} /></th>
                             </tr>
                         </thead>
@@ -293,19 +294,19 @@ export const ClientsDirector = () => {
                                     <tr key={index}>
                                         <td style={{ width: "100px" }} className='text-center'>{index + 1}</td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {all && new Date(all.connectors[index].bronDay).toLocaleString()}
+                                            {all && all.connectors[index] && new Date(all.connectors[index].bronDay).toLocaleString()}
                                         </td>
                                         <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
-                                            {client.lastname} {client.firstname} {client.fathername}
+                                            {client && client.lastname} {client && client.firstname} {client && client.fathername}
                                         </td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {new Date(client.born).toLocaleDateString()}
+                                            {client && new Date(client.born).toLocaleDateString()}
                                         </td>
                                         <td style={{ width: "100px" }} className=' text-center'>
                                             {client.id}
                                         </td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {all && all.connectors[index].probirka}
+                                            {all && all.connectors[index] && all.connectors[index].probirka}
                                         </td>
                                         <td style={{ width: "200px" }} className='text-center'>
                                             <Link className='btn btn-info' to={`/director/adoption/${client._id}/${all && all.connectors[index]._id}`} >
@@ -316,6 +317,9 @@ export const ClientsDirector = () => {
                                             <Link className='btn btn-info' to={`/director/clientallhistory/${client._id}`} >
                                                 <FontAwesomeIcon icon={faPrint} />
                                             </Link>
+                                        </td>
+                                        <td style={{ width: "100px" }} className='text-center'>
+                                            {all && all.connectors[index] && all.connectors[index].diagnosis}
                                         </td>
                                         <td style={{ width: "100px" }} className='text-center fw-bold fs-5'>
                                             <span className='text-success'>{all && all.countsection[index].accept}</span>  / <span className='text-danger'>{all && all.countsection[index].all}</span>

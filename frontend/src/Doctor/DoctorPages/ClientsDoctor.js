@@ -230,6 +230,7 @@ export const ClientsDoctor = () => {
                                 <th style={{ width: "100px" }} className=" text-center">Probirka <FontAwesomeIcon icon={faSort} /></th>
                                 <th style={{ width: "200px" }} className=" text-center">Qabul qilish <FontAwesomeIcon icon={faSort} /></th>
                                 <th style={{ width: "100px" }} className=" text-center">Tahrirlash <FontAwesomeIcon icon={faSort} /></th>
+                                <th style={{ width: "100px" }} className=" text-center">Izoh <FontAwesomeIcon icon={faSort} /></th>
                                 <th style={{ width: "100px" }} className=" text-center">Holati <FontAwesomeIcon icon={faSort} /></th>
                             </tr>
                         </thead>
@@ -318,6 +319,9 @@ export const ClientsDoctor = () => {
                                             <Link className='btn btn-info' to={`/doctor/clientallhistory/${client._id}`} >
                                                 <FontAwesomeIcon icon={faPrint} />
                                             </Link>
+                                        </td>
+                                        <td style={{ width: "100px" }} className='text-center'>
+                                            {all && all.connectors[index] && all.connectors[index].diagnosis}
                                         </td>
                                         <td style={{ width: "100px" }} className='text-center fw-bold fs-5'>
                                             <span className='text-success'>{all && all.countsection[index].accept}</span>  / <span className='text-danger'>{all && all.countsection[index].all}</span>

@@ -248,7 +248,7 @@ export const ClientAllHistory = () => {
                                             <td className="report-content-cell">
                                                 {
                                                     allsections && allsections[i].map((section, index) => {
-                                                        if (section.accept) {
+                                                        if (true) {
                                                             if (
                                                                 alltablesections && alltablesections[i][index].length > 0
                                                             ) {
@@ -256,8 +256,12 @@ export const ClientAllHistory = () => {
                                                                     <>
                                                                         <table style={{ width: "100%" }}>
                                                                             {
-                                                                                (allsections[i][index - 1] && allsections[i][index - 1].name !== section.name) || index === 0
-                                                                                    || alltablesections[i][index - 1].length === 0 || alltablesections[i][index].length > 5 ?
+                                                                                (allsections[i][index - 1] &&
+                                                                                    allsections[i][index - 1].name !== section.name) ||
+                                                                                    index === 0 ||
+                                                                                    alltablesections[i][index - 1].length === 0 ||
+                                                                                    alltablesections[i][index - 1].length > 5 ||
+                                                                                    alltablesections[i][index].length > 5 ?
                                                                                     <>
                                                                                         <span className='d-none'>{k = 0}</span>
                                                                                         <tr>
@@ -297,49 +301,53 @@ export const ClientAllHistory = () => {
                                                                             }
                                                                             {
                                                                                 alltablesections && alltablesections[i][index].map((tablesection, key) => {
-                                                                                    return (
-                                                                                        <tr style={{ backgroundColor: "white", marginTop: "10px !important" }}>
-                                                                                            <td className='py-0 cn' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
-                                                                                                {++k}
-                                                                                            </td>
-                                                                                            <td
-                                                                                                className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
-                                                                                                style={{ border: "1px solid #000", borderTop: "0px solid white" }}
-                                                                                            >
-                                                                                                <p className='py-0 ps-2 text-start m-0' >{tablesection.name}</p>
-                                                                                            </td>
-                                                                                            <td
-                                                                                                className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
-                                                                                                style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
-                                                                                            >
-                                                                                                <pre className='pretable fw-bold fs-6' >{tablesection.result}</pre>
-                                                                                            </td>
-                                                                                            <td
-                                                                                                className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
-                                                                                                style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
-                                                                                            >
-                                                                                                {tablesection.norma}
-                                                                                            </td>
-                                                                                            {
-                                                                                                alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col4).length > 1 ?
-                                                                                                    <td
-                                                                                                        className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
-                                                                                                        style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
-                                                                                                    >
-                                                                                                        <pre className='pretable' >{tablesection.additionalone}</pre>
-                                                                                                    </td> : ""
-                                                                                            }
-                                                                                            {
-                                                                                                alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col5).length > 1 ?
-                                                                                                    <td
-                                                                                                        className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
-                                                                                                        style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
-                                                                                                    >
-                                                                                                        <pre className='pretable' >{tablesection.additionaltwo}</pre>
-                                                                                                    </td> : ""
-                                                                                            }
-                                                                                        </tr>
-                                                                                    )
+                                                                                    if (tablesection.accept) {
+
+
+                                                                                        return (
+                                                                                            <tr style={{ backgroundColor: "white", marginTop: "10px !important" }}>
+                                                                                                <td className='py-0 cn' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
+                                                                                                    {++k}
+                                                                                                </td>
+                                                                                                <td
+                                                                                                    className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
+                                                                                                    style={{ border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                                                >
+                                                                                                    <p className='py-0 ps-2 text-start m-0' >{tablesection.name}</p>
+                                                                                                </td>
+                                                                                                <td
+                                                                                                    className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
+                                                                                                    style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                                                >
+                                                                                                    <pre className='pretable fw-bold fs-6' >{tablesection.result}</pre>
+                                                                                                </td>
+                                                                                                <td
+                                                                                                    className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
+                                                                                                    style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                                                >
+                                                                                                    {tablesection.norma}
+                                                                                                </td>
+                                                                                                {
+                                                                                                    alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col4).length > 1 ?
+                                                                                                        <td
+                                                                                                            className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
+                                                                                                            style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                                                        >
+                                                                                                            <pre className='pretable' >{tablesection.additionalone}</pre>
+                                                                                                        </td> : ""
+                                                                                                }
+                                                                                                {
+                                                                                                    alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col5).length > 1 ?
+                                                                                                        <td
+                                                                                                            className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
+                                                                                                            style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                                                        >
+                                                                                                            <pre className='pretable' >{tablesection.additionaltwo}</pre>
+                                                                                                        </td> : ""
+                                                                                                }
+                                                                                            </tr>
+                                                                                        )
+                                                                                    }
                                                                                 })
                                                                             }
                                                                         </table>
