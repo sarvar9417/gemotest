@@ -9,7 +9,6 @@ import { Doctor } from './Doctor/Doctor'
 import { Fizioterapevt } from './Fizioterapevt/Fizioterapevt'
 import { Labaratoriya } from './Labaratoriya/Labaratoriya'
 import { Medsestra } from './Medsestra/Medsestra'
-import { RegistorDirector } from './RegistorDirector'
 import { Reseption } from './Reseption/Reseption'
 import { Sayt } from './Sayt/sayt'
 import { Turn } from './Turn/Turn'
@@ -35,9 +34,6 @@ export const useRoutes = () => {
             </Route>
             <Route path="/callcenter" >
                 <CallCenter />
-            </Route>
-            <Route path="/registerdirector" >
-                <RegistorDirector />
             </Route>
             <Route path="/clienthistorys/:id" >
                 <ClientHistory />
