@@ -2219,7 +2219,7 @@ router.patch('/:id', async (req, res) => {
                 },
                 probirka: { $gt: 0 }
             })
-            probirka = connectors.length + 1
+            connector.probirka = connectors.length + 1
         }
         const id = req.params.id
         const edit = await Connector.findByIdAndUpdate(id, connector)
