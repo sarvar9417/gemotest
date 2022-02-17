@@ -203,7 +203,7 @@ export const ClientAllHistory = () => {
                                                                         +{client && client.phone}
                                                                     </td>
                                                                     <td className='p-0 fw-bold' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000" }}>
-                                                                        Probirka
+                                                                        Namuna
                                                                     </td>
                                                                     <td className='p-0' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
                                                                         {connector && connector.probirka}

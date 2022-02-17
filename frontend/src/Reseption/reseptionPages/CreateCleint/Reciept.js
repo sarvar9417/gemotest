@@ -170,7 +170,7 @@ export const Reciept = () => {
                                                 <h6
                                                     className='d-inline-block'
                                                     style={{ fontSize: "27pt", fontFamily: "times" }}>
-                                                    PROBIRKA: {connector && connector.probirka}
+                                                    NAMUNA: {connector && connector.probirka}
                                                 </h6> :
                                                 ""
                                         }
@@ -291,7 +291,7 @@ export const Reciept = () => {
                                                 <h6
                                                     className='d-inline-block'
                                                     style={{ fontSize: "27pt", fontFamily: "times" }}>
-                                                    PROBIRKA: {connector && connector.probirka}
+                                                    NAMUNA: {connector && connector.probirka}
                                                 </h6> :
                                                 ""
                                         }
