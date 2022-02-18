@@ -398,7 +398,7 @@ router.get('/doctor/:start/:end/:section', async (req, res) => {
                     new Date(end).getMonth(), new Date(end).getDate() + 1)
             }
         })
-            .sort({ _id: -1 })
+            .sort({ _id: 1 })
         let connectors = []
         for (let i = 0; i < sections.length; i++) {
             const connector = await Connector.findById(sections[i].connector)
@@ -510,6 +510,7 @@ router.get('/reseption/:start/:end/:section', async (req, res) => {
                 name: section
             })
                 .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
+                .sort({ _id: 1 })
             const service = await Service.find({
                 connector: connectors[i]._id
             })
@@ -642,6 +643,7 @@ router.get('/reseptionoffline/:start/:end/:fish', async (req, res) => {
                 connector: connectors[i]._id
             })
                 .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
+                .sort({ _id: 1 })
             const service = await Service.find({
                 connector: connectors[i]._id
             })
@@ -907,6 +909,7 @@ router.get('/reseption/:start/:end', async (req, res) => {
                 connector: connectors[i]._id
             })
                 .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
+                .sort({ _id: 1 })
             const service = await Service.find({
                 connector: connectors[i]._id
             })
@@ -1271,6 +1274,7 @@ router.get('/reseption/:id', async (req, res) => {
                 connector: connectors[i]._id
             })
                 .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
+                .sort({ _id: 1 })
             const service = await Service.find({
                 connector: connectors[i]._id
             })
@@ -1358,6 +1362,7 @@ router.get('/doctor/:section', async (req, res) => {
                 connector: connectors[i]._id,
                 headsectionid: req.params.section,
             })
+                .sort({ _id: 1 })
             let c = {
                 accept: 0,
                 all: 0
@@ -1475,6 +1480,7 @@ router.get('/reseptionborn/:born', async (req, res) => {
                 connector: connectors[i]._id
             })
                 .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
+                .sort({ _id: 1 })
             const service = await Service.find({
                 connector: connectors[i]._id
             })
@@ -2034,6 +2040,7 @@ router.get('/reseption', async (req, res) => {
                 connector: connectors[i]._id
             })
                 .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
+                .sort({ _id: 1 })
             const service = await Service.find({
                 connector: connectors[i]._id
             })

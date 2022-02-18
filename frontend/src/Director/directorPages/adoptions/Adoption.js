@@ -241,6 +241,8 @@ export const Adoption = () => {
         }
     }, [request, auth, setTemplates])
 
+    const [t, setT] = useState()
+
     useEffect(() => {
         if (client) {
             QRCode.toDataURL(`${baseUrl}/clienthistorys/${client._id}`)
@@ -248,26 +250,20 @@ export const Adoption = () => {
                     setQr(data)
                 })
         }
-        if (!baseUrl) {
-            getBaseUrl()
-        }
-        if (!client) {
+
+        if (!t) {
+            setT(1)
             getClient()
+            getConnector()
+            getTemplates()
+            getBaseUrl()
+            getLogo()
         }
         if (error) {
             notify(error)
             clearError()
         }
-        if (!connector) {
-            getConnector()
-        }
-        if (!logo) {
-            getLogo()
-        }
-        if (!templates) {
-            getTemplates()
-        }
-    }, [notify, clearError, getTemplates, getLogo, getConnector, clearError, getClient, getBaseUrl])
+    }, [notify, clearError, getTemplates, getBaseUrl, getLogo, getClient, setT])
 
     const checkClassHead = (data) => {
         if (data.col5.length > 1) {

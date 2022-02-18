@@ -249,19 +249,32 @@ export const ClientAllHistory = () => {
                                                 {
                                                     allsections && allsections[i].map((section, index) => {
                                                         if (true) {
+
                                                             if (
                                                                 alltablesections && alltablesections[i][index].length > 0
                                                             ) {
+                                                                let l = 0
+                                                                let old = 0
+                                                                alltablesections[i][index] && alltablesections[i][index].map((tablesection, j) => {
+                                                                    if (tablesection.accept) {
+                                                                        l++
+                                                                    }
+                                                                })
+                                                                alltablesections[i][index - 1] && alltablesections[i][index - 1].map((tablesection, j) => {
+                                                                    if (tablesection.accept) {
+                                                                        old++
+                                                                    }
+                                                                })
                                                                 return (
                                                                     <>
                                                                         <table style={{ width: "100%" }}>
                                                                             {
-                                                                                (allsections[i][index - 1] &&
+                                                                                ((allsections[i][index - 1] &&
                                                                                     allsections[i][index - 1].name !== section.name) ||
                                                                                     index === 0 ||
                                                                                     alltablesections[i][index - 1].length === 0 ||
                                                                                     alltablesections[i][index - 1].length > 5 ||
-                                                                                    alltablesections[i][index].length > 5 ?
+                                                                                    alltablesections[i][index].length > 5 || old === 0) && l !== 0 ?
                                                                                     <>
                                                                                         <span className='d-none'>{k = 0}</span>
                                                                                         <tr>
@@ -352,7 +365,7 @@ export const ClientAllHistory = () => {
                                                                             }
                                                                         </table>
                                                                         {
-                                                                            !section.probirka ?
+                                                                            !section.probirka && section.accept ?
                                                                                 (<table style={{ width: "100%" }}>
                                                                                     <tr style={{ backgroundColor: "white" }}>
                                                                                         <th style={{ border: "1px solid #000", padding: "10px", width: "100px" }} > Xulosa </th>
@@ -370,7 +383,7 @@ export const ClientAllHistory = () => {
                                                                     </>
                                                                 )
                                                             } else {
-                                                                if (!section.probirka) {
+                                                                if (!section.probirka && section.accept) {
                                                                     return (
                                                                         <table className='mt-4 w-100'>
                                                                             <tr>
