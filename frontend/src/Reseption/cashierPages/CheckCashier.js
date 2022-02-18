@@ -648,7 +648,11 @@ export const CheckCashier = () => {
                                         </td>
                                         <td>
                                             <button
-                                                onClick={() => { setDelSection(section); setModal3(true) }}
+                                                onClick={() => {
+                                                    if (section.priceCashier > 0) {
+                                                        return notify("Diqqat to'lov qabul qilingan xizmatni avval to'lovini qaytarib so'ng ochirinshingiz mumkin.")
+                                                    } else { setDelSection(section); setModal3(true) }
+                                                }}
                                                 className='btn btn-danger p-0 fw-bold'
                                                 style={{ width: "30px", height: "30px" }}
                                             >

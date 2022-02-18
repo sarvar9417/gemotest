@@ -2229,7 +2229,6 @@ router.patch('/:id', async (req, res) => {
             })
             connector.probirka = connectors.length + 1
             const edit = await Connector.findByIdAndUpdate(req.params.id, connector)
-            console.log(edit);
             return res.json(edit);
         }
 
