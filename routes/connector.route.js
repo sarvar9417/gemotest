@@ -2216,7 +2216,8 @@ router.patch('/cashier/:id', async (req, res) => {
 router.patch('/:id', async (req, res) => {
     try {
         let connector = req.body
-        if (connector.probirka) {
+        const pro = await Connector.findById(req.params.id)
+        if ((pro.probirka === 0 || pro.probirka === null) && connector.probirka > 0) {
             const connectors = await Connector.find({
                 bronDay: {
                     $gte:
@@ -2227,10 +2228,12 @@ router.patch('/:id', async (req, res) => {
                 probirka: { $gt: 0 }
             })
             connector.probirka = connectors.length + 1
+            const edit = await Connector.findByIdAndUpdate(req.params.id, connector)
+            console.log(edit);
+            return res.json(edit);
         }
-        const id = req.params.id
-        const edit = await Connector.findByIdAndUpdate(id, connector)
-        res.json(edit);
+
+        res.json(connector);
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })

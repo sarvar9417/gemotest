@@ -221,20 +221,48 @@ export const ClientsPages = () => {
         <div className="container m-5 mx-auto" style={{ minWidth: "1250px" }}  >
             <div className="row mb-3">
                 <div className=" col-2">
-                    <DatePicker className="form-control mb-2" selected={startDate} onChange={(date) => { setStartDate(date) }} />
+                    <DatePicker
+                        className="form-control mb-2"
+                        selected={startDate}
+                        onChange={(date) => { setStartDate(date) }}
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") { searchDate() }
+                        }}
+                    />
                 </div>
                 <div className="col-2">
-                    <DatePicker className="form-control mb-2" selected={endDate} onChange={(date) => setEndDate(date)} />
+                    <DatePicker
+                        className="form-control mb-2"
+                        selected={endDate}
+                        onChange={(date) => setEndDate(date)}
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") { searchDate() }
+                        }}
+                    />
                 </div>
                 <div className="col-1">
                     <button onClick={searchDate} className="btn text-white mb-2" style={{ backgroundColor: "#45D3D3" }}> <FontAwesomeIcon icon={faSearch} /> </button>
                 </div>
                 <div className="col-2">
-                    <input style={{ marginRight: "5px", width: "115px" }} defaultValue={clientId} onChange={(event) => { setClientId(parseInt(event.target.value)) }} className="form-control pb-2 d-inline-block" type="number" placeholder="ID qidiruvi" />
+                    <input
+                        style={{ marginRight: "5px", width: "115px" }}
+                        defaultValue={clientId}
+                        onChange={(event) => { setClientId(parseInt(event.target.value)) }}
+                        className="form-control pb-2 d-inline-block" type="number"
+                        placeholder="ID qidiruvi"
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") { searchId() }
+                        }} />
                     <button onClick={searchId} className="btn text-white" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
                 </div>
                 <div className="col-2">
-                    <input className="form-control mb-2" type="date" onChange={(event) => { setBorn(new Date(event.target.value)) }} />
+                    <input
+                        className="form-control mb-2"
+                        type="date"
+                        onChange={(event) => { setBorn(new Date(event.target.value)) }}
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") { searchBornDate() }
+                        }} />
                 </div>
                 <div className="col-1">
                     <button onClick={searchBornDate} className="btn text-white mb-2" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
@@ -245,7 +273,13 @@ export const ClientsPages = () => {
             </div>
             <div className="row">
                 <div className='col-2 '>
-                    <input onChange={(event) => { setFish(event.target.value) }} className='form-control' placeholder='Mijoz ism-familiyasi' />
+                    <input
+                        onChange={(event) => { setFish(event.target.value) }}
+                        className='form-control'
+                        placeholder='Mijoz ism-familiyasi'
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") { searchName() }
+                        }} />
                 </div>
                 <div className='col-1'>
                     <button onClick={(event) => (searchName((event.target.value)))} className="btn text-white" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
@@ -677,7 +711,7 @@ export const ClientsPages = () => {
                                                                 <Link className='btn button-success text-success' style={{ fontWeight: "600" }} to={`/reseption/edit/${all.clients[key]._id && all.clients[key]._id}`} >
                                                                     <FontAwesomeIcon icon={faPenAlt} />
                                                                 </Link>
-                                                                <span className='ps-3 fs-5'> <span className='text-success fw-bold'>{all.countsection[key] && all.countsection[key].accept}</span> / <span className='text-danger fw-bold'>{all.countsection[key] && all.countsection[key].all}</span>  </span> <br/>
+                                                                <span className='ps-3 fs-5'> <span className='text-success fw-bold'>{all.countsection[key] && all.countsection[key].accept}</span> / <span className='text-danger fw-bold'>{all.countsection[key] && all.countsection[key].all}</span>  </span> <br />
                                                                 <span className='text-info fw-bold'>{all.connectors[key] && all.connectors[key].diagnosis}</span>
                                                             </td>
                                                             <td
@@ -691,7 +725,7 @@ export const ClientsPages = () => {
                                                                 rowSpan={all.sections[key].length + all.services[key].length}
                                                             >
                                                                 {all.clients[key] && all.clients[key].id}
-                                                                
+
                                                             </td>
                                                             <td
                                                                 className="phone"

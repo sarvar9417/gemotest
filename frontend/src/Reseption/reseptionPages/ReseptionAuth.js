@@ -4,7 +4,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { AuthContext } from '../context/AuthContext'
 import { toast } from 'react-toastify'
 import Reseption from './icons/reseption.png'
-import {useHistory} from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 
 toast.configure()
 export const AuthPage = () => {
@@ -27,7 +27,12 @@ export const AuthPage = () => {
     }, [error, clearError])
 
     const changeHandlar = event => {
-        setForm({ ...form, [event.target.name]: event.target.value })
+        if (event.key === "Enter") {
+            loginHandler()
+        } else {
+            setForm({ ...form, [event.target.name]: event.target.value })
+        }
+
     }
 
     const loginHandler = async () => {
@@ -61,6 +66,9 @@ export const AuthPage = () => {
 
                                         <div className="form-group mb-3">
                                             <input
+                                                onKeyUp={(e) => {
+                                                    if (e.key === "Enter") { loginHandler() }
+                                                }}
                                                 className="form-control"
                                                 onChange={changeHandlar}
                                                 name="login"
@@ -71,6 +79,9 @@ export const AuthPage = () => {
                                         </div>
                                         <div className="form-group mb-3">
                                             <input className="form-control"
+                                                onKeyUp={(e) => {
+                                                    if (e.key === "Enter") { loginHandler() }
+                                                }}
                                                 onChange={changeHandlar}
                                                 name="password"
                                                 type="password"
@@ -88,7 +99,7 @@ export const AuthPage = () => {
                                                 Kirish
                                             </button>
                                             <button
-                                                onClick={()=>{history.push('/sayt')}}
+                                                onClick={() => { history.push('/sayt') }}
                                                 className="btn btn-danger btn-block"
                                                 type="button"
                                                 disabled={loading}

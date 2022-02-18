@@ -55,7 +55,7 @@ export const AuthPage = () => {
                     <div className="login-wrapp">
                         <div className="container">
                             <div className=" loginbox ">
-                                <div className="login-left d-none d-md-block text-center" style={{paddingTop:"20%"}}>
+                                <div className="login-left d-none d-md-block text-center" style={{ paddingTop: "20%" }}>
                                     <img className="w-50 " src={director} alt="Logo" />
                                 </div>
                                 <div className="login-right">
@@ -74,6 +74,9 @@ export const AuthPage = () => {
                                                 type="text"
                                                 id="login"
                                                 placeholder="login"
+                                                onKeyUp={(e) => {
+                                                    if (e.key === "Enter") { loginHandler() }
+                                                }}
                                             />
                                         </div>
                                         <div className="form-group mb-3">
@@ -83,6 +86,9 @@ export const AuthPage = () => {
                                                 type="password"
                                                 id="password"
                                                 placeholder="parol"
+                                                onKeyUp={(e) => {
+                                                    if (e.key === "Enter") { loginHandler() }
+                                                }}
                                             />
                                         </div>
                                         <div className="form-group text-end">
@@ -95,7 +101,7 @@ export const AuthPage = () => {
                                                 Kirish
                                             </button>
                                             <button
-                                                onClick={()=>{history.push("/sayt")}}
+                                                onClick={() => { history.push("/sayt") }}
                                                 className="btn btn-danger btn-block"
                                                 type="button"
                                                 disabled={loading}

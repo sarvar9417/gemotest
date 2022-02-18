@@ -76,6 +76,9 @@ export const AuthPage = () => {
                                                 type="text"
                                                 id="login"
                                                 placeholder="login"
+                                                onKeyUp={(e) => {
+                                                    if (e.key === "Enter") { loginHandler() }
+                                                }}
                                             />
                                         </div>
                                         <div className="form-group mb-3">
@@ -85,6 +88,9 @@ export const AuthPage = () => {
                                                 type="password"
                                                 id="password"
                                                 placeholder="parol"
+                                                onKeyUp={(e) => {
+                                                    if (e.key === "Enter") { loginHandler() }
+                                                }}
                                             />
                                         </div>
                                         <div className="form-group text-end">
@@ -117,7 +123,7 @@ export const AuthPage = () => {
                 </div>
             </div>
 
-        
+
         </section>
     )
 }

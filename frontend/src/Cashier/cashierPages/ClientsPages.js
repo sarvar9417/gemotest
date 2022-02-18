@@ -227,11 +227,27 @@ export const ClientsPages = () => {
                     <button onClick={searchDate} className="btn text-white mb-2" style={{ backgroundColor: "#45D3D3" }}> <FontAwesomeIcon icon={faSearch} /> </button>
                 </div>
                 <div className="col-2">
-                    <input style={{ marginRight: "5px", width: "115px" }} defaultValue={clientId} onChange={(event) => { setClientId(parseInt(event.target.value)) }} className="form-control pb-2 d-inline-block" type="number" placeholder="ID qidiruvi" />
+                    <input
+                        style={{ marginRight: "5px", width: "115px" }}
+                        defaultValue={clientId}
+                        onChange={(event) => { setClientId(parseInt(event.target.value)) }}
+                        className="form-control pb-2 d-inline-block"
+                        type="number"
+                        placeholder="ID qidiruvi"
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") { searchId() }
+                        }} />
                     <button onClick={searchId} className="btn text-white" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
                 </div>
                 <div className="col-2">
-                    <input className="form-control mb-2" type="date" onChange={(event) => { setBorn(new Date(event.target.value)) }} />
+                    <input
+                        className="form-control mb-2"
+                        type="date"
+                        onChange={(event) => { setBorn(new Date(event.target.value)) }}
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") { searchBornDate() }
+                        }}
+                    />
                 </div>
                 <div className="col-1">
                     <button onClick={searchBornDate} className="btn text-white mb-2" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
@@ -242,7 +258,14 @@ export const ClientsPages = () => {
             </div>
             <div className="row">
                 <div className='col-2 '>
-                    <input onChange={(event) => { setFish(event.target.value) }} className='form-control' placeholder='Mijoz ism-familiyasi' />
+                    <input
+                        onChange={(event) => { setFish(event.target.value) }}
+                        className='form-control'
+                        placeholder='Mijoz ism-familiyasi'
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") { searchName() }
+                        }}
+                    />
                 </div>
                 <div className='col-1'>
                     <button onClick={(event) => (searchName((event.target.value)))} className="btn text-white" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>

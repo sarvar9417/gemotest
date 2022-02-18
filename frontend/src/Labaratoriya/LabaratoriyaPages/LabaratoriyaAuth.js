@@ -67,10 +67,16 @@ export const AuthPage = () => {
                                                 type="text"
                                                 id="login"
                                                 placeholder="login"
+                                                onKeyUp={(e) => {
+                                                    if (e.key === "Enter") { loginHandler() }
+                                                }}
                                             />
                                         </div>
                                         <div className="form-group mb-3">
                                             <input className="form-control"
+                                                onKeyUp={(e) => {
+                                                    if (e.key === "Enter") { loginHandler() }
+                                                }}
                                                 onChange={changeHandlar}
                                                 name="password"
                                                 type="password"

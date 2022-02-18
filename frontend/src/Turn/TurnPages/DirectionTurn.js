@@ -24,33 +24,9 @@ export const DirectionTurn = ({ section, id }) => {
         }
     }, [request, offline, setOffline, id, setRoom])
 
-    // useEffect(() => {
-    // }, [getOffline])
-    setInterval(() => {
-        if ('caches' in window) {
-            caches.keys().then((names) => {
-                // Delete all the cache files
-                names.forEach(name => {
-                    caches.delete(name);
-                })
-            });
-
-            // Makes sure the page reloads. Changes are only visible after you refresh.
-            // window.location.reload(true);    
-        }
+    setTimeout(() => {
         getOffline()
-
-    }, 3000)
-
-    setInterval(() => {
-
-        // Makes sure the page reloads. Changes are only visible after you refresh.
-        window.location.reload(true);
-
-
-    }, 120000)
-
-
+    }, 5000);
 
     return (
         <div className="kard" style={{ width: "90%", margin: "auto" }}>

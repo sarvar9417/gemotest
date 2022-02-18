@@ -357,7 +357,6 @@ export const AddServices = () => {
 
   const createConnector = async () => {
     try {
-
       const con = await request(`/api/connector/${connector._id}`, "PATCH", {
         _id: connector._id,
         client: connector.client,
@@ -370,7 +369,7 @@ export const AddServices = () => {
         bronDay: connector.bronDay,
         prepaymentCashier: connector.prepaymentCashier,
         accept: connector.accept,
-        probirka: connector.probirka ? connector.probirka : parseInt(`${checkProbirka && probirka ? probirka : 0}`)
+        probirka: connector.probirka > 0 ? connector.probirka : parseInt(`${checkProbirka && probirka ? probirka : 0}`)
       }, {
         Authorization: `Bearer ${auth.token}`
       })
