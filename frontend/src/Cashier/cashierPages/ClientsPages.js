@@ -196,19 +196,18 @@ export const ClientsPages = () => {
         }
     }
 
-
+    const [t, setT] = useState()
     useEffect(() => {
         if (error) {
             notify(error)
             clearError()
         }
-        if (!all) {
+        if (!t) {
+            setT(1)
             getToday()
-        }
-        if (!allSections) {
             getAllSections()
         }
-    }, [notify, clearError])
+    }, [notify, clearError, setT, getAllSections, getToday])
 
     // if (loading) {
     //     return <Loader />

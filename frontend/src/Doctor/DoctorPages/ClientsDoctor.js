@@ -29,14 +29,15 @@ export const ClientsDoctor = () => {
     const [probirka, setProbirka] = useState('')
     const [all, setAll] = useState()
 
+
     const getToday = useCallback(async () => {
         try {
-            const fetch = await request(`/api/connector/doctor/${auth && auth.doctor.section}`, 'GET', null, {
+            const fetch = await request(`/api/connector/doctor/${auth.doctor && auth.doctor.section}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
             setAll(fetch)
         } catch (e) {
-            notify(e)
+            notify(e.error)
         }
     }, [request, auth, setAll])
 
@@ -156,15 +157,18 @@ export const ClientsDoctor = () => {
         }
     }, [request, auth, connectorId])
 
+    const [t, setT] = useState()
+
     useEffect(() => {
         if (error) {
             notify(error)
             clearError()
         }
-        if (!all) {
+        if (!t && auth.doctor) {
+            setT(1)
             getToday()
         }
-    }, [notify, clearError, getToday])
+    }, [notify, clearError, getToday, setT, auth])
 
     // if (loading) {
     //     return <Loader />

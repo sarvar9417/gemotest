@@ -175,18 +175,18 @@ export const ClientsPages = () => {
         }
     }, [request, auth, setAll, startDate, endDate, fish])
 
+    const [t, setT] = useState()
     useEffect(() => {
         if (error) {
             notify(error)
             clearError()
         }
-        if (!all) {
+        if (!t) {
+            setT(1)
             getConnectors()
-        }
-        if (!options) {
             getOptions()
         }
-    }, [notify, clearError])
+    }, [notify, clearError, setT, getConnectors, getOptions])
 
     // if (loading) {
     //     return <Loader />

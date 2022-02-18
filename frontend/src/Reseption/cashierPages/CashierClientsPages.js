@@ -196,19 +196,19 @@ export const CashierClientsPages = () => {
         }
     }
 
+    const [t, setT] = useState()
 
     useEffect(() => {
         if (error) {
             notify(error)
             clearError()
         }
-        if (!all) {
+        if (!t) {
+            setT(1)
+            getAllSections()
             getToday()
         }
-        if (!allSections) {
-            getAllSections()
-        }
-    }, [notify, clearError])
+    }, [notify, clearError, setT, getAllSections])
 
     // if (loading) {
     //     return <Loader />

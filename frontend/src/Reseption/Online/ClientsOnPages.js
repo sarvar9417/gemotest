@@ -173,16 +173,18 @@ export const ClientsOnPages = () => {
         }
     }, [request, auth, setAll, startDate, endDate, fish])
 
+    const [t, setT] = useState()
 
     useEffect(() => {
         if (error) {
             notify(error)
             clearError()
         }
-        if (!all) {
+        if (!t) {
+            setT(1)
             getConnectors()
         }
-    }, [notify, clearError])
+    }, [notify, clearError, setT, getConnectors])
 
     // if (loading) {
     //     return <Loader />

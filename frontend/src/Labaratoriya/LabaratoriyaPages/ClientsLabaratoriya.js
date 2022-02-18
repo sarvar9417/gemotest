@@ -171,15 +171,17 @@ export const ClientsLabaratoriya = () => {
         }
     }, [request, auth, connectorId, getConnectors, setModal2])
 
+    const [t, setT] = useState()
     useEffect(() => {
         if (error) {
             notify(error)
             clearError()
         }
-        if (!all) {
+        if (!t) {
+            setT(1)
             getToday()
         }
-    }, [notify, clearError, getToday])
+    }, [notify, clearError, getToday, setT])
 
     // if (loading) {
     //     return <Loader />

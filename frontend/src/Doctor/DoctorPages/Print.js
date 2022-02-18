@@ -141,16 +141,28 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                     if (
                                         tablesections && tablesections[index].length > 0 && section.probirka
                                     ) {
+                                        let l = 0
+                                        let old = 0
+                                        tablesections[index] && tablesections[index].map((tablesection, j) => {
+                                            if (tablesection.accept) {
+                                                l++
+                                            }
+                                        })
+                                        tablesections[index - 1] && tablesections[index - 1].map((tablesection, j) => {
+                                            if (tablesection.accept) {
+                                                old++
+                                            }
+                                        })
                                         return (
                                             <>
                                                 <table style={{ width: "100%" }}>
                                                     {
-                                                        (sections[index - 1] &&
+                                                        ((sections[index - 1] &&
                                                             sections[index - 1].name !== section.name) ||
                                                             index === 0 ||
                                                             tablesections[index - 1].length === 0 ||
                                                             tablesections[index].length > 5 ||
-                                                            tablesections[index - 1].length > 5
+                                                            tablesections[index - 1].length > 5 || old === 0) && l !== 0
                                                             ?
                                                             <>
                                                                 <span className='d-none'>{k = 0}</span>
@@ -191,53 +203,55 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                     }
                                                     {
                                                         tablesections && tablesections[index].map((tablesection, key) => {
-                                                            return (
-                                                                <tr style={{ backgroundColor: "white", marginTop: "10px !important" }}>
-                                                                    <td className='cn py-0' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
-                                                                        {++k}
-                                                                    </td>
-                                                                    <td
-                                                                        className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
-                                                                        style={{ border: "1px solid #000", padding: "10px", borderTop: "0px solid white" }}
-                                                                    >
-                                                                        <p className='py-0 m-0 ps-2 text-start'>{tablesection.name}</p>
-                                                                    </td>
-                                                                    <td
-                                                                        className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
-                                                                        style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
-                                                                    >
-                                                                        <pre className='pretable fw-bold fs-6' >{tablesection.result}</pre>
-                                                                    </td>
-                                                                    <td
-                                                                        className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
-                                                                        style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
-                                                                    >
-                                                                        {tablesection.norma}
-                                                                    </td>
-                                                                    {
-                                                                        tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
-                                                                            <td
-                                                                                className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
-                                                                                style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
-                                                                            >
-                                                                                <pre className='pretable' >{tablesection.additionalone}</pre>
-                                                                            </td> : ""
-                                                                    }
-                                                                    {
-                                                                        tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
-                                                                            <td
-                                                                                className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
-                                                                                style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
-                                                                            >
-                                                                                <pre className='pretable' >{tablesection.additionaltwo}</pre>
-                                                                            </td> : ""
-                                                                    }
-                                                                </tr>
-                                                            )
+                                                            if (tablesection.accept) {
+                                                                return (
+                                                                    <tr style={{ backgroundColor: "white", marginTop: "10px !important" }}>
+                                                                        <td className='cn py-0' style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}>
+                                                                            {++k}
+                                                                        </td>
+                                                                        <td
+                                                                            className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                            style={{ border: "1px solid #000", padding: "10px", borderTop: "0px solid white" }}
+                                                                        >
+                                                                            <p className='py-0 m-0 ps-2 text-start'>{tablesection.name}</p>
+                                                                        </td>
+                                                                        <td
+                                                                            className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                            style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                        >
+                                                                            <pre className='pretable fw-bold fs-6' >{tablesection.result}</pre>
+                                                                        </td>
+                                                                        <td
+                                                                            className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                            style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                        >
+                                                                            {tablesection.norma}
+                                                                        </td>
+                                                                        {
+                                                                            tablecolumns && tablecolumns[index] && (tablecolumns[index].col4).length > 1 ?
+                                                                                <td
+                                                                                    className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                                    style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                                >
+                                                                                    <pre className='pretable' >{tablesection.additionalone}</pre>
+                                                                                </td> : ""
+                                                                        }
+                                                                        {
+                                                                            tablecolumns && tablecolumns[index] && (tablecolumns[index].col5).length > 1 ?
+                                                                                <td
+                                                                                    className={tablecolumns && tablecolumns[index] && checkClassFoot(tablecolumns[index])}
+                                                                                    style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
+                                                                                >
+                                                                                    <pre className='pretable' >{tablesection.additionaltwo}</pre>
+                                                                                </td> : ""
+                                                                        }
+                                                                    </tr>
+                                                                )
+                                                            }
                                                         })
                                                     }
                                                 </table>
-                                                {
+                                                {/* {
                                                     !section.probirka ?
                                                         (<table className='mt-4 w-100'>
                                                             <tr>
@@ -265,49 +279,49 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                                 </td>
                                                             </tr>
                                                         </table>) : ""
-                                                }
+                                                } */}
                                             </>
                                         )
                                     } else {
-                                        if (!section.probirka) {
-                                            return (
-                                                <table className='mt-4 w-100'>
-                                                    <tr>
-                                                        <td colSpan={3} className="text-uppercase">
-                                                            {section.subname}
-                                                        </td>
-                                                    </tr>
-                                                    {
-                                                        section.summary.length > 1 ?
-                                                            <tr style={{ backgroundColor: "white" }}>
-                                                                <th
-                                                                    className='text-center'
-                                                                    style={{ border: "1px solid #000", padding: "10px", width: "100px" }}
-                                                                >
-                                                                    Xulosa
-                                                                </th>
-                                                                <td
-                                                                    style={{ border: "1px solid #000", padding: "10px" }}
-                                                                    className='p-0 fw-normal text-start'
-                                                                >
-                                                                    <pre style={{ border: "none" }} >{section.summary}</pre>
-                                                                </td>
-                                                            </tr> : ""
-                                                    }
-                                                    {
-                                                        section.comment.length > 1 ?
-                                                            <tr style={{ backgroundColor: "white" }}>
-                                                                <th style={{ border: "1px solid #000", padding: "10px", textAlign: "center", width: "100px" }}> Izoh </th>
-                                                                <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
-                                                                    <pre style={{ border: "none" }} >{sections[index].comment}</pre>
-                                                                </td>
-                                                            </tr>
-                                                            : ""
-                                                    }
+                                        // if (!section.probirka) {
+                                        //     return (
+                                        //         <table className='mt-4 w-100'>
+                                        //             <tr>
+                                        //                 <td colSpan={3} className="text-uppercase">
+                                        //                     {section.subname}
+                                        //                 </td>
+                                        //             </tr>
+                                        //             {
+                                        //                 section.summary.length > 1 ?
+                                        //                     <tr style={{ backgroundColor: "white" }}>
+                                        //                         <th
+                                        //                             className='text-center'
+                                        //                             style={{ border: "1px solid #000", padding: "10px", width: "100px" }}
+                                        //                         >
+                                        //                             Xulosa
+                                        //                         </th>
+                                        //                         <td
+                                        //                             style={{ border: "1px solid #000", padding: "10px" }}
+                                        //                             className='p-0 fw-normal text-start'
+                                        //                         >
+                                        //                             <pre style={{ border: "none" }} >{section.summary}</pre>
+                                        //                         </td>
+                                        //                     </tr> : ""
+                                        //             }
+                                        //             {
+                                        //                 section.comment.length > 1 ?
+                                        //                     <tr style={{ backgroundColor: "white" }}>
+                                        //                         <th style={{ border: "1px solid #000", padding: "10px", textAlign: "center", width: "100px" }}> Izoh </th>
+                                        //                         <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
+                                        //                             <pre style={{ border: "none" }} >{sections[index].comment}</pre>
+                                        //                         </td>
+                                        //                     </tr>
+                                        //                     : ""
+                                        //             }
 
-                                                </table>
-                                            )
-                                        }
+                                        //         </table>
+                                        //     )
+                                        // }
                                     }
                                 })
                             }

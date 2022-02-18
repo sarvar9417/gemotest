@@ -273,7 +273,7 @@ export const ClientAllHistory = () => {
                                                                                     index === 0 ||
                                                                                     alltablesections[i][index - 1].length === 0 ||
                                                                                     alltablesections[i][index - 1].length > 5 ||
-                                                                                    alltablesections[i][index].length > 5 || old ===0) && l !== 0  ?
+                                                                                    alltablesections[i][index].length > 5 || old === 0) && l !== 0  ?
                                                                                     <>
                                                                                         <span className='d-none'>{k = 0}</span>
                                                                                         <tr>

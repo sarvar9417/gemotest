@@ -154,15 +154,18 @@ export const ClientsDirector = () => {
         }
     }, [request, auth, connectorId])
 
+    const [t, setT] = useState()
+
     useEffect(() => {
         if (error) {
             notify(error)
             clearError()
         }
-        if (!all) {
+        if (!t) {
+            setT(1)
             getToday()
         }
-    }, [notify, clearError, getToday])
+    }, [notify, clearError, getToday, setT])
 
     // if (loading) {
     //     return <Loader />
