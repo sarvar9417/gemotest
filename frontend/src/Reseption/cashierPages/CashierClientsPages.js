@@ -208,7 +208,7 @@ export const CashierClientsPages = () => {
             getAllSections()
             getToday()
         }
-    }, [notify, clearError, setT, getAllSections])
+    }, [notify, clearError, setT, getAllSections, getToday])
 
     // if (loading) {
     //     return <Loader />
