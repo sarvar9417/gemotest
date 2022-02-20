@@ -149,12 +149,11 @@ export const Reciept = () => {
                             <tbody>
                                 <tr>
                                     <td>
-                                        <ul className="list-unstyled  text-start m-3">
+                                        <ul className="list-unstyled  text-start ms-3 mb-0">
                                             <li className="" style={{ fontSize: "10pt", fontFamily: "times" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }} > {logo && logo.companyname}</strong></li>
                                             <li style={{ fontSize: "10pt", fontFamily: "times" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }}>Manzil: </strong> {logo && logo.address}</li>
                                             <li style={{ fontSize: "10pt", fontFamily: "times" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }}>Bank: </strong> {logo && logo.bank}</li>
                                             <li style={{ fontSize: "10pt", fontFamily: "times" }}> <strong style={{ fontSize: "10pt", fontFamily: "times" }}>MFO: </strong> {logo && logo.mfo}</li>
-                                            <li style={{ fontFamily: "times" }}> <h5 style={{ textAlign: "", fontSize: "10pt" }}> {today}</h5> </li>
                                             <li style={{ textAlign: "", fontSize: "10pt" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }}>INN:</strong> {logo && logo.inn}</li>
                                             <li style={{ textAlign: "", fontSize: "10pt" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }}>Hisob raqam: </strong> {logo && logo.accountnumber}</li>
                                             <li style={{ textAlign: "", fontSize: "10pt" }}><strong style={{ fontSize: "10pt", fontFamily: "times" }}>Telefon raqam: </strong>
@@ -174,10 +173,11 @@ export const Reciept = () => {
                                                 </h6> :
                                                 ""
                                         }
+                                        <div className='ms-3 fs-5'>  {connector && new Date(connector.bronDay).toLocaleDateString() + " " + new Date(connector.bronDay).toLocaleTimeString()}</div>
                                     </td>
                                     <td className="text-end">
                                         <img width="140" className='me-3 mt-4' src={qr && qr} alt="QR" /><br />
-                                        <p className="pe-3 me-1" style={{ fontSize: "10pt" }}>Bu yerni skanerlang</p>
+                                        <p className="pe-3 me-1 mb-0" style={{ fontSize: "10pt" }}>Bu yerni skanerlang</p>
                                     </td>
                                 </tr>
                             </tbody>
