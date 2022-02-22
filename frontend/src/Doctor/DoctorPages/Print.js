@@ -3,7 +3,7 @@ import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faTelegram } from '@fortawesome/free-brands-svg-icons'
 
-export const Print = ({ sectionFiles, client, connector, sections, tablesections, logo, qr, tablecolumns }) => {
+export const Print = ({ doctor, sectionFiles, client, connector, sections, tablesections, logo, qr, tablecolumns }) => {
     let k = 0
     const checkClassHead = (data) => {
         if (data.col5.length > 1) {
@@ -283,45 +283,38 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                             </>
                                         )
                                     } else {
-                                        // if (!section.probirka) {
-                                        //     return (
-                                        //         <table className='mt-4 w-100'>
-                                        //             <tr>
-                                        //                 <td colSpan={3} className="text-uppercase">
-                                        //                     {section.subname}
-                                        //                 </td>
-                                        //             </tr>
-                                        //             {
-                                        //                 section.summary.length > 1 ?
-                                        //                     <tr style={{ backgroundColor: "white" }}>
-                                        //                         <th
-                                        //                             className='text-center'
-                                        //                             style={{ border: "1px solid #000", padding: "10px", width: "100px" }}
-                                        //                         >
-                                        //                             Xulosa
-                                        //                         </th>
-                                        //                         <td
-                                        //                             style={{ border: "1px solid #000", padding: "10px" }}
-                                        //                             className='p-0 fw-normal text-start'
-                                        //                         >
-                                        //                             <pre style={{ border: "none" }} >{section.summary}</pre>
-                                        //                         </td>
-                                        //                     </tr> : ""
-                                        //             }
-                                        //             {
-                                        //                 section.comment.length > 1 ?
-                                        //                     <tr style={{ backgroundColor: "white" }}>
-                                        //                         <th style={{ border: "1px solid #000", padding: "10px", textAlign: "center", width: "100px" }}> Izoh </th>
-                                        //                         <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
-                                        //                             <pre style={{ border: "none" }} >{sections[index].comment}</pre>
-                                        //                         </td>
-                                        //                     </tr>
-                                        //                     : ""
-                                        //             }
+                                        if (!section.probirka && section.summary.length > 2) {
+                                            return (
+                                                <table className='mt-4 w-100'>
+                                                    <tr>
+                                                        <td colSpan={3} className="text-uppercase">
+                                                            {section.subname}
+                                                        </td>
+                                                    </tr>
+                                                    {
+                                                        section.summary.length > 1 ?
+                                                            <tr style={{ backgroundColor: "white" }}>
+                                                                <td
+                                                                    className='p-0 fw-normal text-start'
+                                                                >
+                                                                    <pre style={{ border: "none" }} >{section.summary}</pre>
+                                                                </td>
+                                                            </tr> : ""
+                                                    }
+                                                    {
+                                                        section.comment.length > 1 ?
+                                                            <tr style={{ backgroundColor: "white" }}>
+                                                                <td
+                                                                    className='p-0 text-start'>
+                                                                    <pre style={{ border: "none" }} >{sections[index].comment}</pre>
+                                                                </td>
+                                                            </tr>
+                                                            : ""
+                                                    }
 
-                                        //         </table>
-                                        //     )
-                                        // }
+                                                </table>
+                                            )
+                                        }
                                     }
                                 })
                             }
@@ -341,7 +334,7 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                     </div>
                                 </div>
                                 <div className='col-4'>
-                                    <p className='text-center' style={{ paddingTop: "35px" }}> Vrach: Iydiyev B.  __________ </p>
+                                    <p className='text-center' style={{ paddingTop: "35px" }}> Vrach: {doctor && doctor.lastname} {doctor && doctor.firstname[0]}   __________ </p>
                                 </div>
                                 <div className='col-4'>
                                     <img width="200" src={logo && logo.logo} />

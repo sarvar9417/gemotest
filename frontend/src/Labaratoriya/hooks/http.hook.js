@@ -1,13 +1,15 @@
-import  { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 
 export const useHttp = () => {
     const [loading, setLoading] = useState(false)
     const [error, setError] = useState(null)
 
+    const [turn, setTurn] = useState()
+
     const request = useCallback(async (url, method = 'GET', body = 'null', headers = {}) => {
         setLoading(true)
         try {
-            if(body){
+            if (body) {
                 body = JSON.stringify(body)
                 headers['Content-Type'] = 'application/json'
             }
@@ -26,6 +28,15 @@ export const useHttp = () => {
         }
     }, [])
 
+    const getTurn = useCallback(async (section) => {
+        try {
+            const fetch = await request(`/api/section/turnid/${section}`, 'GET', null)
+            setTurn(fetch)
+        } catch (e) {
+        }
+    }, [setTurn])
+
+
     const clearError = () => setError(null)
-    return { loading, request, error, clearError }
+    return { loading, request, error, clearError, getTurn, turn }
 }

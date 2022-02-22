@@ -24,6 +24,8 @@ export const Adoption = () => {
     const notify = (e) => {
         toast.error(e);
     };
+
+
     const auth = useContext(AuthContext)
     const { loading, request, error, clearError } = useHttp()
 
@@ -321,7 +323,7 @@ export const Adoption = () => {
         <>
             <div className='d-none'>
                 <div ref={componentRef} className="container p-4" style={{ fontFamily: "times" }}>
-                    <Print sectionFiles={sectionFiles} tablecolumns={tablecolumns} qr={qr} logo={logo} connector={connector} client={client} sections={sections} tablesections={tablesections} />
+                    <Print doctor={auth.doctor} sectionFiles={sectionFiles} tablecolumns={tablecolumns} qr={qr} logo={logo} connector={connector} client={client} sections={sections} tablesections={tablesections} />
                 </div>
             </div>
             <div className="container p-4" style={{ fontFamily: "times" }}>
@@ -625,65 +627,65 @@ export const Adoption = () => {
                                     </>
                                 )
                             } else {
-                                // if (!section.probirka) {
-                                //     return <table className='mt-4'>
-                                //         <tr>
-                                //             <td colSpan={3} className="text-uppercase">
-                                //                 {section.subname}
-                                //             </td>
-                                //         </tr>
-                                //         <tr style={{ backgroundColor: "white" }}>
-                                //             <th
-                                //                 className='w-25'
-                                //                 style={{ border: "1px solid #000", padding: "10px" }}
-                                //             >
-                                //                 Xulosa <br />
-                                //                 <Select
-                                //                     className=""
-                                //                     onChange={(event) => changeTypeOptions(event, index)}
-                                //                     closeMenuOnSelect={false}
-                                //                     components={animatedComponents}
-                                //                     options={templates && templates}
-                                //                     isMulti
-                                //                 /> </th>
-                                //             <td
-                                //                 style={{ border: "1px solid #000", padding: "10px" }}
-                                //                 className='p-0'
-                                //             >
-                                //                 <textarea
-                                //                     rows={(sections[index].summary).split("\n").length}
-                                //                     value={sections[index].summary}
-                                //                     onChange={(event) => { sectionSummary(event, index) }}
-                                //                     className='form-control'
-                                //                     style={{ border: "none", overflowY: "auto" }}
-                                //                     placeholder='Xulosa'
-                                //                     contentEditable>
-                                //                 </textarea>
-                                //             </td>
-                                //             <td rowSpan="2" className='text-center' style={{ border: "1px solid #000", padding: "10px" }}>
-                                //                 <input
-                                //                     checked={section.accept}
-                                //                     type="checkbox"
-                                //                     style={{ width: "20px", height: "20px" }}
-                                //                     onChange={(event) => sectionAccept(event, index)}
-                                //                 />
-                                //             </td>
-                                //         </tr>
-                                //         <tr style={{ backgroundColor: "white" }}>
-                                //             <th style={{ border: "1px solid #000", padding: "10px" }}> Izoh </th>
-                                //             <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
-                                //                 <textarea
-                                //                     defaultValue={sections[index].comment}
-                                //                     onChange={(event) => { sectionComment(event, index) }}
-                                //                     className='form-control' style={{ border: "none" }}
-                                //                     placeholder='Xulosa'
-                                //                     rows={(sections[index].comment).split("\n").length}
-                                //                 >
-                                //                 </textarea>
-                                //             </td>
-                                //         </tr>
-                                //     </table>
-                                // }
+                                if (!section.probirka) {
+                                    return <table className='mt-4'>
+                                        <tr>
+                                            <td colSpan={3} className="text-uppercase">
+                                                {section.subname}
+                                            </td>
+                                        </tr>
+                                        <tr style={{ backgroundColor: "white" }}>
+                                            <th
+                                                className='w-25'
+                                                style={{ border: "1px solid #000", padding: "10px" }}
+                                            >
+                                                Xulosa <br />
+                                                <Select
+                                                    className=""
+                                                    onChange={(event) => changeTypeOptions(event, index)}
+                                                    closeMenuOnSelect={false}
+                                                    components={animatedComponents}
+                                                    options={templates && templates}
+                                                    isMulti
+                                                /> </th>
+                                            <td
+                                                style={{ border: "1px solid #000", padding: "10px" }}
+                                                className='p-0'
+                                            >
+                                                <textarea
+                                                    rows={(sections[index].summary).split("\n").length}
+                                                    value={sections[index].summary}
+                                                    onChange={(event) => { sectionSummary(event, index) }}
+                                                    className='form-control'
+                                                    style={{ border: "none", overflowY: "auto" }}
+                                                    placeholder='Xulosa'
+                                                    contentEditable>
+                                                </textarea>
+                                            </td>
+                                            <td rowSpan="2" className='text-center' style={{ border: "1px solid #000", padding: "10px" }}>
+                                                <input
+                                                    checked={section.accept}
+                                                    type="checkbox"
+                                                    style={{ width: "20px", height: "20px" }}
+                                                    onChange={(event) => sectionAccept(event, index)}
+                                                />
+                                            </td>
+                                        </tr>
+                                        <tr style={{ backgroundColor: "white" }}>
+                                            <th style={{ border: "1px solid #000", padding: "10px" }}> Izoh </th>
+                                            <td style={{ border: "1px solid #000", padding: "10px" }} className='p-0'>
+                                                <textarea
+                                                    defaultValue={sections[index].comment}
+                                                    onChange={(event) => { sectionComment(event, index) }}
+                                                    className='form-control' style={{ border: "none" }}
+                                                    placeholder='Xulosa'
+                                                    rows={(sections[index].comment).split("\n").length}
+                                                >
+                                                </textarea>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                }
 
                             }
 

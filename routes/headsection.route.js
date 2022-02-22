@@ -21,6 +21,17 @@ router.post("/register", async (req, res) => {
     }
 })
 
+router.get("/probirka", async (req, res) => {
+    try {
+        const headsections = await HeadSection.find({
+            probirka: true
+        }).sort({ _id: -1 })
+        res.json(headsections)
+    } catch (error) {
+        res.json({ error: "Serverda xatolik yuz berdi" })
+    }
+})
+
 router.get("/", async (req, res) => {
     try {
         const headsections = await HeadSection.find().sort({ _id: -1 })

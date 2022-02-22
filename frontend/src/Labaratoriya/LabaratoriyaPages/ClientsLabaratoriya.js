@@ -21,10 +21,12 @@ export const ClientsLabaratoriya = () => {
         { value: false, label: "Qabul qilinmaganlar" },
     ]
 
+
+
     const [startDate, setStartDate] = useState(new Date())
     const [endDate, setEndDate] = useState(new Date())
     const [born, setBorn] = useState('')
-    const { loading, request, error, clearError } = useHttp()
+    const { loading, request, error, clearError, getTurn } = useHttp()
     const [clientId, setClientId] = useState('')
     const [probirka, setProbirka] = useState('')
     const [all, setAll] = useState()
@@ -171,6 +173,21 @@ export const ClientsLabaratoriya = () => {
         }
     }, [request, auth, connectorId, getConnectors, setModal2])
 
+    const [directions, setDirections] = useState()
+
+    const getDirections = useCallback(async () => {
+        try {
+            const data = await request("/api/headsection/probirka", "GET", null)
+            if (data.message) {
+                return notify(data.message)
+            }
+            setDirections(data)
+            getTurn(data[0]._id)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, setDirections, getTurn])
+
     const [t, setT] = useState()
     useEffect(() => {
         if (error) {
@@ -180,8 +197,9 @@ export const ClientsLabaratoriya = () => {
         if (!t) {
             setT(1)
             getToday()
+            getDirections()
         }
-    }, [notify, clearError, getToday, setT])
+    }, [notify, clearError, getToday, setT, getDirections])
 
     // if (loading) {
     //     return <Loader />

@@ -9,46 +9,51 @@ toast.configure()
 export const Turn = () => {
 
     // So'rovlar yuklanishi
-    const { request, loading, error, clearError } = useHttp()
-    const [directions, setDirections] = useState()
+    const { request } = useHttp()
 
-    const getDirections = useCallback(async () => {
+    const [headsections, setHeadsections] = useState()
+    const getHeadsections = useCallback(async () => {
         try {
             const data = await request("/api/headsection", "GET", null)
-            if (data.message) {
-                return notify(data.message)
-            }
-            setDirections(data)
+            let h = []
+            data.map((headsection) => {
+                h.push({
+                    headsection: headsection._id,
+                    name: headsection.name,
+                    room: 0,
+                    turn: 0
+                })
+            })
+            setHeadsections(h)
         } catch (e) {
-            notify(e)
         }
-    }, [request, setDirections])
+    }, [request, setHeadsections])
 
-    // Vaqt hisoblagichi
+    const getTurns = () => {
+        headsections && headsections.map((headsection) => {
+            const fetch = request(`/api/section/turnid/${headsection.headsection}`, 'GET', null)
+            let h = [...headsection]
+            console.log(fetch)
+        })
+    }
+
     const [time, setTime] = useState(new Date().toLocaleTimeString())
     setInterval(() => {
         setTime(new Date().toLocaleTimeString())
-    }, 1000)
+        // getTurns()
+    }, 1000);
 
-    //Xatoliklar chiqaruvi
-    const notify = (e) => {
-        toast.error(e)
-    }
+    setInterval(() => {
+        // getTurns()
+    }, 5000);
 
     // Componentlar chaqiruvi
     useEffect(() => {
-        if (!directions) {
-            getDirections()
+        if (!headsections) {
+            getHeadsections()
         }
-        if (error) {
-            notify(error)
-            clearError()
-        }
-    }, [getDirections, notify, clearError, directions])
+    }, [getHeadsections])
 
-    if (loading) {
-        return <Loading />
-    }
 
     return (
         <div className="body">
@@ -66,16 +71,12 @@ export const Turn = () => {
                 </div>
             </div>
             <div className="row mb-4" style={{ overflowX: "hidden" }}>
-                {directions && directions.map((direction, index) => {
-                    if (
-                        (index === 0) ||
-                        (index > 0 && directions[index - 1].name !== directions[index].name)
-                    ) {
-                        return (
-                            <div className="col-lg-3 col-md-4 col-sm-6 mb-2" key={index}>
-                                <DirectionTurn section={direction.name} id={direction._id} />
-                            </div>)
-                    }
+                {headsections && headsections.map((headsection, index) => {
+
+                    return (
+                        <div className="col-lg-3 col-md-4 col-sm-6 mb-2" key={index}>
+                            <DirectionTurn section={headsection.name} room={headsection.room} turn={headsection.turn} />
+                        </div>)
                 })}
             </div>
         </div>
