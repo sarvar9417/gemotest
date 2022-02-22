@@ -13,7 +13,7 @@ const { Clients } = require('../models/Clients')
 // ===================================================================================
 // ===================================================================================
 // RESEPTION routes
-// /api/section/reseption/register/
+// /api/section/reseption/register/ 
 router.post('/reseption/register/:id', auth, async (req, res) => {
     try {
         const id = req.params.id
@@ -54,6 +54,36 @@ router.post('/reseption/register/:id', auth, async (req, res) => {
             accept,
             probirka
         } = req.body
+
+        const sections = await Section.find({
+            headsectionid: headsectionid,
+            bronDay: {
+                $gte:
+                    new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+                $lt: new Date(new Date().getFullYear(),
+                    new Date().getMonth(), new Date().getDate() + 1)
+            }
+        })
+
+        let Turn = 0
+
+        const sorted = []
+        for (let i = 0; i < sections.length; i++) {
+            let k = true
+            for (let j = 0; j < sorted.length; j++) {
+                if ((sections[i].connector).toString() === (sorted[j].connector).toString()) {
+                    k = false
+                }
+            }
+            if ((sections[i].connector).toString() === (connector).toString()) {
+                Turn = sections[i].turn
+            }
+            if (k && (sections[i].connector).toString() !== (connector).toString()) {
+                sorted.push(sections[i])
+            }
+        }
+
+        // console.log(sorted);
         const section = new Section({
             client: id,
             headsection,
@@ -67,7 +97,7 @@ router.post('/reseption/register/:id', auth, async (req, res) => {
             summary,
             done,
             payment,
-            turn,
+            turn: Turn > 0 ? Turn : sorted.length + 1,
             bron,
             bronDay,
             bronTime,
