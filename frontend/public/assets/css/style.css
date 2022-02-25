@@ -839,6 +839,11 @@ section {
   margin-bottom: 0;
 }
 
+.aboutimg{
+  width: 400px !important;
+  height: 400px !important;
+}
+
 /*--------------------------------------------------------------
 # Counts
 --------------------------------------------------------------*/
@@ -1830,4 +1835,18 @@ section {
   padding-top: 10px;
   text-align: center;
   font-size: 13px;
+}
+
+.iconss{
+  color: white !important;
+  font-size: 30px !important;
+}
+
+.surish{
+  margin-left: 450px !important;
+}
+
+.razmer{
+  width: 100% !important;
+  height: 50vh !important;
 }

@@ -6,7 +6,7 @@ export const Gallery = () => {
     <section id="gallery" className="gallery">
                     <div className="container" data-aos="fade-up">
                         <div className="section-title">
-                            <h2>Gallery</h2>
+                            <h2> "GEMO-TEST"dan FOTO LAVHALAR</h2>
                         </div>
                         <div className="gallery-slider swiper">
                             <div className="swiper-wrapper align-items-center">

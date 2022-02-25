@@ -47,6 +47,7 @@ export const RecieptCheck = () => {
         try {
             const fetch = await request(`/api/clienthistorys/url`, 'GET', null)
             setBasuUrl(fetch)
+            // window.location.reload()
         } catch (e) {
             notify(e)
         }
@@ -87,8 +88,35 @@ export const RecieptCheck = () => {
         } catch (e) {
         }
     }, [request, clientId, auth])
+    const [oldPayments, setOldPayments] = useState()
 
+    const getOldPayments = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/payment/cashier/${connectorId}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            let sum = fetch.reduce((summ, payment) => {
+                return summ + payment.cash + payment.card + payment.transfer
+            }, 0)
+            setOldPayments(sum)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, connectorId, auth, setOldPayments])
+    const [sale, setSale] = useState()
+    const getSale = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/sale/${connectorId}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setSale(fetch[0])
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, auth, setSale, connectorId])
     const [qr, setQr] = useState()
+
+    const [t, setT] = useState()
     useEffect(() => {
         if (client) {
             QRCode.toDataURL(`${baseUrl}/clienthistorys/${client._id}`)
@@ -100,22 +128,17 @@ export const RecieptCheck = () => {
             notify(error)
             clearError()
         }
-        if (!client) {
+        if (!t) {
+            setT(1)
+            getSections()
+            getServices()
             getClient()
-        }
-        if (!logo) {
+            getOldPayments()
+            getSale()
             getLogo()
-        }
-        if (!baseUrl) {
             getBaseUrl()
         }
-        if (!sections) {
-            getSections()
-        }
-        if (!services) {
-            getServices()
-        }
-    }, [error, clearError])
+    }, [QRCode, t, client, error, clearError, getSale, setT, getLogo, getSections, getServices, getBaseUrl, getClient, getOldPayments])
 
     if (loading) {
         return <Loader />
@@ -205,22 +228,22 @@ export const RecieptCheck = () => {
                     </div>
                     <div className='row fs-6 '>
                         <div className='col-6'>
-                            {
-                                sections && sections.map(section => {
-                                    paid = paid + section.priceCashier
-                                    unpaid = unpaid + section.price
-                                })
-                            }
-                            {
-                                services && services.map(service => {
-                                    paid = paid + service.priceCashier
-                                    unpaid = unpaid + service.price
-                                })
-                            }
                             To'lov summasi:
                         </div>
                         <div className='col-6 text-end fw-bold'>
-                            {unpaid} so'm
+                            {(sections && sections.reduce((summ, section) => {
+                                return summ + section.priceCashier
+                            }, 0)) + (services && services.reduce((summ, service) => {
+                                return summ + service.priceCashier
+                            }, 0))} so'm
+                        </div>
+                    </div>
+                    <div className='row fs-6'>
+                        <div className='col-6'>
+                            Chegirma:
+                        </div>
+                        <div className='col-6 text-end fw-bold'>
+                            {sale && sale.summa} so'm
                         </div>
                     </div>
                     <div className='row fs-6'>
@@ -228,7 +251,7 @@ export const RecieptCheck = () => {
                             To'langan summa:
                         </div>
                         <div className='col-6 text-end fw-bold'>
-                            {paid} so'm
+                            {oldPayments && oldPayments} so'm
                         </div>
                     </div>
                     <div className='row fs-6 mb-5'>
@@ -236,7 +259,11 @@ export const RecieptCheck = () => {
                             Qarz summa:
                         </div>
                         <div className='col-6 text-end fw-bold'>
-                            {unpaid - paid} so'm
+                            {(sections && sections.reduce((summ, section) => {
+                                return summ + section.priceCashier
+                            }, 0)) + (services && services.reduce((summ, service) => {
+                                return summ + service.priceCashier
+                            }, 0)) - oldPayments - (sale && sale.summa)} so'm
                         </div>
                     </div>
                     <div style={{ border: "1px  dashed black", marginTop: "100px" }}>

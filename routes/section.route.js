@@ -9,6 +9,7 @@ const { TableSection } = require('../models/TableSection')
 const { Direction } = require('../models/Direction')
 const { Connector } = require('../models/Connector')
 const { Clients } = require('../models/Clients')
+const { Sale } = require('../models/Sale')
 
 // ===================================================================================
 // ===================================================================================
@@ -83,7 +84,6 @@ router.post('/reseption/register/:id', auth, async (req, res) => {
             }
         }
 
-        // console.log(sorted);
         const section = new Section({
             client: id,
             headsection,
@@ -318,19 +318,8 @@ router.patch('/cashier', auth, async (req, res) => {
         const sections = req.body.sections
         const services = req.body.services
         const payment = req.body.payment
-
+        const sale = req.body.sale
         let p = 0
-        for (let i = 0; i < sections.length; i++) {
-            const section = await Section.findById(sections[i]._id)
-            p = p + (sections[i].priceCashier - section.priceCashier)
-        }
-        for (let i = 0; i < services.length; i++) {
-            const service = await Service.findById(services[i]._id)
-            p = p + (services[i].priceCashier - service.priceCashier)
-        }
-        if (p !== payment.total) {
-            res.status(500).json({ message: "To'lov summasini aniqlashda xatolik yuz berdi. Iltimos sahifani yangilab qayta urininb ko'ring." })
-        }
 
         for (let i = 0; i < sections.length; i++) {
             const section = await Section.findByIdAndUpdate(sections[i]._id, sections[i])
@@ -338,6 +327,7 @@ router.patch('/cashier', auth, async (req, res) => {
         for (let i = 0; i < services.length; i++) {
             const service = await Service.findByIdAndUpdate(services[i]._id, services[i])
         }
+
         const {
             client,
             connector,
@@ -358,6 +348,19 @@ router.patch('/cashier', auth, async (req, res) => {
             cash,
             position
         })
+
+        if (sale._id) {
+            const oldsale = await Sale.findByIdAndUpdate(sale._id, sale)
+        } else {
+            const newsale = new Sale({
+                client: sale.client,
+                connector: sale.connector,
+                summa: sale.summa,
+                procient: sale.procient,
+                day: sale.day
+            })
+            await newsale.save()
+        }
         await newpayment.save()
         res.json(newpayment)
 
@@ -812,7 +815,6 @@ router.put('/:id', auth, async (req, res) => {
 router.patch('/table', auth, async (req, res) => {
     try {
         const alltables = [...req.body]
-        console.log(alltables);
         alltables.map(async (tables) => {
             tables.map(async (table) => {
                 if (table) {

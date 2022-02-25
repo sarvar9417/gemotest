@@ -21,6 +21,8 @@ import { RecieptStatsionar } from './Statsionar/RecieptStatsionar'
 import { CashierClientsPages } from './cashierPages/CashierClientsPages'
 import { CreateCheck } from './cashierPages/CreateCheck'
 import { RecieptCheck } from './cashierPages/RecieptCheck'
+import { Debtors } from './cashierPages/Debtors'
+import { Sales } from './cashierPages/Sales'
 
 
 export const ReseptionRoutes = (isAuthenticated) => {
@@ -84,6 +86,12 @@ export const ReseptionRoutes = (isAuthenticated) => {
                     </Route>
                     <Route path="/reseption/recieptcheck/:id/:connector" >
                         <RecieptCheck />
+                    </Route>
+                    <Route path="/reseption/debtors" >
+                        <Debtors />
+                    </Route>
+                    <Route path="/reseption/sales" >
+                        <Sales />
                     </Route>
                     <Route path="/sayt" >
                         <Sayt />

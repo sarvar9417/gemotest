@@ -11,7 +11,7 @@ export const Slider = () => {
                         <div className="container">
                             <h2> <span className='text-danger'>GEMO-</span><span className='text-info'>TEST</span> ga xush kelibsiz</h2>
                             <p> “GEMO-TEST” xususiy korxonasi 2018-yil O'zbekiston Respublikasining "Xususiy korxona to'g'risida"gi qonun va boshqa qonun hujjatlariga asosan tashkil qilingan va hozirgi kungacha sifatli xizmat ko'rsatib kelmoqda.</p>
-                            <a href="#about" className="btn-get-started scrollto">Biz bilan bog'laning</a>
+                            <a href="#contact" className="btn-get-started scrollto">Biz bilan bog'laning</a>
                         </div>
                     </div>
                     {/* Slide 2 */}
@@ -19,7 +19,7 @@ export const Slider = () => {
                         <div className="container">
                             <h2> <span className='text-danger'>GEMO-</span><span className='text-info'>TEST</span> ga xush kelibsiz</h2>
                             <p>“GEMO-TEST” xususiy korxonasi 2018-yil O'zbekiston Respublikasining "Xususiy korxona to'g'risida"gi qonun va boshqa qonun hujjatlariga asosan tashkil qilingan va hozirgi kungacha sifatli xizmat ko'rsatib kelmoqda.</p>
-                            <a href="#about" className="btn-get-started scrollto">Biz bilan bog'laning</a>
+                            <a href="#contact" className="btn-get-started scrollto">Biz bilan bog'laning</a>
                         </div>
                     </div>
                     {/* Slide 3 */}
@@ -27,7 +27,7 @@ export const Slider = () => {
                         <div className="container">
                             <h2> <span className='text-danger'>GEMO-</span><span className='text-info'>TEST</span> ga xush kelibsiz</h2>
                             <p>“GEMO-TEST” xususiy korxonasi 2018-yil O'zbekiston Respublikasining "Xususiy korxona to'g'risida"gi qonun va boshqa qonun hujjatlariga asosan tashkil qilingan va hozirgi kungacha sifatli xizmat ko'rsatib kelmoqda.</p>
-                            <a href="#about" className="btn-get-started scrollto">Biz bilan bog'laning</a>
+                            <a href="#contact" className="btn-get-started scrollto">Biz bilan bog'laning</a>
                         </div>
                     </div>
                 </div>

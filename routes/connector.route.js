@@ -14,6 +14,8 @@ const { HeadSection } = require('../models/HeadSection')
 const { TableColumn } = require('../models/Tablecolumn')
 const { FileSave } = require('../models/FileSave')
 
+const { Payment } = require('../models/Payment')
+const { Sale } = require('../models/Sale')
 
 // /api/auth/connector/register
 router.post('/register', async (req, res) => {
@@ -669,6 +671,204 @@ router.get('/reseptionoffline/:start/:end/:fish', async (req, res) => {
 })
 
 // /api/auth/connector/
+router.get('/debtorname/:start/:end/:fish', async (req, res) => {
+    try {
+        const fish = (req.params.fish).split(" ")
+        const name = new RegExp('.*' + fish[0] + ".*", "i")
+        const lastname = fish[1] ? new RegExp('.*' + fish[1] + ".*", "i") : new RegExp('.*' + "" + ".*", "i")
+        const start = new Date(req.params.start)
+        const end = new Date(req.params.end)
+        const clientss = await Clients.find()
+            .or([
+                { firstname: name, lastname: lastname },
+                { lastname: name, firstname: lastname }
+            ])
+            .sort({ _id: -1 })
+        let connectors = []
+        for (let i = 0; i < clientss.length; i++) {
+            const connector = await Connector.find({
+                bronDay: {
+                    $gte:
+                        new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
+                    $lt: new Date(new Date(end).getFullYear(),
+                        new Date(end).getMonth(), new Date(end).getDate() + 1)
+                },
+                client: clientss[i]._id
+            })
+                .or([{ type: "offline" }, { type: "online" }, { type: "callcenter" }])
+                .sort({ _id: -1 })
+            connectors = connectors.concat(connector)
+        }
+
+        let clients = []
+        for (let i = 0; i < connectors.length; i++) {
+            let client = {
+                client: "",
+                id: "",
+                born: "",
+                phone: "",
+                connector: '',
+                firstname: "",
+                lastname: "",
+                bronDay: connectors[i].bronDay,
+                sectionscount: 0,
+                sectionssumma: 0,
+                sale: 0,
+                payment: 0,
+                debt: 0
+            }
+            const client1 = await Clients.findById(connectors[i].client)
+            const sections = await Section.find({
+                connector: connectors[i]._id
+            })
+                .sort({ _id: 1 })
+            const summsections = sections.reduce((sum, section) => {
+                return sum + section.priceCashier
+            }, 0)
+
+            const services = await Service.find({
+                connector: connectors[i]._id
+            })
+            const summservices = services.reduce((sum, service) => {
+                return sum + service.priceCashier
+            }, 0)
+
+            const payments = await Payment.find({
+                connector: connectors[i]._id
+            })
+            const summpayments = payments.reduce((sum, payment) => {
+                return sum + payment.card + payment.cash + payment.transfer
+            }, 0)
+
+            const sale = await Sale.findOne({
+                connector: connectors[i]._id
+            })
+
+            if (sale && summsections + summservices !== summpayments + sale.summa) {
+                client.client = client1._id
+                client.id = client1.id
+                client.born = client1.born
+                client.phone = client1.phone
+                client.connector = connectors[i]._id
+                client.firstname = client1.firstname
+                client.lastname = client1.lastname
+                client.bronDay = connectors[i].bronDay
+                client.sectionscount = sections.length + services.length
+                client.sectionssumma = summsections + summservices
+                client.sale = sale && sale.summa
+                client.payment = summpayments
+                client.debt = sale && summsections + summservices - summpayments - sale.summa
+                clients.push(client)
+            }
+
+        }
+        // console.log(clients);
+        res.json(clients)
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/connector/
+router.get('/salename/:start/:end/:fish', async (req, res) => {
+    try {
+        const fish = (req.params.fish).split(" ")
+        const name = new RegExp('.*' + fish[0] + ".*", "i")
+        const lastname = fish[1] ? new RegExp('.*' + fish[1] + ".*", "i") : new RegExp('.*' + "" + ".*", "i")
+        const start = new Date(req.params.start)
+        const end = new Date(req.params.end)
+        const clientss = await Clients.find()
+            .or([
+                { firstname: name, lastname: lastname },
+                { lastname: name, firstname: lastname }
+            ])
+            .sort({ _id: -1 })
+        let connectors = []
+        for (let i = 0; i < clientss.length; i++) {
+            const connector = await Connector.find({
+                bronDay: {
+                    $gte:
+                        new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
+                    $lt: new Date(new Date(end).getFullYear(),
+                        new Date(end).getMonth(), new Date(end).getDate() + 1)
+                },
+                client: clientss[i]._id
+            })
+                .or([{ type: "offline" }, { type: "online" }, { type: "callcenter" }])
+                .sort({ _id: -1 })
+            connectors = connectors.concat(connector)
+        }
+
+        let clients = []
+        for (let i = 0; i < connectors.length; i++) {
+            let client = {
+                client: "",
+                id: "",
+                born: "",
+                phone: "",
+                connector: '',
+                firstname: "",
+                lastname: "",
+                bronDay: connectors[i].bronDay,
+                sectionscount: 0,
+                sectionssumma: 0,
+                sale: 0,
+                payment: 0,
+                procient: 0
+            }
+            const client1 = await Clients.findById(connectors[i].client)
+            const sections = await Section.find({
+                connector: connectors[i]._id
+            })
+                .sort({ _id: 1 })
+            const summsections = sections.reduce((sum, section) => {
+                return sum + section.priceCashier
+            }, 0)
+
+            const services = await Service.find({
+                connector: connectors[i]._id
+            })
+            const summservices = services.reduce((sum, service) => {
+                return sum + service.priceCashier
+            }, 0)
+
+            const payments = await Payment.find({
+                connector: connectors[i]._id
+            })
+            const summpayments = payments.reduce((sum, payment) => {
+                return sum + payment.card + payment.cash + payment.transfer
+            }, 0)
+
+            const sale = await Sale.findOne({
+                connector: connectors[i]._id
+            })
+
+            if (sale && sale.summa > 0) {
+                client.client = client1._id
+                client.id = client1.id
+                client.born = client1.born
+                client.phone = client1.phone
+                client.connector = connectors[i]._id
+                client.firstname = client1.firstname
+                client.lastname = client1.lastname
+                client.bronDay = connectors[i].bronDay
+                client.sectionscount = sections.length + services.length
+                client.sectionssumma = summsections + summservices
+                client.sale = sale && sale.summa
+                client.payment = summpayments
+                client.procient = sale.procient
+                clients.push(client)
+            }
+
+        }
+        // console.log(clients);
+        res.json(clients)
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/connector/
 router.get('/labaratoriya/:start/:end/:fish', async (req, res) => {
     try {
         const fish = (req.params.fish).split(" ")
@@ -929,6 +1129,175 @@ router.get('/reseption/:start/:end', async (req, res) => {
             sections.push(sec)
         }
         res.json({ connectors, clients, sections, services, countsection })
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/connector/
+router.get('/debtors/:start/:end', async (req, res) => {
+    try {
+        const start = new Date(req.params.start)
+        const end = new Date(req.params.end)
+        const connectors = await Connector.find({
+            bronDay: {
+                $gte:
+                    new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
+                $lt: new Date(new Date(end).getFullYear(),
+                    new Date(end).getMonth(), new Date(end).getDate() + 1)
+            }
+        })
+            .sort({ _id: -1 })
+        let clients = []
+
+        for (let i = 0; i < connectors.length; i++) {
+            let client = {
+                client: "",
+                id: "",
+                born: "",
+                phone: "",
+                connector: '',
+                firstname: "",
+                lastname: "",
+                bronDay: connectors[i].bronDay,
+                sectionscount: 0,
+                sectionssumma: 0,
+                sale: 0,
+                payment: 0,
+                debt: 0
+            }
+            const client1 = await Clients.findById(connectors[i].client)
+            const sections = await Section.find({
+                connector: connectors[i]._id
+            })
+                .sort({ _id: 1 })
+            const summsections = sections.reduce((sum, section) => {
+                return sum + section.priceCashier
+            }, 0)
+
+            const services = await Service.find({
+                connector: connectors[i]._id
+            })
+            const summservices = services.reduce((sum, service) => {
+                return sum + service.priceCashier
+            }, 0)
+
+            const payments = await Payment.find({
+                connector: connectors[i]._id
+            })
+            const summpayments = payments.reduce((sum, payment) => {
+                return sum + payment.card + payment.cash + payment.transfer
+            }, 0)
+
+            const sale = await Sale.findOne({
+                connector: connectors[i]._id
+            })
+
+            if (sale && summsections + summservices !== summpayments + sale.summa) {
+                client.client = client1._id
+                client.id = client1.id
+                client.born = client1.born
+                client.phone = client1.phone
+                client.connector = connectors[i]._id
+                client.firstname = client1.firstname
+                client.lastname = client1.lastname
+                client.bronDay = connectors[i].bronDay
+                client.sectionscount = sections.length + services.length
+                client.sectionssumma = summsections + summservices
+                client.sale = sale && sale.summa
+                client.payment = summpayments
+                client.debt = sale && summsections + summservices - summpayments - sale.summa
+                clients.push(client)
+            }
+
+        }
+        // console.log(clients);
+        res.json(clients)
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+
+// /api/auth/connector/
+router.get('/sales/:start/:end', async (req, res) => {
+    try {
+        const start = new Date(req.params.start)
+        const end = new Date(req.params.end)
+        const connectors = await Connector.find({
+            bronDay: {
+                $gte:
+                    new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
+                $lt: new Date(new Date(end).getFullYear(),
+                    new Date(end).getMonth(), new Date(end).getDate() + 1)
+            }
+        })
+            .sort({ _id: -1 })
+        let clients = []
+
+        for (let i = 0; i < connectors.length; i++) {
+            let client = {
+                client: "",
+                id: "",
+                born: "",
+                phone: "",
+                connector: '',
+                firstname: "",
+                lastname: "",
+                bronDay: connectors[i].bronDay,
+                sectionscount: 0,
+                sectionssumma: 0,
+                sale: 0,
+                procient: 0,
+                payment: 0,
+            }
+            const client1 = await Clients.findById(connectors[i].client)
+            const sections = await Section.find({
+                connector: connectors[i]._id
+            })
+                .sort({ _id: 1 })
+            const summsections = sections.reduce((sum, section) => {
+                return sum + section.priceCashier
+            }, 0)
+
+            const services = await Service.find({
+                connector: connectors[i]._id
+            })
+            const summservices = services.reduce((sum, service) => {
+                return sum + service.priceCashier
+            }, 0)
+
+            const payments = await Payment.find({
+                connector: connectors[i]._id
+            })
+            const summpayments = payments.reduce((sum, payment) => {
+                return sum + payment.card + payment.cash + payment.transfer
+            }, 0)
+
+            const sale = await Sale.findOne({
+                connector: connectors[i]._id
+            })
+
+            if (sale && sale.summa > 0) {
+                client.client = client1._id
+                client.id = client1.id
+                client.born = client1.born
+                client.phone = client1.phone
+                client.connector = connectors[i]._id
+                client.firstname = client1.firstname
+                client.lastname = client1.lastname
+                client.bronDay = connectors[i].bronDay
+                client.sectionscount = sections.length + services.length
+                client.sectionssumma = summsections + summservices
+                client.sale = sale && sale.summa
+                client.payment = summpayments
+                client.procient = sale.procient
+                clients.push(client)
+            }
+
+        }
+        // console.log(clients);
+        res.json(clients)
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -1294,6 +1663,356 @@ router.get('/reseption/:id', async (req, res) => {
             sections.push(sec)
         }
         res.json({ connectors, clients, sections, services, countsection })
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/connector/
+router.get('/debtorid/:id', async (req, res) => {
+    try {
+
+        const id = req.params.id
+        const client1 = await Clients.findOne({
+            id: id
+        })
+
+        if (!client1) {
+            return res.status(500).json({ message: 'Bunday ID li foydalanuvchi topilmadi' })
+        }
+        const connector = await Connector.findOne({
+            client: client1._id
+        })
+        let client = {
+            client: "",
+            id: "",
+            born: "",
+            phone: "",
+            connector: '',
+            firstname: "",
+            lastname: "",
+            bronDay: connector.bronDay,
+            sectionscount: 0,
+            sectionssumma: 0,
+            sale: 0,
+            payment: 0,
+            debt: 0
+        }
+        const sections = await Section.find({
+            client: client1._id
+        })
+            .sort({ _id: 1 })
+
+        const summsections = sections.reduce((sum, section) => {
+            return sum + section.priceCashier
+        }, 0)
+
+        const services = await Service.find({
+            client: client1._id
+        })
+        const summservices = services.reduce((sum, service) => {
+            return sum + service.priceCashier
+        }, 0)
+
+        const payments = await Payment.find({
+            client: client1._id
+        })
+        const summpayments = payments.reduce((sum, payment) => {
+            return sum + payment.card + payment.cash + payment.transfer
+        }, 0)
+
+        const sale = await Sale.findOne({
+            client: client1._id
+        })
+
+        if (!sale) {
+            return res.status(500).json({ message: 'Bunday ID li foydalanuvchi ma\'lumotlari topilmadi' })
+        }
+
+
+        if (sale && summsections + summservices !== summpayments + sale.summa) {
+            client.client = client1._id
+            client.id = client1.id
+            client.born = client1.born
+            client.phone = client1.phone
+            client.connector = connector._id
+            client.firstname = client1.firstname
+            client.lastname = client1.lastname
+            client.bronDay = connector.bronDay
+            client.sectionscount = sections.length + services.length
+            client.sectionssumma = summsections + summservices
+            client.sale = sale && sale.summa
+            client.payment = summpayments
+            client.debt = sale && summsections + summservices - summpayments - sale.summa
+        }
+
+        // console.log(clients);
+        res.json([client])
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/connector/
+router.get('/saleid/:id', async (req, res) => {
+    try {
+
+        const id = req.params.id
+        const client1 = await Clients.findOne({
+            id: id
+        })
+
+        if (!client1) {
+            return res.status(500).json({ message: 'Bunday ID li foydalanuvchi topilmadi' })
+        }
+        const connector = await Connector.findOne({
+            client: client1._id
+        })
+        let client = {
+            client: "",
+            id: "",
+            born: "",
+            phone: "",
+            connector: '',
+            firstname: "",
+            lastname: "",
+            bronDay: connector.bronDay,
+            sectionscount: 0,
+            sectionssumma: 0,
+            sale: 0,
+            payment: 0,
+            procient: 0
+        }
+        const sections = await Section.find({
+            client: client1._id
+        })
+            .sort({ _id: 1 })
+
+        const summsections = sections.reduce((sum, section) => {
+            return sum + section.priceCashier
+        }, 0)
+
+        const services = await Service.find({
+            client: client1._id
+        })
+        const summservices = services.reduce((sum, service) => {
+            return sum + service.priceCashier
+        }, 0)
+
+        const payments = await Payment.find({
+            client: client1._id
+        })
+        const summpayments = payments.reduce((sum, payment) => {
+            return sum + payment.card + payment.cash + payment.transfer
+        }, 0)
+
+        const sale = await Sale.findOne({
+            client: client1._id
+        })
+
+        if (!sale) {
+            return res.status(500).json({ message: 'Bunday ID li foydalanuvchi ma\'lumotlari topilmadi' })
+        }
+
+
+        if (sale && sale.summa > 0) {
+            client.client = client1._id
+            client.id = client1.id
+            client.born = client1.born
+            client.phone = client1.phone
+            client.connector = connector._id
+            client.firstname = client1.firstname
+            client.lastname = client1.lastname
+            client.bronDay = connector.bronDay
+            client.sectionscount = sections.length + services.length
+            client.sectionssumma = summsections + summservices
+            client.sale = sale && sale.summa
+            client.payment = summpayments
+            client.procient = sale.summa.procient
+        }
+
+        // console.log(clients);
+        res.json([client])
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/connector/
+router.get('/debtorborn/:born', async (req, res) => {
+    try {
+
+        const born = req.params.born
+        const clients = await Clients.find({
+            born: {
+                $gte: new Date(new Date(born).getFullYear(), new Date(born).getMonth(), new Date(born).getDate()),
+                $lt: new Date(new Date(born).getFullYear(), new Date(born).getMonth(), new Date(born).getDate() + 1)
+            }
+        })
+
+        if (!clients) {
+            return res.status(500).json({ message: 'Bunday ID li foydalanuvchi topilmadi' })
+        }
+
+        let allclients = []
+        for (let i = 0; i < clients.length; i++) {
+            const connector = await Connector.findOne({
+                client: clients[i]._id
+            })
+
+            let client = {
+                client: "",
+                id: "",
+                born: "",
+                phone: "",
+                connector: '',
+                firstname: "",
+                lastname: "",
+                bronDay: connector && connector.bronDay,
+                sectionscount: 0,
+                sectionssumma: 0,
+                sale: 0,
+                payment: 0,
+                debt: 0
+            }
+            const sections = await Section.find({
+                client: clients[i]._id
+            })
+                .sort({ _id: 1 })
+
+            const summsections = sections.reduce((sum, section) => {
+                return sum + section.priceCashier
+            }, 0)
+
+            const services = await Service.find({
+                client: clients[i]._id
+            })
+            const summservices = services.reduce((sum, service) => {
+                return sum + service.priceCashier
+            }, 0)
+
+            const payments = await Payment.find({
+                client: clients[i]._id
+            })
+            const summpayments = payments.reduce((sum, payment) => {
+                return sum + payment.card + payment.cash + payment.transfer
+            }, 0)
+
+            const sale = await Sale.findOne({
+                client: clients[i]._id
+            })
+
+            if (sale && summsections + summservices !== summpayments + sale.summa) {
+                client.client = clients[i]._id
+                client.id = clients[i].id
+                client.born = clients[i].born
+                client.phone = clients[i].phone
+                client.connector = connector && connector._id
+                client.firstname = clients[i].firstname
+                client.lastname = clients[i].lastname
+                client.bronDay = connector && connector.bronDay
+                client.sectionscount = sections.length + services.length
+                client.sectionssumma = summsections + summservices
+                client.sale = sale && sale.summa
+                client.payment = summpayments
+                client.debt = sale && summsections + summservices - summpayments - sale.summa
+                allclients.push(client)
+            }
+        }
+
+
+        // console.log(clients);
+        res.json(allclients)
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/connector/
+router.get('/saleborn/:born', async (req, res) => {
+    try {
+
+        const born = req.params.born
+        const clients = await Clients.find({
+            born: {
+                $gte: new Date(new Date(born).getFullYear(), new Date(born).getMonth(), new Date(born).getDate()),
+                $lt: new Date(new Date(born).getFullYear(), new Date(born).getMonth(), new Date(born).getDate() + 1)
+            }
+        })
+
+        if (!clients) {
+            return res.status(500).json({ message: 'Bunday ID li foydalanuvchi topilmadi' })
+        }
+
+        let allclients = []
+        for (let i = 0; i < clients.length; i++) {
+            const connector = await Connector.findOne({
+                client: clients[i]._id
+            })
+
+            let client = {
+                client: "",
+                id: "",
+                born: "",
+                phone: "",
+                connector: '',
+                firstname: "",
+                lastname: "",
+                bronDay: connector && connector.bronDay,
+                sectionscount: 0,
+                sectionssumma: 0,
+                sale: 0,
+                payment: 0,
+                procient: 0
+            }
+            const sections = await Section.find({
+                client: clients[i]._id
+            })
+                .sort({ _id: 1 })
+
+            const summsections = sections.reduce((sum, section) => {
+                return sum + section.priceCashier
+            }, 0)
+
+            const services = await Service.find({
+                client: clients[i]._id
+            })
+            const summservices = services.reduce((sum, service) => {
+                return sum + service.priceCashier
+            }, 0)
+
+            const payments = await Payment.find({
+                client: clients[i]._id
+            })
+            const summpayments = payments.reduce((sum, payment) => {
+                return sum + payment.card + payment.cash + payment.transfer
+            }, 0)
+
+            const sale = await Sale.findOne({
+                client: clients[i]._id
+            })
+
+            if (sale && sale.summa > 0) {
+                client.client = clients[i]._id
+                client.id = clients[i].id
+                client.born = clients[i].born
+                client.phone = clients[i].phone
+                client.connector = connector && connector._id
+                client.firstname = clients[i].firstname
+                client.lastname = clients[i].lastname
+                client.bronDay = connector && connector.bronDay
+                client.sectionscount = sections.length + services.length
+                client.sectionssumma = summsections + summservices
+                client.sale = sale && sale.summa
+                client.payment = summpayments
+                client.procient = sale.procient
+                allclients.push(client)
+            }
+        }
+
+
+        // console.log(clients);
+        res.json(allclients)
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }

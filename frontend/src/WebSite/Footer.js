@@ -4,7 +4,7 @@ export const Footer = () => {
   return (
     <>
     <footer id="footer">
-                <div className="footer-top">
+                {/*<div className="footer-top">
                     <div className="container">
                         <div className="row">
                             <div className="col-lg-4 col-md-6">
@@ -45,7 +45,7 @@ export const Footer = () => {
                             </div>
                         </div>
                     </div>
-                </div>
+                </div>*/}
                 <div className="container">
                   
                     <div className="credits">

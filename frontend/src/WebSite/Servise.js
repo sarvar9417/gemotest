@@ -33,6 +33,10 @@ export const Servise = () => {
                                 <div className="icon"><i className="fas fa-notes-medical" /></div>
                                 <h4 className="title"><a href> PSR tekshiruvlari</a></h4>
                             </div>
+                            <div className="col-lg-12 col-md-6 icon-box" data-aos="zoom-in" data-aos-delay={300}>
+                                <div className="icon"><i class="fas fa-hospital"></i></div>
+                                <h4 className="title"><a href> Alergiya tashxisi </a></h4>
+                            </div>
                         </div>
                     </div>
                 </section>

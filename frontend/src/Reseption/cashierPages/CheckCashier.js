@@ -14,29 +14,100 @@ export const CheckCashier = () => {
     const notify = (e) => {
         toast.error(e)
     }
-    let num = 0
     let num2 = 0
     const [modal1, setModal1] = useState(false)
     const [modal2, setModal2] = useState(false)
     const [modal3, setModal3] = useState(false)
     const [delSection, setDelSection] = useState()
     const [delService, setDelService] = useState()
-    let allPrice = 0
-    let paymented = 0
-    let back = 0
 
+
+    const { request, error, clearError, loading } = useHttp()
     const [clientId, setClientId] = useState(useParams().id)
     const [connectorId, setConnectorId] = useState(useParams().connector)
     const [clientid, setClientid] = useState()
     const [sections, setSections] = useState()
     const [sectionsT, setSectionsT] = useState()
     const [services, setServices] = useState()
-    const [servicesT, setServicesT] = useState()
     const [connector, setConnector] = useState()
-    const [connectorT, setConnectorT] = useState()
     const [client, setClient] = useState()
-    const [clientT, setClientT] = useState()
-    const { request, error, clearError, loading } = useHttp()
+
+    const [sections1, setSections1] = useState()
+    const [services1, setServices1] = useState()
+    const [bepaid, setBepaid] = useState(0)
+    const [oldPayments, setOldPayments] = useState()
+    const [t, setT] = useState()
+    const [debt, setDebt] = useState(0)
+
+    const [sale, setSale] = useState({
+        client: clientId && clientId,
+        connector: connectorId && connectorId,
+        summa: 0,
+        procient: 0,
+        day: new Date(),
+        comment: " "
+    })
+
+    const getClient = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/clients/cashier/${clientId}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setClient(fetch)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, clientId, auth, setClient])
+
+    const getConnector = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/connector/${connectorId}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setConnector(fetch)
+            // setPayment({ ...payment, position: fetch.type })
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, connectorId, auth, setConnector])
+
+    const getSections = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/section/cashierconnector/${connectorId}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setSections(fetch)
+            setSections1(fetch)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, connectorId, auth, setSections, setSections1, setSectionsT])
+
+    const getServices = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/service/cashierconnector/${connectorId}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setServices(fetch)
+            setServices1(fetch)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, connectorId, auth, setServices, setServices1])
+
+    const getOldPayments = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/payment/cashier/${connectorId}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            let sum = fetch.reduce((summ, payment) => {
+                return summ + payment.cash + payment.card + payment.transfer
+            }, 0)
+            setOldPayments(sum)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, connectorId, auth, setOldPayments])
 
     const [payment, setPayment] = useState({
         client: clientId,
@@ -46,16 +117,59 @@ export const CheckCashier = () => {
         cash: 0,
         card: 0,
         transfer: 0,
-        position: ""
+        position: " "
     })
 
+    const paymenteds = useCallback((event) => {
+        if (event.target.checked) {
+            let k = 0
+            let s = [...services]
+            for (let i = 0; i < services.length; i++) {
+                k = k + (s[i].price - services1[i].priceCashier)
+                s[i].priceCashier = s[i].price
+                s[i].payment = "to'langan"
+                s[i].commentCashier = " "
+            }
+            setServices(s)
+            let m = [...sections]
+            for (let i = 0; i < sections.length; i++) {
+                k = k + (m[i].price - sections1[i].priceCashier)
+                m[i].priceCashier = m[i].price
+                m[i].payment = "to'langan"
+                m[i].commentCashier = " "
+            }
+            setSections(m)
+            setBepaid(k)
+        } else {
+            setSale({
+                ...sale,
+                summa: 0,
+                procient: 0
+            })
+            let k = 0
+            let s = [...services]
+            for (let i = 0; i < services.length; i++) {
+                k = k + (0 - services1[i].priceCashier)
+                s[i].priceCashier = 0
+                s[i].payment = "kutilmoqda"
+            }
+            setServices(s)
+            let m = [...sections]
+            for (let i = 0; i < sections.length; i++) {
+                k = k + (0 - sections1[i].priceCashier)
+                m[i].priceCashier = 0
+                m[i].payment = "kutilmoqda"
+            }
+            setSections(m)
+            setBepaid(k)
+        }
+    }, [setSections, setBepaid, sections, setServices, services1, sections1])
 
     const setPay = (event) => {
         if (event.target.id === "card") {
             setPayment({
                 ...payment,
                 [event.target.id]: parseInt(event.target.value),
-                total: bepaid
             })
         }
 
@@ -63,7 +177,6 @@ export const CheckCashier = () => {
             setPayment({
                 ...payment,
                 [event.target.id]: parseInt(event.target.value),
-                total: bepaid
             })
         }
 
@@ -71,50 +184,43 @@ export const CheckCashier = () => {
             setPayment({
                 ...payment,
                 [event.target.id]: parseInt(event.target.value),
-                total: bepaid
             })
         }
     }
 
     const setAllPayment = useCallback((event) => {
-        let s = [...sections]
-        s.map((section, key) => {
-            s[key].paymentMethod = event.target.id
-        })
-        let m = [...services]
-        m.map((section, key) => {
-            m[key].paymentMethod = event.target.id
-        })
-        setSections(s)
-        setServices(m)
+
+        const sum = (sections && sections.reduce((summ, section) => {
+            return summ + section.priceCashier
+        }, 0)) + (services && services.reduce((summ, service) => {
+            return summ + service.priceCashier
+        }, 0)) - (oldPayments && oldPayments) - sale.summa - debt
+
         if (event.target.id === "card") {
             setPayment({
                 ...payment,
-                total: bepaid,
                 type: event.target.id,
                 cash: 0,
                 transfer: 0,
-                [event.target.id]: bepaid,
+                [event.target.id]: sum,
             })
         }
         if (event.target.id === "cash") {
             setPayment({
                 ...payment,
-                total: bepaid,
                 type: event.target.id,
                 card: 0,
                 transfer: 0,
-                [event.target.id]: bepaid,
+                [event.target.id]: sum,
             })
         }
         if (event.target.id === "transfer") {
             setPayment({
                 ...payment,
-                total: bepaid,
                 type: event.target.id,
                 cash: 0,
                 card: 0,
-                [event.target.id]: bepaid,
+                [event.target.id]: sum,
             })
         }
         if (event.target.id === "mixed") {
@@ -127,145 +233,7 @@ export const CheckCashier = () => {
                 transfer: 0
             })
         }
-    }, [setPayment, payment, setSections, setServices, services, sections])
-
-    const getClient = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/clients/cashier/${clientId}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            setClient(fetch)
-            setClientT(1)
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, clientId, auth, setClient, setClientT])
-
-    const getConnector = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/connector/${connectorId}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            setConnector(fetch)
-            setPayment({ ...payment, position: fetch.type })
-            setConnectorT(1)
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, connectorId, auth, setConnector, setConnectorT])
-
-    const [sections1, setSections1] = useState()
-    const [services1, setServices1] = useState()
-    const [bepaid, setBepaid] = useState(0)
-    const [oldPayments, setOldPayments] = useState()
-    const [l, setL] = useState()
-
-    const getOldPayments = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/payment/cashier/${connectorId}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            let s = 0
-            fetch.map(f => {
-                s = s + f.total
-            })
-            setOldPayments(s)
-            setL(1)
-
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, connectorId, auth, setOldPayments, setL])
-
-
-    const getSections = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/section/cashierconnector/${connectorId}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            let s = []
-            fetch.map(f => {
-                s.push(f)
-            })
-            setSections(fetch)
-            setSections1(s)
-            setSectionsT(1)
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, connectorId, auth, setSections, setSections1, setSectionsT])
-
-    const getSections1 = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/section/cashierconnector/${connectorId}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            const data = await request(`/api/service/cashierconnector/${connectorId}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            setSections1(fetch)
-            setServices1(data)
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, connectorId, auth, setServices1, setSections1])
-
-    const getServices = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/service/cashierconnector/${connectorId}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            setServices(fetch)
-            setServices1([...fetch])
-            setServicesT(1)
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, connectorId, auth, setServices, setServices1, setServicesT])
-
-    const inputPriceSection = useCallback((event, key) => {
-        document.getElementById(`checkbox${key}`).checked = false
-        if (parseInt(event.target.value) > sections[key].price) {
-            return notify("Iltimos to'lovdan ortiqcha summa kiritmang")
-        }
-        if (parseInt(event.target.value) === sections[key].price) {
-            setSections(
-                Object.values({
-                    ...sections,
-                    [key]: { ...sections[key], priceCashier: parseInt(event.target.value), payment: "to'langan", commentCashier: " " },
-                }))
-            let k = 0
-            sections.map((s, i) => {
-                if (i === key) {
-                    k = k + (parseInt(event.target.value) - sections1[i].priceCashier)
-                } else {
-                    k = k + (sections[i].priceCashier - sections1[i].priceCashier)
-                }
-            })
-            services.map((s, i) => {
-                k = k + (services[i].priceCashier - services1[i].priceCashier)
-            })
-            setBepaid(k)
-        } else {
-            setSections(
-                Object.values({
-                    ...sections,
-                    [key]: { ...sections[key], priceCashier: parseInt(event.target.value), payment: "kutilmoqda" },
-                }))
-            let k = 0
-            sections.map((s, i) => {
-                if (i === key) {
-                    k = k + (parseInt(event.target.value) - sections1[i].priceCashier)
-                } else {
-                    k = k + (sections[i].priceCashier - sections1[i].priceCashier)
-                }
-            })
-            services.map((s, i) => {
-                k = k + (services[i].priceCashier - services1[i].priceCashier)
-            })
-            setBepaid(k)
-        }
-    }, [services, setSections, services1, sections, sections1, setBepaid])
+    }, [setPayment, oldPayments, sections, services, sale, debt, notify])
 
     const inputPriceService = useCallback((event, key) => {
         document.getElementById(`checkboxservice${key}`).checked = false
@@ -342,7 +310,6 @@ export const CheckCashier = () => {
                     k = k + (sections[i].priceCashier - sections1[i].priceCashier)
                 }
             })
-            console.log(k);
             services.map((s, i) => {
                 k = k + (services[i].priceCashier - services1[i].priceCashier)
             })
@@ -409,20 +376,39 @@ export const CheckCashier = () => {
     }, [setSections, sections, bepaid, sections1, services1, services, setBepaid])
 
     const checkPrices = () => {
+        if (!sale._id && sale.summa > 0 && sale.comment.length < 2) {
+            return notify("Diqqat! Chegirma uchun izoh berishni unutdingiz.")
+        }
         let k = 0
         sections && sections.map(section => {
             if (section.price !== section.priceCashier && section.commentCashier.length < 6) {
                 k++
-                return notify("Iltimos mijoz to'lovni bajarolmagani sababini to'liq ko'rsating.")
+                return notify("Iltimos mijoz xizmatni rad etgani sababini ko'rsating.")
             }
         })
         services && services.map(service => {
             if (service.price !== service.priceCashier && service.commentCashier.length < 6) {
                 k++
-                return notify("Iltimos mijoz to'lovni bajarolmagani sababini to'liq ko'rsating.")
+                return notify("Iltimos mijoz xizmatni rad etgani sababini ko'rsating.")
             }
         })
-        if ((payment.total !== payment.cash + payment.card + payment.transfer) || payment.total !== bepaid) {
+
+        const sum =
+            (sections && sections.reduce((summ, section) => {
+                return summ + section.priceCashier
+            }, 0))
+            +
+            (services && services.reduce((summ, service) => {
+                return summ + service.priceCashier
+            }, 0))
+            -
+            (oldPayments && oldPayments)
+            -
+            sale.summa
+            -
+            debt
+
+        if ((sum !== payment.cash + payment.card + payment.transfer)) {
             return notify("Diqqat to'lov turida summani kiritishda xatolikka yo'l qo'ydingiz. Iltimos to'lov turidagi summalarni yana bir bor tekshiring")
         }
         if (payment.type === "") {
@@ -435,22 +421,45 @@ export const CheckCashier = () => {
         }
     }
 
+    const setPayments = () => {
+        patchPaymentSections()
+        history.push({
+            pathname: `/reseption/recieptcheck/${clientId}/${connectorId}`
+        })
+    }
+
     const checkPrices2 = () => {
         let k = 0
 
         sections && sections.map(section => {
             if (section.price !== section.priceCashier && section.commentCashier.length < 6) {
                 k++
-                return notify("Iltimos mijoz to'lovni bajarolmagani sababini to'liq ko'rsating.")
+                return notify("Iltimos mijoz xizmatni rad etgani sababini ko'rsating.")
             }
         })
         services && services.map(service => {
             if (service.price !== service.priceCashier && service.commentCashier.length < 6) {
                 k++
-                return notify("Iltimos mijoz to'lovni bajarolmagani sababini to'liq ko'rsating.")
+                return notify("Iltimos mijoz xizmatni rad etgani sababini ko'rsating.")
             }
         })
-        if ((payment.total !== payment.cash + payment.card + payment.transfer) || payment.total !== bepaid) {
+
+        const sum =
+            (sections && sections.reduce((summ, section) => {
+                return summ + section.priceCashier
+            }, 0))
+            +
+            (services && services.reduce((summ, service) => {
+                return summ + service.priceCashier
+            }, 0))
+            -
+            (oldPayments && oldPayments)
+            -
+            sale.summa
+            -
+            debt
+
+        if ((sum !== payment.cash + payment.card + payment.transfer)) {
             return notify("Diqqat to'lov turida summani kiritishda xatolikka yo'l qo'ydingiz. Iltimos to'lov turidagi summalarni yana bir bor tekshiring")
         }
         if (payment.type === "") {
@@ -462,20 +471,13 @@ export const CheckCashier = () => {
 
     const patchPaymentSections = useCallback(async () => {
         try {
-            const fetch = await request(`/api/section/cashier`, 'PATCH', { sections, services, payment }, {
+            const fetch = await request(`/api/section/cashier`, 'PATCH', { sections, services, payment, sale }, {
                 Authorization: `Bearer ${auth.token}`
             })
         } catch (e) {
             notify(e)
         }
-    }, [request, auth, payment, sections, services])
-
-    const setPayments = () => {
-        patchPaymentSections()
-        history.push({
-            pathname: `/reseption/recieptcheck/${clientId}/${connectorId}`
-        })
-    }
+    }, [request, auth, payment, sections, services, sale])
 
     const getchangeSections = useCallback(async (event) => {
         try {
@@ -510,71 +512,98 @@ export const CheckCashier = () => {
         }
     }, [request, auth, delService])
 
-    const paymenteds = useCallback((event) => {
-        if (event.target.checked) {
-            let k = 0
-            let s = [...services]
-            for (let i = 0; i < services.length; i++) {
-                k = k + (s[i].price - services1[i].priceCashier)
-                s[i].priceCashier = s[i].price
-                s[i].payment = "to'langan"
-                s[i].commentCashier = " "
-            }
-            setServices(s)
-            let m = [...sections]
-            for (let i = 0; i < sections.length; i++) {
-                k = k + (m[i].price - sections1[i].priceCashier)
-                m[i].priceCashier = m[i].price
-                m[i].payment = "to'langan"
-                m[i].commentCashier = " "
-            }
-            setSections(m)
-            setBepaid(k)
-            getSections1()
-        } else {
-            let k = 0
-            let s = [...services]
-            for (let i = 0; i < services.length; i++) {
-                k = k + (0 - services1[i].priceCashier)
-                s[i].priceCashier = 0
 
-                s[i].payment = "kutilmoqda"
-            }
-            setServices(s)
-            let m = [...sections]
-            for (let i = 0; i < sections.length; i++) {
-                k = k + (0 - sections1[i].priceCashier)
-                m[i].priceCashier = 0
 
-                m[i].payment = "kutilmoqda"
+    const getSale = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/sale/${connectorId}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            if (fetch.length > 0) {
+                setSale(fetch[0])
             }
-            setSections(m)
-            setBepaid(k)
-            getSections1()
+        } catch (e) {
+            notify(e)
         }
-    }, [setSections, setSections1, setBepaid, sections, setServices, services1, sections1])
+    }, [request, auth, setSale, connectorId])
+
+    const Sale = (event) => {
+        const allPrice = sections.reduce((summ, section) => {
+            return section.probirka ? summ + section.priceCashier : summ + 0
+        }, 0)
+
+        if (parseInt(event.target.value) > allPrice) {
+            document.getElementById("sale").value = parseInt(event.target.value) / 10
+            return notify("Diqqat! Umumiy to'lov summasidan ortiq chegirma berilmaydi.")
+        }
+
+        if (parseInt(event.target.value) > 100) {
+            setSale({
+                ...sale,
+                procient: 0,
+                summa: parseInt(event.target.value)
+            })
+        } else {
+            let summ = 0
+            for (const section of sections) {
+                if (section.probirka) {
+                    summ += section.priceCashier
+                }
+            }
+            setSale({
+                ...sale,
+                summa: parseInt(summ * parseInt(event.target.value) / 100),
+                procient: parseInt(event.target.value)
+            })
+        }
+    }
+
+    const SaleComment = (event) => {
+        setSale({
+            ...sale,
+            comment: event.target.value
+        })
+    }
+
+    const Debt = useCallback((e) => {
+        const sum = (sections && sections.reduce((summ, section) => {
+            return summ + section.priceCashier
+        }, 0)) + (services && services.reduce((summ, service) => {
+            return summ + service.priceCashier
+        }, 0)) - (oldPayments && oldPayments) - sale.summa
+        if (parseInt(e.target.value) > sum) {
+            document.getElementById("debt").value = parseInt(e.target.value) / 10
+            return notify("Diqqat! Qarz miqdori umumiy to'lov summasidan oshmaslighi zarur")
+        }
+        setDebt(e.target.value)
+    }, [setDebt, sections, services, oldPayments, sale, notify])
+
 
     useEffect(() => {
-        if (!l) {
+        if (!t) {
+            setT(1)
             getOldPayments()
+            getSections()
+            getClient()
+            getConnector()
+            getServices()
+            getSale()
         }
         if (error) {
             notify(error)
             clearError()
         }
-        if (!sectionsT) {
-            getSections()
-        }
-        if (!clientT) {
-            getClient()
-        }
-        if (!connectorT) {
-            getConnector()
-        }
-        if (!servicesT) {
-            getServices()
-        }
-    }, [notify, clearError])
+
+    }, [
+        notify,
+        clearError,
+        setT,
+        getOldPayments,
+        getSections,
+        getServices,
+        getClient,
+        getConnector
+    ])
 
     if (loading) {
         return <Loader />
@@ -625,22 +654,15 @@ export const CheckCashier = () => {
                     <tbody style={{ borderBottom: "1px solid #999" }}>
                         {
                             sections && sections.map((section, key) => {
-                                allPrice = allPrice + section.price
-                                paymented = paymented + section.priceCashier
-                                num++
-                                if (section.payment === "to'lanmagan") {
-                                    back = back + section.price
-                                }
                                 return (
                                     <tr >
-                                        <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{num}</td>
+                                        <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{key + 1}</td>
                                         <td style={{ width: "35%", textAlign: "center", padding: "10px 0" }}>
                                             {section.subname}
                                         </td>
                                         <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{section.price}</td>
-                                        <td style={{ width: "25%", padding: "10px 0" }}>
-                                            <input onChange={event => inputPriceSection(event, key)} value={section.priceCashier} type="number" className="form-control" style={{ width: "80%", margin: "auto", display: "inline" }} />
-                                            <input disabled={loading} checked={section.priceCashier === section.price ? true : false} id={`checkbox${key}`} onChange={event => checkboxSection(event, key)} type="checkbox" className="check" style={{ position: "absolute" }} />
+                                        <td style={{ textAlign: "center", width: "25%", padding: "10px 0" }}>
+                                            <input disabled={loading} checked={section.priceCashier === section.price ? true : false} id={`checkbox${key}`} onChange={event => checkboxSection(event, key)} type="checkbox" className="check" />
                                         </td>
 
                                         <td style={{ textAlign: "center", padding: "10px 0", color: "green" }}>
@@ -650,7 +672,7 @@ export const CheckCashier = () => {
                                             <button
                                                 onClick={() => {
                                                     if (section.priceCashier > 0) {
-                                                        return notify("Diqqat to'lov qabul qilingan xizmatni avval to'lovini qaytarib so'ng ochirinshingiz mumkin.")
+                                                        return notify("Diqqat to'lov qabul qilingan xizmatni avval to'lovini qaytarib so'ng o'chirinshingiz mumkin.")
                                                     } else { setDelSection(section); setModal3(true) }
                                                 }}
                                                 className='btn btn-danger p-0 fw-bold'
@@ -665,22 +687,15 @@ export const CheckCashier = () => {
                         }
                         {
                             services && services.map((service, key) => {
-                                allPrice = allPrice + service.price
-                                paymented = paymented + service.priceCashier
-                                num++
-                                if (service.payment === "to'lanmagan") {
-                                    back = back + service.price
-                                }
                                 return (
                                     <tr >
-                                        <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{num}</td>
+                                        <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{key + 1}</td>
                                         <td style={{ width: "35%", textAlign: "center", padding: "10px 0" }}>
                                             {service.name}
                                         </td>
                                         <td style={{ width: "15%", textAlign: "center", padding: "10px 0" }}>{service.price}</td>
-                                        <td style={{ width: "25%", padding: "10px 0" }}>
-                                            <input onChange={event => inputPriceService(event, key)} value={service.priceCashier} type="number" className="form-control" style={{ width: "80%", margin: "auto", display: "inline" }} />
-                                            <input disabled={loading} checked={service.priceCashier === service.price ? true : false} id={`checkboxservice${key}`} onChange={event => checkboxService(event, key)} type="checkbox" className="check" style={{ position: "absolute" }} />
+                                        <td style={{ width: "25%", padding: "10px 0", textAlign: "center" }}>
+                                            <input disabled={loading} checked={service.priceCashier === service.price ? true : false} id={`checkboxservice${key}`} onChange={event => checkboxService(event, key)} type="checkbox" className="check" />
                                         </td>
 
                                         <td style={{ textAlign: "center", padding: "10px 0", color: "green" }}>
@@ -699,38 +714,138 @@ export const CheckCashier = () => {
                             <div className="fw-bold text-primary">Jami to'lov:</div>
                         </div>
                         <div className="col-6">
-                            <div className="fw-bold  text-end ">{allPrice}</div>
+                            <div className="fw-bold  text-end ">
+                                {sections && services &&
+                                    sections.reduce((summ, section) => {
+                                        return summ + section.priceCashier
+                                    }, 0)
+                                    +
+                                    services.reduce((summ, service) => {
+                                        return summ + service.priceCashier
+                                    }, 0)
+                                }
+                            </div>
                         </div>
                         <hr />
-
+                    </div>
+                    <div className="row ms-3 me-5">
+                        <div className="col-6">
+                            <div className="fw-bold text-info">Chegirma:</div>
+                        </div>
+                        <div className="col-6">
+                            <div className="fw-bold  text-end text-info">{sale.summa}</div>
+                        </div>
+                        <hr />
                     </div>
                     <div className="row ms-3 me-5">
                         <div className="col-6">
                             <div className="fw-bold text-success">To'langan:</div>
                         </div>
                         <div className="col-6">
-                            <div className="fw-bold  text-end text-success">{oldPayments}</div>
+                            <div className="fw-bold  text-end text-success">
+                                {oldPayments && oldPayments}
+                            </div>
                         </div>
                         <hr />
+                    </div>
+                    <div className="row ms-3 me-5">
+                        <div className="col-6">
+                            <div className="fw-bold text-warning">To'lov:</div>
+                        </div>
+                        <div className="col-6">
+                            <div className="fw-bold  text-end text-warning">
+                                {
+                                    ((sections &&
+                                        sections.reduce((summ, section) => {
+                                            return summ + section.priceCashier
+                                        }, 0))
+                                        +
+                                        (services &&
+                                            services.reduce((summ, service) => {
+                                                return summ + service.priceCashier
+                                            }, 0)))
+                                    -
+                                    (oldPayments && oldPayments)
+                                    -
+                                    (sale && sale.summa)
+                                    - debt
+                                }
+                            </div>
+                        </div>
+                        <hr />
+                    </div>
 
-                    </div>
                     <div className="row ms-3 me-5">
                         <div className="col-6">
-                            <div className="fw-bold text-warning">To'lanayotgan:</div>
+                            <div className="fw-bold text-danger">To'lanmagan:</div>
                         </div>
                         <div className="col-6">
-                            <div className="fw-bold  text-end text-warning">{bepaid}</div>
+                            <div className="fw-bold  text-end text-danger">
+                                {
+                                    (sections &&
+                                        sections.reduce((summ, section) => {
+                                            return summ + section.priceCashier
+                                        }, 0))
+                                    +
+                                    (services &&
+                                        services.reduce((summ, service) => {
+                                            return summ + service.priceCashier
+                                        }, 0))
+                                    -
+                                    (oldPayments && oldPayments)
+                                    -
+                                    (sale && sale.summa)
+                                }
+                            </div>
                         </div>
                         <hr />
                     </div>
-                    <div className="row ms-3 me-5">
-                        <div className="col-6">
-                            <div className="fw-bold text-danger">Qarz:</div>
+
+                    <div className='row border-top border-bottom p-3'>
+                        <div className='col-2 text-center'>
+                            <span
+                                className='fw-bold text-info pt-2 d-block'
+                            > Chegirma:
+                            </span>
                         </div>
-                        <div className="col-6">
-                            <div className="fw-bold  text-end text-danger">{allPrice - (oldPayments + bepaid)}</div>
+                        <div className='col-4'>
+                            <input
+                                value={sale.procient ? sale.procient : sale.summa}
+                                type="number"
+                                id='sale'
+                                onChange={Sale}
+                                className='form-control d-inline-block'
+                            />
                         </div>
-                        <hr />
+                        <div className='col-2 text-center'>
+                            <span
+                                className='fw-bold text-danger pt-2 d-block'
+                            > Qarz:
+                            </span>
+                        </div>
+                        <div className='col-4'>
+                            <input
+                                defaultValue={debt}
+                                type="number"
+                                id='debt'
+                                onChange={Debt}
+                                className='form-control d-inline-block'
+                            />
+                        </div>
+                        <div className='col-2 text-center mt-2'>
+                            <span
+                                className='fw-bold text-info pt-2 d-block'
+                            > Izoh:
+                            </span>
+                        </div>
+                        <div className='col-4 mt-2'>
+                            <input
+                                value={sale.comment}
+                                id='sale'
+                                onChange={SaleComment}
+                                className='form-control d-inline-block'
+                            />
+                        </div>
                     </div>
                     <div className='row border-top border-bottom p-3'>
                         <div className='col-md-3 col-4 text-center '>
@@ -774,13 +889,26 @@ export const CheckCashier = () => {
                         </div>
                         <div className='col-md-3 col-4 text-center'>
                             <label className='mx-3'>
-                                <input disabled={loading} onChange={setAllPayment} id='mixed' type="radio" name="payment" /> Aralash
+                                <input
+                                    disabled={loading}
+                                    onChange={setAllPayment}
+                                    id='mixed'
+                                    type="radio"
+                                    name="payment"
+                                />
+                                Aralash
                             </label>
                         </div>
                     </div>
                     <div className="row pt-3">
                         <div className="col-12 text-center">
-                            <button disabled={loading} className="btn button-success" onClick={checkPrices}>To'lovni tasdiqlash</button>
+                            <button
+                                disabled={loading}
+                                className="btn button-success"
+                                onClick={checkPrices}
+                            >
+                                To'lovni tasdiqlash
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -863,10 +991,29 @@ export const CheckCashier = () => {
                                     <div className="fw-bold text-primary">Jami to'lov:</div>
                                 </div>
                                 <div className="col-6">
-                                    <div className="fw-bold  text-end ">{allPrice}</div>
+                                    <div className="fw-bold  text-end ">
+                                        {
+                                            sections && services &&
+                                            sections.reduce((summ, section) => {
+                                                return summ + section.priceCashier
+                                            }, 0)
+                                            +
+                                            services.reduce((summ, service) => {
+                                                return summ + service.priceCashier
+                                            }, 0)
+                                        }
+                                    </div>
                                 </div>
                                 <hr />
-
+                            </div>
+                            <div className="row ms-3 me-5">
+                                <div className="col-6">
+                                    <div className="fw-bold text-info">Chegirma:</div>
+                                </div>
+                                <div className="col-6">
+                                    <div className="fw-bold  text-end text-info">{sale.summa}</div>
+                                </div>
+                                <hr />
                             </div>
                             <div className="row ms-3 me-5">
                                 <div className="col-6">
@@ -880,10 +1027,10 @@ export const CheckCashier = () => {
                             </div>
                             <div className="row ms-3 me-5">
                                 <div className="col-6">
-                                    <div className="fw-bold text-warning">To'lanayotgan:</div>
+                                    <div className="fw-bold text-warning">To'lov:</div>
                                 </div>
                                 <div className="col-6">
-                                    <div className="fw-bold  text-end text-warning">{payment.total}</div>
+                                    <div className="fw-bold  text-end text-warning">{payment.card + payment.cash + payment.transfer}</div>
                                 </div>
                                 <hr />
                             </div>
@@ -892,7 +1039,13 @@ export const CheckCashier = () => {
                                     <div className="fw-bold text-danger">Qarz:</div>
                                 </div>
                                 <div className="col-6">
-                                    <div className="fw-bold  text-end text-danger">{allPrice - (payment.total + oldPayments)}</div>
+                                    <div className="fw-bold  text-end text-danger">{
+                                        (sections && sections.reduce((summ, section) => {
+                                            return summ + section.priceCashier
+                                        }, 0)) + (services && services.reduce((summ, service) => {
+                                            return summ + service.priceCashier
+                                        }, 0)) - (oldPayments && oldPayments) - sale.summa - (payment.card + payment.cash + payment.transfer)
+                                    }</div>
                                 </div>
                                 <hr />
                             </div>

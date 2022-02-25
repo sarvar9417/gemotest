@@ -6,7 +6,7 @@ export const AboutUs = () => {
             <div className="container" data-aos="fade-up">
                 <div className="section-title">
                     <h2>Biz haqimizda</h2>
-                    <p> “GEMO-TEST” o'z faoliyatini 2018-yilda boshlagan. Korxona manzili: Navoiy shahar, 2-daxa, Navoiy ko'chasi Mamuriy bino. Bundan tashqari korxonaning birnecha filiallari mavjud, Nurota tumani filiali 2018-yil, Navbaxor tumani filiali 2019-yil ishga tushurilgan.
+                    <p> “GEMO-TEST” o'z faoliyatini 2018-yilda boshlagan. Korxona manzili: Navoiy shahar, 2-daxa, Navoiy ko'chasi Mamuriy bino. Bundan tashqari korxonaning bir necha filiallari mavjud, Nurota tumani filiali 2018-yil, Navbaxor tumani filiali 2019-yil ishga tushurilgan.
                         Labaratoriyalarimizda oliy malumotli shifokorlar, o'rta tibbiyot xodimlari xizmat ko'rsatadi. 
                     </p>
                 </div>

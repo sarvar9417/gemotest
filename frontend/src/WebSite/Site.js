@@ -14,11 +14,12 @@ import { Servise } from './Servise';
 import { Slider } from './Slider';
 import { Toptar } from './Toptar';
 
+
 export const Site = () => {
     return <div>
         <div>
             <Toptar />
-             <Navbar />
+            <Navbar />
             <Slider />
             <main id="main">
                 <AboutUs />
@@ -29,7 +30,7 @@ export const Site = () => {
                 {/* ======= Services Section ======= */}
                 <Servise/>
                 {/* End Services Section */}
-                 <GetResult />
+                <GetResult />
                 <LabaratoriyaXonalar/>
 
               {/* ======= Testimonials Section ======= 

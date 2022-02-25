@@ -1,0 +1,22 @@
+.iconnn{
+    position: absolute !important;
+    display: block !important;
+    border: none !important;
+    font-size: 40px !important;
+    margin-left: 65px !important;
+    bottom: 47px !important;
+}
+
+.p{
+    margin-top: 50px !important;
+    text-align: center !important;
+}
+
+.border{
+    border: none !important;
+    color: rgb(0, 136, 255);
+}
+
+#button1{
+    background-color: rgb(120, 160, 194);
+}
