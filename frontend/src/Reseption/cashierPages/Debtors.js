@@ -236,7 +236,7 @@ export const Debtors = () => {
                                             <td scope="" className="phone text-center">+{data.phone} </td>
                                             <td scope="" className=" text-center">
                                                 <Link className='btn button-success text-success' to={`/reseption/pay/${data.client}/${data.connector}`} >
-                                                    tulov
+                                                    To'lov
                                                 </Link>
                                             </td>
                                             <td scope="" className="fish text-center fw-bold"> {data.sectionssumma} </td>
