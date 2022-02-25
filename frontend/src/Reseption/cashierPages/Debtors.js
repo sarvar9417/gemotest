@@ -23,6 +23,8 @@ export const Debtors = () => {
     const [born, setBorn] = useState('')
     const [clientId, setClientId] = useState('')
     const [all, setAll] = useState()
+    const [probirka, setProbirka] = useState()
+
     const getDebitors = useCallback(async () => {
         try {
             const fetch = await request(`/api/connector/debtors/${startDate}/${endDate}`, 'GET', null, {
@@ -44,6 +46,17 @@ export const Debtors = () => {
             notify(e)
         }
     }, [request, auth, clientId, setAll])
+
+    const searchProbirka = useCallback(async () => {
+        try {
+            const fetch = await request(`/api/connector/debtorprobirka/${probirka}`, 'GET', null, {
+                Authorization: `Bearer ${auth.token}`
+            })
+            setAll(fetch)
+        } catch (e) {
+            notify(e)
+        }
+    }, [request, auth, probirka, setAll])
 
     const getBorn = useCallback(async () => {
         try {
@@ -137,6 +150,19 @@ export const Debtors = () => {
                 </div>
                 <div className="col-2">
                     <input
+                        style={{ marginRight: "5px", width: "115px" }}
+                        defaultValue={clientId}
+                        onChange={(event) => { setProbirka(parseInt(event.target.value)) }}
+                        className="form-control pb-2 d-inline-block"
+                        type="number"
+                        placeholder="Probirka qidiruvi"
+                        onKeyUp={(e) => {
+                            if (e.key === "Enter") { searchProbirka() }
+                        }} />
+                    <button onClick={searchProbirka} className="btn text-white" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
+                </div>
+                <div className="col-2">
+                    <input
                         className="form-control mb-2"
                         type="date"
                         onChange={(event) => { setBorn(new Date(event.target.value)) }}
@@ -148,15 +174,7 @@ export const Debtors = () => {
                 <div className="col-1">
                     <button onClick={searchBornDate} className="btn text-white mb-2" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
                 </div>
-                <div className="offset-1 col-1 text-end">
-                    <ReactHTMLTableToExcel
-                        className="btn text-white mb-2 btn-success"
-                        table="reseptionReport"
-                        filename={new Date().toLocaleDateString()}
-                        sheet="Sheet"
-                        buttonText="Excel"
-                    />
-                </div>
+
             </div>
             <div className="row">
                 <div className='col-2 '>
@@ -173,8 +191,14 @@ export const Debtors = () => {
                     <button onClick={(event) => (searchName((event.target.value)))} className="btn text-white" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
                 </div>
 
-                <div className=" col-2">
-                    {/* <Select isDisabled={loading} onChange={(event) => sortSections(event)} defaultValue={allSections && allSections[0]} options={allSections && allSections} /> */}
+                <div className="offset-8 col-1 text-end">
+                    <ReactHTMLTableToExcel
+                        className="btn text-white mb-2 btn-success"
+                        table="reseptionReport"
+                        filename={new Date().toLocaleDateString()}
+                        sheet="Sheet"
+                        buttonText="Excel"
+                    />
                 </div>
 
             </div>
@@ -185,7 +209,7 @@ export const Debtors = () => {
                             <tr>
                                 <th className="no" scope="" >№ <FontAwesomeIcon icon={faSort} /> </th>
                                 <th scope="" className="fish text-center">F.I.Sh <FontAwesomeIcon icon={faSort} /></th>
-                                <th scope="" className="id text-center">Tug'ilgan sanasi <FontAwesomeIcon icon={faSort} /></th>
+                                <th scope="" className="id text-center">Kelgan vaqti <FontAwesomeIcon icon={faSort} /></th>
                                 <th scope="" className="id text-center">ID <FontAwesomeIcon icon={faSort} /></th>
                                 <th scope="" className="phone text-center">Tel <FontAwesomeIcon icon={faSort} /></th>
                                 <th scope="" className=" text-center">Xizmalar <FontAwesomeIcon icon={faSort} /></th>
@@ -203,10 +227,18 @@ export const Debtors = () => {
                                         <tr className='bg-white border-bottom'>
                                             <td className="no" scope="" > {index + 1}  </td>
                                             <td scope="" className="fish text-center fw-bold"> {data.lastname + " " + data.firstname} </td>
-                                            <td scope="" className="id text-center">{new Date(data.born).toLocaleDateString()} </td>
+                                            <td scope="" className="id text-center">
+                                                {new Date(data.bronDay).toLocaleDateString()}
+                                                <br />
+                                                {new Date(data.bronDay).toLocaleTimeString()}
+                                            </td>
                                             <td scope="" className="id text-center">{data.id} </td>
                                             <td scope="" className="phone text-center">+{data.phone} </td>
-                                            <td scope="" className=" text-center">{data.sectionscount} </td>
+                                            <td scope="" className=" text-center">
+                                                <Link className='btn button-success text-success' to={`/reseption/pay/${data.client}/${data.connector}`} >
+                                                    tulov
+                                                </Link>
+                                            </td>
                                             <td scope="" className="fish text-center fw-bold"> {data.sectionssumma} </td>
                                             <td scope="" className="date text-center text-info fw-bold" >{data.sale} </td>
                                             <td scope="" className="section text-center text-success fw-bold"> {data.payment} </td>

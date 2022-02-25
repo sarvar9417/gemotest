@@ -1754,6 +1754,93 @@ router.get('/debtorid/:id', async (req, res) => {
 })
 
 // /api/auth/connector/
+router.get('/debtorprobirka/:probirka', async (req, res) => {
+    try {
+
+        const probirka = req.params.probirka
+        const connector = await Connector.findOne({
+            probirka: probirka
+        })
+
+        if (!connector) {
+            return res.status(500).json({ message: 'Bunday PROBIRKAli foydalanuvchi topilmadi' })
+        }
+
+        const client1 = await Clients.findById( connector.client)
+
+        let client = {
+            client: "",
+            id: "",
+            born: "",
+            phone: "",
+            connector: '',
+            firstname: "",
+            lastname: "",
+            bronDay: connector.bronDay,
+            sectionscount: 0,
+            sectionssumma: 0,
+            sale: 0,
+            payment: 0,
+            debt: 0
+        }
+        const sections = await Section.find({
+            client: client1._id
+        })
+            .sort({ _id: 1 })
+
+        const summsections = sections.reduce((sum, section) => {
+            return sum + section.priceCashier
+        }, 0)
+
+        const services = await Service.find({
+            client: client1._id
+        })
+        const summservices = services.reduce((sum, service) => {
+            return sum + service.priceCashier
+        }, 0)
+
+        const payments = await Payment.find({
+            client: client1._id
+        })
+
+        const summpayments = payments.reduce((sum, payment) => {
+            return sum + payment.card + payment.cash + payment.transfer
+        }, 0)
+
+
+        const sale = await Sale.findOne({
+            client: client1._id
+        })
+
+        if (!sale) {
+            return res.status(500).json({ message: 'Bunday PROBIRKAli foydalanuvchi ma\'lumotlari topilmadi' })
+        }
+
+
+        if (sale && summsections + summservices !== summpayments + sale.summa) {
+            client.client = client1._id
+            client.id = client1.id
+            client.born = client1.born
+            client.phone = client1.phone
+            client.connector = connector._id
+            client.firstname = client1.firstname
+            client.lastname = client1.lastname
+            client.bronDay = connector.bronDay
+            client.sectionscount = sections.length + services.length
+            client.sectionssumma = summsections + summservices
+            client.sale = sale && sale.summa
+            client.payment = summpayments
+            client.debt = sale && summsections + summservices - summpayments - sale.summa
+        }
+
+        // console.log(clients);
+        res.json([client])
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+// /api/auth/connector/
 router.get('/saleid/:id', async (req, res) => {
     try {
 

@@ -185,7 +185,7 @@ export const Sales = () => {
                             <tr>
                                 <th className="no" scope="" >№ <FontAwesomeIcon icon={faSort} /> </th>
                                 <th scope="" className="fish text-center">F.I.Sh <FontAwesomeIcon icon={faSort} /></th>
-                                <th scope="" className="id text-center">Tug'ilgan sanasi <FontAwesomeIcon icon={faSort} /></th>
+                                <th scope="" className="id text-center">Kelgan vaqti <FontAwesomeIcon icon={faSort} /></th>
                                 <th scope="" className="id text-center">ID <FontAwesomeIcon icon={faSort} /></th>
                                 <th scope="" className="phone text-center">Tel <FontAwesomeIcon icon={faSort} /></th>
                                 <th scope="" className=" text-center">Xizmalar <FontAwesomeIcon icon={faSort} /></th>
@@ -203,7 +203,7 @@ export const Sales = () => {
                                         <tr className='bg-white border-bottom'>
                                             <td className="no" scope="" > {index + 1}  </td>
                                             <td scope="" className="fish text-center fw-bold"> {data.lastname + " " + data.firstname} </td>
-                                            <td scope="" className="id text-center">{new Date(data.born).toLocaleDateString()} </td>
+                                            <td scope="" className="id text-center">{new Date(data.bronDay).toLocaleDateString()} </td>
                                             <td scope="" className="id text-center">{data.id} </td>
                                             <td scope="" className="phone text-center">+{data.phone} </td>
                                             <td scope="" className=" text-center">{data.sectionscount} </td>
