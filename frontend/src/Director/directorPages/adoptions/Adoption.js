@@ -53,7 +53,6 @@ export const Adoption = () => {
             const fetch = await request(`/api/connector/directorconnector/${connectorId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            console.log(fetch.sections.length);
             setConnector(fetch.connector)
             setSections(fetch.sections)
             setTableSections(fetch.tablesections)
@@ -534,6 +533,21 @@ export const Adoption = () => {
                                                                     style={{ border: "none" }}
                                                                     onChange={(event) => { changeResult(event, index, key) }}
                                                                     name='result'
+                                                                    onKeyDown={(e) => {
+                                                                        if (e.key === "ArrowDown" && tablesections[index][key + 1]) {
+                                                                            document.getElementById(`result${index}-${key + 1}`).focus()
+                                                                        }
+                                                                        if (e.key === "ArrowUp" && key > 0) {
+                                                                            document.getElementById(`result${index}-${key - 1}`).focus()
+                                                                        }
+                                                                        if (e.key === "ArrowUp" && key === 0 && tablesections[index - 1].length > 0) {
+                                                                            document.getElementById(`result${index - 1}-${tablesections[index - 1].length - 1}`).focus()
+                                                                        }
+                                                                        if (e.key === "ArrowDown" && tablesections[index].length - 1 === key && tablesections[index + 1].length > 0) {
+                                                                            document.getElementById(`result${index + 1}-${0}`).focus()
+                                                                        }
+                                                                    }}
+                                                                    id={`result${index}-${key}`}
                                                                     className='form-control text-center fw-bold'
                                                                     defaultValue={tablesection.result}
                                                                 >
@@ -545,7 +559,8 @@ export const Adoption = () => {
                                                                     rows={(tablesection.norma).split("\n").length}
                                                                     style={{ border: "none" }}
                                                                     onChange={(event) => { changeNorma(event, index, key) }}
-                                                                    name='norma' className='form-control text-center'
+                                                                    name='norma'
+                                                                    className='form-control text-center'
                                                                     defaultValue={tablesection.norma} >
                                                                 </textarea>
                                                             </td>

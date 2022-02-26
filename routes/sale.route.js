@@ -21,6 +21,7 @@ router.post('/register', auth, async (req, res) => {
             connector,
             summa,
             procient,
+            comment,
             day
         } = req.body
         const Sale = new Sale({
@@ -28,6 +29,7 @@ router.post('/register', auth, async (req, res) => {
             connector,
             summa,
             procient,
+            comment,
             day
         })
         await Sale.save()

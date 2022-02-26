@@ -34,9 +34,11 @@ export const ClientsDoctor = () => {
 
     const getConnectors = useCallback(async () => {
         try {
-            const fetch = await request(`/api/connector/doctor/${startDate}/${endDate}/${doctorId}`, 'GET', null, {
+            console.log(doctorId);
+            const fetch = await request(`/api/connector/directordoctor/${startDate}/${endDate}/${doctorId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
+            console.log(fetch)
             setAll(fetch)
         } catch (e) {
             notify(e)
@@ -98,15 +100,17 @@ export const ClientsDoctor = () => {
         }
     }, [request, auth, setAll, startDate, endDate, fish])
 
+    const [t, setT] = useState()
     useEffect(() => {
         if (error) {
             notify(error)
             clearError()
         }
-        if (!all) {
+        if (!t) {
+            setT(1)
             getConnectors()
         }
-    }, [notify, clearError])
+    }, [notify, clearError, setT, getConnectors])
 
     // if (loading) {
     //     return <Loader />
@@ -191,13 +195,13 @@ export const ClientsDoctor = () => {
                     </thead>
                     <tbody className="" >
                         {
-                            all && all.sections.map((section, index) => {
+                            all && all.sections && all.sections.map((section, index) => {
                                 allPrice = allPrice + section.price
                                 paid = paid + section.priceCashier
-                                if (all && all.directions[index].doctorProcient <= 100) {
+                                if (all && all.directions && all.directions[index] && all.directions[index].doctorProcient <= 100) {
                                     doctorSumma = doctorSumma + section.price * parseInt(all.directions[index].doctorProcient) / 100
                                 } else {
-                                    doctorSumma = doctorSumma + parseInt(all.directions[index].doctorProcient)
+                                    doctorSumma = doctorSumma + parseInt(all.directions && all.directions[index] && all.directions[index].doctorProcient)
                                 }
                                 return (
                                     <tr index={index} className=' border-top' >
@@ -205,22 +209,22 @@ export const ClientsDoctor = () => {
                                             {++k}
                                         </td>
                                         <td className="fish text-uppercase ps-3 fw-bold text-success">
-                                            {all.clients[index].lastname} {all.clients[index].firstname} {all.clients[index].fathername}
+                                            {all.clients[index] && all.clients[index].lastname + " " + all.clients[index].firstname + " " + all.clients[index].fathername}
                                         </td>
                                         <td className="id" >
-                                            {new Date(all.clients[index].born).toLocaleDateString()}
+                                            {all.clients[index] && new Date(all.clients[index].born).toLocaleDateString()}
                                         </td>
                                         <td className="id" >
-                                            {all.clients[index].id}
+                                            {all.clients[index] && all.clients[index].id}
                                         </td>
                                         <td className="phone" >
-                                            +{all.clients[index].phone}
+                                            +{all.clients[index] && all.clients[index].phone}
                                         </td>
                                         <td className="date text-center" >{new mongoose.Types.ObjectId(section._id).getTimestamp().toLocaleDateString()} {new mongoose.Types.ObjectId(section._id).getTimestamp().toLocaleTimeString()}</td>
                                         <td className="section text-uppercase">  {section.name}  <span style={{ fontSize: "10pt" }}>{section.subname}</span></td>
                                         <td className="date text-center">{section.price}</td>
                                         <td className="date text-center">{section.priceCashier}</td>
-                                        <td className="date text-center">{all && all.directions[index].doctorProcient < 101 ? section.price * all.directions[index].doctorProcient / 100 : all.directions[index].doctorProcient}</td>
+                                        <td className="date text-center">{all && all.directions && all.directions[index] && all.directions[index].doctorProcient < 101 ? section.price * all.directions[index].doctorProcient / 100 : all.directions && all.directions[index] && all.directions[index].doctorProcient}</td>
                                     </tr>
                                 )
                             }
@@ -243,29 +247,29 @@ export const ClientsDoctor = () => {
                 <table className=" table-hover"  >
                     <tbody className="" >
                         {
-                            all && all.sections.map((section, index) => {
+                            all && all.sections && all.sections.map((section, index) => {
                                 return (
                                     <tr index={index} className=' border-top' >
                                         <td className="no border-right" >
                                             {++kk}
                                         </td>
                                         <td className="fish text-uppercase ps-3 fw-bold text-success">
-                                            {all.clients[index].lastname} {all.clients[index].firstname} {all.clients[index].fathername}
+                                            {all.clients[index] && all.clients[index].lastname + " " + all.clients[index].firstname + " " + all.clients[index].fathername}
                                         </td>
                                         <td className="id" >
-                                            {new Date(all.clients[index].born).toLocaleDateString()}
+                                            {all.clients[index] && new Date(all.clients[index].born).toLocaleDateString()}
                                         </td>
                                         <td className="id" >
-                                            {all.clients[index].id}
+                                            {all.clients[index] && all.clients[index].id}
                                         </td>
                                         <td className="phone" >
-                                            +{all.clients[index].phone}
+                                            +{all.clients[index] && all.clients[index].phone}
                                         </td>
                                         <td className="date text-center" >{new mongoose.Types.ObjectId(section._id).getTimestamp().toLocaleDateString()} {new mongoose.Types.ObjectId(section._id).getTimestamp().toLocaleTimeString()}</td>
                                         <td className="section text-uppercase">  {section.name}  <span style={{ fontSize: "10pt" }}>{section.subname}</span></td>
                                         <td className="date text-center">{section.price}</td>
                                         <td className="date text-center">{section.priceCashier}</td>
-                                        <td className="date text-center">{all && all.directions[index].doctorProcient < 101 ? section.price * all.directions[index].doctorProcient / 100 : all.directions[index].doctorProcient}</td>
+                                        <td className="date text-center">{all && all.directions && all.directions[index] && all.directions[index].doctorProcient < 101 ? section.price * all.directions[index].doctorProcient / 100 : all.direction && all.directions[index] && all.directions[index].doctorProcient}</td>
                                     </tr>
                                 )
                             }

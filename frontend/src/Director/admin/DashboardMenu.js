@@ -55,6 +55,7 @@ export const DashboardMenu = () => {
             const fetch = await request(`/api/connector/reseption/${new Date()}/${new Date()}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
+            
             const payments = await request(`/api/payment/directorclients/${new Date()}/${new Date()}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
@@ -64,19 +65,10 @@ export const DashboardMenu = () => {
             let stat = 0
             let t = 0
             payments.payments.map(p => {
-                t = t + p.total
-                if (p.position === "statsionar") {
-                    stat = stat + p.total
-                }
-                if (p.position === "offline") {
-                    off = off + p.total
-                }
-                if (p.position === "online") {
-                    on = on + p.total
-                }
+                t = t + p.cash + p.card + p.transfer
             })
             setTushum(t)
-            setSections(off)
+            setSections(fetch.clients.length)
             setPriceToday(stat)
         } catch (e) {
 

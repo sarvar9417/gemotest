@@ -50,7 +50,6 @@ export const ClientAllHistory = () => {
             setAllTableSections(fetch.alltablesections)
             setAllTableColumns(fetch.alltablecolumns)
             setAllSectionFiles(fetch.allsectionFiles)
-            console.log(fetch.allsectionFiles);
         } catch (e) {
             notify(e)
         }

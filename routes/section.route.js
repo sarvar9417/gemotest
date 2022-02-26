@@ -357,6 +357,7 @@ router.patch('/cashier', auth, async (req, res) => {
                 connector: sale.connector,
                 summa: sale.summa,
                 procient: sale.procient,
+                comment: sale.comment,
                 day: sale.day
             })
             await newsale.save()
@@ -478,7 +479,8 @@ router.get('/doctorall/:section', auth, async (req, res) => {
 router.get('/doctorhistory/:id', auth, async (req, res) => {
     try {
         const section = await Section.find({
-            client: req.params.id
+            client: req.params.id,
+            priceCashier: { $gt: 0 }
         }).sort({ turn: -1 })
         res.json(section)
     } catch (e) {
@@ -538,7 +540,8 @@ router.get('/directorproceeds', auth, async (req, res) => {
                         new Date(new Date().getFullYear(), i, 1),
                     $lt:
                         new Date(new Date().getFullYear(), i, 32)
-                }
+                },
+                priceCashier: { $gt: 0 }
             })
                 .or([{ bron: "offline" }, { bron: "online" }, { bron: "callcenter" }])
                 .sort({ _id: -1 })
@@ -678,7 +681,8 @@ router.get('/table/:start/:end/:section', async (req, res) => {
                         new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
                     $lt:
                         new Date(new Date(end).getFullYear(), new Date(end).getMonth(), new Date(end).getDate() + 1)
-                }
+                },
+                priceCashier: { $gt: 0 }
             })
             allsections = allsections.concat(sections)
         }
@@ -712,7 +716,8 @@ router.get('/table/:start/:end/:section', async (req, res) => {
             let data = []
             let table = []
             const sections = await Section.find({
-                connector: connectors[i]._id
+                connector: connectors[i]._id,
+                priceCashier: { $gt: 0 }
             })
             for (let j = 0; j < directions.length; j++) {
                 let yes

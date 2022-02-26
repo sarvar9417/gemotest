@@ -70,6 +70,19 @@ export const Header = () => {
                                 </li>
                             </ul>
                         </li>
+                        <li className="nav-item  dropdown">
+                            <button class="w-100 nav-link dropdown-toggle btn a" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Kassa
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                <li>
+                                    <Link className="dropdown-item " to="/director/debtors" >Qarzlar</Link>
+                                </li>
+                                <li>
+                                    <Link className="dropdown-item " to="/director/sales" >Chegirmalar</Link>
+                                </li>
+                            </ul>
+                        </li>
                         <li className="nav-item">
                             <Link className="btn nav-link a aktive" to="/director/marketing" >Marketing</Link>
                         </li>

@@ -83,8 +83,6 @@ export const TableSection = () => {
         }
     }, [auth, request, toast, tables])
 
-
-
     useEffect(() => {
         if (!alldirections) {
             getAllDirections()

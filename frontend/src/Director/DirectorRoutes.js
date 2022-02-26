@@ -52,6 +52,8 @@ import { Directions } from './directorPages/Directions/Directions'
 import { EditDirection } from './directorPages/Directions/EditDirection'
 import { ClientsDirector } from './directorPages/adoptions/ClientsDirektor'
 import { Adoption } from './directorPages/adoptions/Adoption'
+import { Sales } from './directorPages/salesandebt/Sales'
+import { Debtors } from './directorPages/salesandebt/Debtors'
 
 export const DirectorRoutes = (isAuthenticated) => {
     if (isAuthenticated) {
@@ -195,6 +197,12 @@ export const DirectorRoutes = (isAuthenticated) => {
                     </Route>
                     <Route path='/director/adoption/:clientid/:connectorid' >
                         <RouterComponent component={<Adoption />} menu={false} />
+                    </Route>
+                    <Route path='/director/sales' >
+                        <RouterComponent component={<Sales />} menu={true} />
+                    </Route>
+                    <Route path='/director/debtors' >
+                        <RouterComponent component={<Debtors />} menu={true} />
                     </Route>
                     <Route path="/sayt" >
                         <Sayt />

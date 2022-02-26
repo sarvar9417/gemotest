@@ -95,7 +95,8 @@ router.get('/doctorid/:start/:end/:section/:id', async (req, res) => {
                     new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
                 $lt: new Date(new Date(end).getFullYear(),
                     new Date(end).getMonth(), new Date(end).getDate() + 1)
-            }
+            },
+            priceCashier: { $gt: 0 }
         })
         let connectors = []
         for (let i = 0; i < sections.length; i++) {
@@ -121,6 +122,7 @@ router.get('/doctorid/:start/:end/:section/:id', async (req, res) => {
             const sections = await Section.find({
                 connector: connectors[i]._id,
                 headsectionid: req.params.section,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -153,7 +155,8 @@ router.get('/doctor/:start/:end/:section/:probirka', async (req, res) => {
                     new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
                 $lt: new Date(new Date(end).getFullYear(),
                     new Date(end).getMonth(), new Date(end).getDate() + 1)
-            }
+            },
+            priceCashier: { $gt: 0 }
         })
         let connectors = []
         for (let i = 0; i < sections.length; i++) {
@@ -179,6 +182,7 @@ router.get('/doctor/:start/:end/:section/:probirka', async (req, res) => {
             const sections = await Section.find({
                 connector: connectors[i]._id,
                 headsectionid: req.params.section,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -223,6 +227,7 @@ router.get('/doctorfish/:start/:end/:section/:fish', async (req, res) => {
                     $lt: new Date(new Date(end).getFullYear(),
                         new Date(end).getMonth(), new Date(end).getDate() + 1)
                 },
+                priceCashier: { $gt: 0 }
             })
             section.map(s => {
                 sections.push(s)
@@ -253,6 +258,7 @@ router.get('/doctorfish/:start/:end/:section/:fish', async (req, res) => {
             const sections = await Section.find({
                 connector: connectors[i]._id,
                 headsectionid: req.params.section,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -283,7 +289,8 @@ router.get('/directorprobirka/:start/:end/:probirka', async (req, res) => {
                     new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
                 $lt: new Date(new Date(end).getFullYear(),
                     new Date(end).getMonth(), new Date(end).getDate() + 1)
-            }
+            },
+            priceCashier: { $gt: 0 }
         })
         let connectors = []
         for (let i = 0; i < sections.length; i++) {
@@ -305,6 +312,7 @@ router.get('/directorprobirka/:start/:end/:probirka', async (req, res) => {
             clients.push(client)
             const sections = await Section.find({
                 connector: connectors[i]._id,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -343,7 +351,8 @@ router.get('/directorid/:start/:end/:id', async (req, res) => {
                     new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
                 $lt: new Date(new Date(end).getFullYear(),
                     new Date(end).getMonth(), new Date(end).getDate() + 1)
-            }
+            },
+            priceCashier: { $gt: 0 }
         })
         let connectors = []
         for (let i = 0; i < sections.length; i++) {
@@ -365,6 +374,7 @@ router.get('/directorid/:start/:end/:id', async (req, res) => {
             clients.push(client)
             const sections = await Section.find({
                 connector: connectors[i]._id,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -398,7 +408,8 @@ router.get('/doctor/:start/:end/:section', async (req, res) => {
                     new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
                 $lt: new Date(new Date(end).getFullYear(),
                     new Date(end).getMonth(), new Date(end).getDate() + 1)
-            }
+            },
+            priceCashier: { $gt: 0 }
         })
             .sort({ _id: 1 })
         let connectors = []
@@ -425,6 +436,7 @@ router.get('/doctor/:start/:end/:section', async (req, res) => {
             const sections = await Section.find({
                 connector: connectors[i]._id,
                 headsectionid: req.params.section,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -439,6 +451,71 @@ router.get('/doctor/:start/:end/:section', async (req, res) => {
             countsection.push(c)
         }
         res.json({ clients, connectors, countsection })
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+
+// /api/auth/connector/
+router.get('/directordoctor/:start/:end/:section', async (req, res) => {
+    try {
+        const doctor = await Doctor.findById(req.params.section)
+        const headsection = await HeadSection.findById(doctor.section)
+        const start = new Date(req.params.start)
+        const end = new Date(req.params.end)
+        const sections = await Section.find({
+            headsectionid: headsection._id,
+            bronDay: {
+                $gte:
+                    new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
+                $lt: new Date(new Date(end).getFullYear(),
+                    new Date(end).getMonth(), new Date(end).getDate() + 1)
+            }
+        })
+        let connectors = []
+        let directions = []
+        let clients = []
+        for (let i = 0; i < sections.length; i++) {
+            const connector = await Connector.findById(sections[i].connector)
+            let k = true
+            if (headsection.probirka && !connector.accept) {
+                k = false
+            }
+            connectors.map((c) => {
+                if ((connector._id).toString() === (c._id).toString()) {
+                    k = false
+                }
+            })
+            if (k) {
+                connectors.push(connector)
+            }
+            const direction = await Direction.findOne({ subsection: sections[i].subname })
+            directions.push(direction)
+            const client = await Clients.findById(sections[i].client)
+            clients.push(client)
+        }
+        let countsection = []
+
+        for (let i = 0; i < connectors.length; i++) {
+
+            const sections = await Section.find({
+                connector: connectors[i]._id,
+                headsectionid: req.params.section,
+            })
+            let c = {
+                accept: 0,
+                all: 0
+            }
+            sections.map(section => {
+                c.all = c.all + 1
+                if (section.accept) {
+                    c.accept = c.accept + 1
+                }
+            })
+            countsection.push(c)
+        }
+        res.json({ clients, connectors, countsection, sections, directions })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -468,7 +545,8 @@ router.get('/director/:start/:end/:section', async (req, res) => {
             const client = await Clients.findById(connectors[i].client)
             const sec = await Section.find({
                 connector: connectors[i]._id,
-                name: section
+                name: section,
+                priceCashier: { $gt: 0 }
             })
                 .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
             const service = await Service.find({
@@ -509,7 +587,7 @@ router.get('/reseption/:start/:end/:section', async (req, res) => {
             const client = await Clients.findById(connectors[i].client)
             const sec = await Section.find({
                 connector: connectors[i]._id,
-                name: section
+                name: section,
             })
                 .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
                 .sort({ _id: 1 })
@@ -561,6 +639,7 @@ router.get('/directorfish/:start/:end/:fish', async (req, res) => {
                     $lt: new Date(new Date(end).getFullYear(),
                         new Date(end).getMonth(), new Date(end).getDate() + 1)
                 },
+                priceCashier: { $gt: 0 }
             })
             section.map(s => {
                 sections.push(s)
@@ -587,6 +666,7 @@ router.get('/directorfish/:start/:end/:fish', async (req, res) => {
             clients.push(client)
             const sections = await Section.find({
                 connector: connectors[i]._id,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -810,7 +890,7 @@ router.get('/salename/:start/:end/:fish', async (req, res) => {
                 firstname: "",
                 lastname: "",
                 bronDay: connectors[i].bronDay,
-                sectionscount: 0,
+                comment: "",
                 sectionssumma: 0,
                 sale: 0,
                 payment: 0,
@@ -852,7 +932,7 @@ router.get('/salename/:start/:end/:fish', async (req, res) => {
                 client.firstname = client1.firstname
                 client.lastname = client1.lastname
                 client.bronDay = connectors[i].bronDay
-                client.sectionscount = sections.length + services.length
+                client.comment = sale.comment
                 client.sectionssumma = summsections + summservices
                 client.sale = sale && sale.summa
                 client.payment = summpayments
@@ -1035,7 +1115,8 @@ router.get('/director/:start/:end', async (req, res) => {
                     new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
                 $lt: new Date(new Date(end).getFullYear(),
                     new Date(end).getMonth(), new Date(end).getDate() + 1)
-            }
+            },
+            priceCashier: { $gt: 0 }
         })
             .sort({ _id: -1 })
         let connectors = []
@@ -1064,6 +1145,7 @@ router.get('/director/:start/:end', async (req, res) => {
             clients.push(client)
             const sections = await Section.find({
                 connector: connectors[i]._id,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -1245,7 +1327,7 @@ router.get('/sales/:start/:end', async (req, res) => {
                 firstname: "",
                 lastname: "",
                 bronDay: connectors[i].bronDay,
-                sectionscount: 0,
+                comment: "",
                 sectionssumma: 0,
                 sale: 0,
                 procient: 0,
@@ -1287,7 +1369,7 @@ router.get('/sales/:start/:end', async (req, res) => {
                 client.firstname = client1.firstname
                 client.lastname = client1.lastname
                 client.bronDay = connectors[i].bronDay
-                client.sectionscount = sections.length + services.length
+                client.comment = sale.comment
                 client.sectionssumma = summsections + summservices
                 client.sale = sale && sale.summa
                 client.payment = summpayments
@@ -1483,7 +1565,8 @@ router.get('/doctorborn/:section/:born', async (req, res) => {
         for (let i = 0; i < clientss.length; i++) {
             const section = await Section.find({
                 headsectionid: req.params.section,
-                client: clientss[i]._id
+                client: clientss[i]._id,
+                priceCashier: { $gt: 0 }
             })
             section.map(s => {
                 sections.push(s)
@@ -1514,6 +1597,7 @@ router.get('/doctorborn/:section/:born', async (req, res) => {
             const sections = await Section.find({
                 connector: connectors[i]._id,
                 headsectionid: req.params.section,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -1542,7 +1626,8 @@ router.get('/doctorconnector/:section/:id', async (req, res) => {
         const connector = await Connector.findById(id)
         const sections = await Section.find({
             headsectionid: req.params.section,
-            connector: connector._id
+            connector: connector._id,
+            priceCashier: { $gt: 0 }
         })
             .sort({
                 _id: 1
@@ -1598,7 +1683,8 @@ router.get('/directorconnector/:id', async (req, res) => {
         const id = req.params.id
         const connector = await Connector.findById(id)
         const sections = await Section.find({
-            connector: connector._id
+            connector: connector._id,
+            priceCashier: { $gt: 0 }
         })
             .sort({ _id: 1 })
 
@@ -1766,7 +1852,7 @@ router.get('/debtorprobirka/:probirka', async (req, res) => {
             return res.status(500).json({ message: 'Bunday PROBIRKAli foydalanuvchi topilmadi' })
         }
 
-        const client1 = await Clients.findById( connector.client)
+        const client1 = await Clients.findById(connector.client)
 
         let client = {
             client: "",
@@ -1864,7 +1950,7 @@ router.get('/saleid/:id', async (req, res) => {
             firstname: "",
             lastname: "",
             bronDay: connector.bronDay,
-            sectionscount: 0,
+            comment: "",
             sectionssumma: 0,
             sale: 0,
             payment: 0,
@@ -1911,7 +1997,7 @@ router.get('/saleid/:id', async (req, res) => {
             client.firstname = client1.firstname
             client.lastname = client1.lastname
             client.bronDay = connector.bronDay
-            client.sectionscount = sections.length + services.length
+            client.comment = sale.comment
             client.sectionssumma = summsections + summservices
             client.sale = sale && sale.summa
             client.payment = summpayments
@@ -2046,7 +2132,7 @@ router.get('/saleborn/:born', async (req, res) => {
                 firstname: "",
                 lastname: "",
                 bronDay: connector && connector.bronDay,
-                sectionscount: 0,
+                comment: "",
                 sectionssumma: 0,
                 sale: 0,
                 payment: 0,
@@ -2088,7 +2174,7 @@ router.get('/saleborn/:born', async (req, res) => {
                 client.firstname = clients[i].firstname
                 client.lastname = clients[i].lastname
                 client.bronDay = connector && connector.bronDay
-                client.sectionscount = sections.length + services.length
+                client.comment = sale.comment
                 client.sectionssumma = summsections + summservices
                 client.sale = sale && sale.summa
                 client.payment = summpayments
@@ -2140,7 +2226,8 @@ router.get('/doctor/:section', async (req, res) => {
                     new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
                 $lt: new Date(new Date().getFullYear(),
                     new Date().getMonth(), new Date().getDate() + 1)
-            }
+            },
+            priceCashier: { $gt: 0 }
         })
             .sort({ _id: -1 })
         let connectors = []
@@ -2167,6 +2254,7 @@ router.get('/doctor/:section', async (req, res) => {
             const sections = await Section.find({
                 connector: connectors[i]._id,
                 headsectionid: req.params.section,
+                priceCashier: { $gt: 0 }
             })
                 .sort({ _id: 1 })
             let c = {
@@ -2324,7 +2412,8 @@ router.get('/directorborn/:born', async (req, res) => {
         let sections = []
         for (let i = 0; i < clientss.length; i++) {
             const section = await Section.find({
-                client: clientss[i]._id
+                client: clientss[i]._id,
+                priceCashier: { $gt: 0 }
             })
             section.map(s => {
                 sections.push(s)
@@ -2351,6 +2440,7 @@ router.get('/directorborn/:born', async (req, res) => {
             clients.push(client)
             const sections = await Section.find({
                 connector: connectors[i]._id,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -2528,7 +2618,8 @@ router.get('/clientallhistory/:id', async (req, res) => {
         let allsectionFiles = []
         for (let i = 0; i < connectors.length; i++) {
             const sections = await Section.find({
-                connector: connectors[i]._id
+                connector: connectors[i]._id,
+                priceCashier: { $gt: 0 }
             })
                 .sort({ _id: 1 })
             let tablesections = []
@@ -2560,6 +2651,7 @@ router.get('/clientallhistory/:id', async (req, res) => {
     }
 })
 
+
 // /api/connector
 router.get('/clienthistory/:id', async (req, res) => {
     try {
@@ -2567,18 +2659,55 @@ router.get('/clienthistory/:id', async (req, res) => {
         const connectors = await Connector.find({
             client: id
         })
-            .sort({ _id: -1 })
+            .sort({ _id: 1 })
         let allsections = []
         let alltablesections = []
         let alltablecolumns = []
+        let allsectionFiles = []
         for (let i = 0; i < connectors.length; i++) {
             const sections = await Section.find({
                 connector: connectors[i]._id,
-                done: "tasdiqlangan",
-                priceCashier: { $ne: 0 }
+                priceCashier: { $gt: 0 },
             })
+            let k = 0
+
+            sections.map((section) => {
+                if (section.done === "tasdiqlanmagan") {
+                    k = 1
+                }
+            })
+            if (k) {
+                return res.status(500).json({ message: 'Xurmatli mijoz! Tahlil natijalaringiz hozirda tekshiruvda. Tayyor bo\'lishi bilan olish imkoniyatiga ega bo\'lasiz. Noqulaylik uzr so\'raymiz.' })
+            }
+
+            const summsections = sections.reduce((summ, section) => {
+                return summ + section.priceCashier
+            }, 0)
+            const payments = await Payment.find({
+                connector: connectors[i]._id
+            })
+            const sales = await Sale.findOne({
+                connector: connectors[i]._id
+            })
+            const summpayments = payments.reduce((s, payment) => {
+                return s + payment.card + payment.cash + payment.transfer
+            }, 0)
+
+            if (summsections > summpayments + sales.summa) {
+                return res.status(500).json({ message: 'Xurmatli mijoz! Xizmatlar to\'lovlarini to\'liq to\'lamaguningizcha javoblarni online olish imkoniga ega emassiz. Noqulaylik uchun uzr.' })
+            }
+        }
+        for (let i = 0; i < connectors.length; i++) {
+            const sections = await Section.find({
+                connector: connectors[i]._id,
+                priceCashier: { $gt: 0 },
+                done: "tasdiqlangan"
+            })
+                .sort({ _id: 1 })
+
             let tablesections = []
             let tablecolumns = []
+            let sectionFiles = []
             for (let j = 0; j < sections.length; j++) {
                 const t = await TableSection.find({
                     sectionid: sections[j]._id
@@ -2587,13 +2716,18 @@ router.get('/clienthistory/:id', async (req, res) => {
                 const tablecolumn = await TableColumn.findOne({
                     direction: sections[j].nameid
                 })
+                const f = await FileSave.find({
+                    section: sections[j]._id
+                })
+                sectionFiles.push(f)
                 tablecolumns.push(tablecolumn)
             }
             allsections.push(sections)
             alltablesections.push(tablesections)
             alltablecolumns.push(tablecolumns)
+            allsectionFiles.push(sectionFiles)
         }
-        res.send({ connectors, allsections, alltablesections, alltablecolumns })
+        res.send({ connectors, allsections, alltablesections, alltablecolumns, allsectionFiles })
 
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
@@ -2672,7 +2806,8 @@ router.get('/directorclients', async (req, res) => {
                     new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
                 $lt: new Date(new Date().getFullYear(),
                     new Date().getMonth(), new Date().getDate() + 1)
-            }
+            },
+            priceCashier: { $gt: 0 }
         })
             .sort({ _id: -1 })
         let connectors = []
@@ -2701,6 +2836,7 @@ router.get('/directorclients', async (req, res) => {
             clients.push(client)
             const sections = await Section.find({
                 connector: connectors[i]._id,
+                priceCashier: { $gt: 0 }
             })
             let c = {
                 accept: 0,
@@ -2970,7 +3106,6 @@ router.patch('/labaratoriya/:id', async (req, res) => {
         const sections = await Section.find({
             probirka: true,
             connector: id,
-
         })
         for (let i = 0; i < sections.length; i++) {
             const section = await Section.findById(sections[i]._id)
