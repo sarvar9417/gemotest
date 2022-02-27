@@ -1,59 +1,47 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { useParams } from 'react-router'
-import { useHttp } from './../../hooks/http.hook'
+import { useHttp } from '../../hooks/http.hook'
 import { toast } from 'react-toastify'
-import { AuthContext } from './../../context/AuthContext'
-import { useReactToPrint } from 'react-to-print'
+import { AuthContext } from '../../context/AuthContext'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSearch } from '@fortawesome/free-solid-svg-icons'
 import { faTelegram } from '@fortawesome/free-brands-svg-icons'
+import { useReactToPrint } from 'react-to-print'
+import DatePicker from "react-datepicker"
 import QRCode from 'qrcode'
 
 toast.configure()
-export const ClientAllHistory = () => {
+export const AllClients = () => {
+    const [modal, setModal] = useState(false)
     let k = 0
     const componentRef = useRef()
     const handlePrint = useReactToPrint({
         content: () => componentRef.current,
     })
+
     const notify = (e) => {
-        toast.error(e);
-    };
+        toast.error(e)
+    }
+
     const auth = useContext(AuthContext)
+
     const { loading, request, error, clearError } = useHttp()
+    // const clientId = useParams().id
+    const [all, setAll] = useState()
+    const [startDate, setStartDate] = useState(new Date())
+    const [endDate, setEndDate] = useState(new Date())
 
-    const clientId = useParams().id
-    const [client, setClient] = useState()
-    const [connectors, setConnectors] = useState()
-    const [allsections, setAllSections] = useState()
-    const [alltablesections, setAllTableSections] = useState()
-    const [alltablecolumns, setAllTableColumns] = useState()
-    const [allsectionFiles, setAllSectionFiles] = useState()
-
-    const getClient = useCallback(async () => {
+    const getAll = useCallback(async () => {
         try {
-            const fetch = await request(`/api/clients/doctor/${clientId}`, 'GET', null, {
+            const fetch = await request(`/api/connector/allresults/${startDate}/${endDate}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            setClient(fetch)
+            console.log(fetch)
+            setAll(fetch)
         } catch (e) {
             notify(e)
         }
-    }, [request, auth, setClient, clientId])
+    }, [request, auth, setAll, startDate, endDate])
 
-    const getConnectors = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/connector/clientallhistory/${clientId}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            setConnectors(fetch.connectors)
-            setAllSections(fetch.allsections)
-            setAllTableSections(fetch.alltablesections)
-            setAllTableColumns(fetch.alltablecolumns)
-            setAllSectionFiles(fetch.allsectionFiles)
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, auth, setConnectors, setAllSections, setAllTableSections, setAllTableColumns, setAllSectionFiles])
 
     const [logo, setLogo] = useState()
     const getLogo = useCallback(async () => {
@@ -75,10 +63,20 @@ export const ClientAllHistory = () => {
             notify(e)
         }
     }, [request, setBasuUrl])
+    const searchDate = () => {
+        getAll()
+    }
+
+    const [t, setT] = useState()
+    const [q, setQ] = useState()
 
     useEffect(() => {
-        if (client) {
-            QRCode.toDataURL(`${baseUrl}/clienthistorys/${client._id}`)
+        if (!t) {
+            setT(1)
+            getAll()
+        }
+        if (all) {
+            QRCode.toDataURL(`gemo-test.uz`)
                 .then(data => {
                     setQr(data)
                 })
@@ -86,20 +84,14 @@ export const ClientAllHistory = () => {
         if (!baseUrl) {
             getBaseUrl()
         }
-        if (!client) {
-            getClient()
-        }
         if (error) {
             notify(error)
             clearError()
         }
-        if (!connectors) {
-            getConnectors()
-        }
         if (!logo) {
             getLogo()
         }
-    }, [notify, clearError])
+    }, [notify, clearError, setT, getAll])
 
     const checkClassHead = (data) => {
         if (data.col5.length > 1) {
@@ -121,20 +113,52 @@ export const ClientAllHistory = () => {
         return "text-center cw30 py-0"
     }
 
+    const Delete =
+        useCallback(async () => {
+            try {
+                const data = await request("/api/tozalash", "DELETE", null, {
+                    Authorization: `Bearer ${auth.token}`
+                })
+                toast.success("Barcha ma'lumotlar o'chirib yuborildi")
+            } catch (e) {
+                notify(e)
+            }
+        }, [request, toast, auth])
+
+
     return (
         <div>
-            <div className='row'>
-                <div className='col-12 text-center my-4' >
+            <div className="row mb-3">
+                <div className=" col-2">
+                    <DatePicker className="form-control mb-2" selected={startDate} onChange={(date) => { setStartDate(date) }} />
+                </div>
+                <div className="col-2">
+                    <DatePicker className="form-control mb-2" selected={endDate} onChange={(date) => setEndDate(date)} />
+                </div>
+                <div className="col-1">
+                    <button onClick={searchDate} className="btn text-white mb-2" style={{ backgroundColor: "#45D3D3" }}> <FontAwesomeIcon icon={faSearch} /> </button>
+                </div>
+                <div className='col-5 text-center' >
                     <button onClick={handlePrint} className="btn btn-info px-5" >
                         Chop etish / Saqlash
                     </button>
                 </div>
+
+                <div className="col-2">
+                    <button
+                        onClick={() => setModal(true)}
+                        className="btn text-white mb-2 btn-danger"
+                    >
+                        O'chirish
+                    </button>
+                </div>
             </div>
+
             <div ref={componentRef} className="container" style={{ fontFamily: "times" }}>
                 {
-                    connectors && connectors.map((connector, i) => {
+                    all && all.map((customer, i) => {
                         return (
-                            <div >
+                            <div style={{ pageBreakAfter: "always" }} >
                                 <table className="report-container w-100">
                                     <thead className="report-header">
                                         <tr>
@@ -178,7 +202,7 @@ export const ClientAllHistory = () => {
                                                                         Mijozning F.I.SH
                                                                     </td>
                                                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
-                                                                        <h4>{client && client.lastname + " " + client.firstname}</h4>
+                                                                        <h4>{customer.client && customer.client.lastname + " " + customer.client.firstname}</h4>
                                                                     </td>
                                                                     <td rowSpan="2" colSpan={2} style={{ width: "33%" }}>
                                                                         <p className='fw-bold fs-5 m-0'>
@@ -191,7 +215,7 @@ export const ClientAllHistory = () => {
                                                                         Tug'ilgan yili
                                                                     </td>
                                                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
-                                                                        {client && new Date(client.born).toLocaleDateString()}
+                                                                        {customer.client && new Date(customer.client.born).toLocaleDateString()}
                                                                     </td>
                                                                 </tr>
                                                                 <tr style={{ textAlign: "center" }}>
@@ -199,13 +223,13 @@ export const ClientAllHistory = () => {
                                                                         Telefon raqami
                                                                     </td>
                                                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
-                                                                        +{client && client.phone}
+                                                                        +{customer.client && customer.client.phone}
                                                                     </td>
                                                                     <td className='p-0 fw-bold' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000" }}>
                                                                         Namuna
                                                                     </td>
                                                                     <td className='p-0' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
-                                                                        {connector && connector.probirka}
+                                                                        {customer.connector && customer.connector.probirka}
                                                                     </td>
                                                                 </tr>
 
@@ -214,13 +238,13 @@ export const ClientAllHistory = () => {
                                                                         Sana
                                                                     </td>
                                                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
-                                                                        {connector && new Date(connector.bronDay).toLocaleDateString()}
+                                                                        {customer.connector && new Date(customer.connector.bronDay).toLocaleDateString()}
                                                                     </td>
                                                                     <td className='p-0 fw-bold' style={{ width: "200px", backgroundColor: "white", border: "1px solid #000" }}>
                                                                         ID
                                                                     </td>
                                                                     <td className='p-0' style={{ width: "200px", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
-                                                                        {client && client.id}
+                                                                        {customer.client && customer.client.id}
                                                                     </td>
                                                                 </tr>
                                                             </table>
@@ -246,20 +270,19 @@ export const ClientAllHistory = () => {
                                         <tr>
                                             <td className="report-content-cell">
                                                 {
-                                                    allsections && allsections[i].map((section, index) => {
+                                                    customer.sections && customer.sections.map((section, index) => {
                                                         if (true) {
-
                                                             if (
-                                                                alltablesections && alltablesections[i][index].length > 0
+                                                                customer.tablesections && customer.tablesections[index].length > 0
                                                             ) {
                                                                 let l = 0
                                                                 let old = 0
-                                                                alltablesections[i][index] && alltablesections[i][index].map((tablesection, j) => {
+                                                                customer.tablesections[index] && customer.tablesections[index].map((tablesection, j) => {
                                                                     if (tablesection.accept) {
                                                                         l++
                                                                     }
                                                                 })
-                                                                alltablesections[i][index - 1] && alltablesections[i][index - 1].map((tablesection, j) => {
+                                                                customer.tablesections[index - 1] && customer.tablesections[index - 1].map((tablesection, j) => {
                                                                     if (tablesection.accept) {
                                                                         old++
                                                                     }
@@ -268,42 +291,42 @@ export const ClientAllHistory = () => {
                                                                     <>
                                                                         <table style={{ width: "100%" }}>
                                                                             {
-                                                                                ((allsections[i][index - 1] &&
-                                                                                    allsections[i][index - 1].name !== section.name) ||
+                                                                                ((customer.sections[index - 1] &&
+                                                                                    customer.sections[index - 1].name !== section.name) ||
                                                                                     index === 0 ||
-                                                                                    alltablesections[i][index - 1].length === 0 ||
-                                                                                    alltablesections[i][index - 1].length > 5 ||
-                                                                                    alltablesections[i][index].length > 5 || old === 0) && l !== 0 ?
+                                                                                    customer.tablesections[index - 1].length === 0 ||
+                                                                                    customer.tablesections[index - 1].length > 5 ||
+                                                                                    customer.tablesections[index].length > 5 || old === 0) && l !== 0 ?
                                                                                     <>
                                                                                         <span className='d-none'>{k = 0}</span>
                                                                                         <tr>
                                                                                             <td className='text-center py-0 m-0 pt-2' colSpan={6} style={{ backgroundColor: "#FFF" }} >
-                                                                                                {alltablesections[i][index].length > 5 ? section.subname : section.name}
+                                                                                                {customer.tablesections[index].length > 5 ? section.subname : section.name}
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr style={{ backgroundColor: "#C0C0C0" }}>
                                                                                             <td className='text-center fw-bold cn py-1' style={{ border: "1px solid #000" }}>
                                                                                                 №
                                                                                             </td>
-                                                                                            <td className={alltablecolumns && alltablecolumns[i][index] && checkClassHead(alltablecolumns[i][index])} style={{ border: "1px solid #000" }}>
-                                                                                                {alltablecolumns && alltablecolumns[i][index] && alltablecolumns[i][index].col1}
+                                                                                            <td className={customer.tablecolumns && customer.tablecolumns[index] && checkClassHead(customer.tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                                                {customer.tablecolumns && customer.tablecolumns[index] && customer.tablecolumns[index].col1}
                                                                                             </td>
-                                                                                            <td className={alltablecolumns && alltablecolumns[i][index] && checkClassHead(alltablecolumns[i][index])} style={{ border: "1px solid #000" }}>
-                                                                                                {alltablecolumns && alltablecolumns[i][index] && alltablecolumns[i][index].col2}
+                                                                                            <td className={customer.tablecolumns && customer.tablecolumns[index] && checkClassHead(customer.tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                                                {customer.tablecolumns && customer.tablecolumns[index] && customer.tablecolumns[index].col2}
                                                                                             </td>
-                                                                                            <td className={alltablecolumns && alltablecolumns[i][index] && checkClassHead(alltablecolumns[i][index])} style={{ border: "1px solid #000" }}>
-                                                                                                {alltablecolumns && alltablecolumns[i][index] && alltablecolumns[i][index].col3}
+                                                                                            <td className={customer.tablecolumns && customer.tablecolumns[index] && checkClassHead(customer.tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                                                {customer.tablecolumns && customer.tablecolumns[index] && customer.tablecolumns[index].col3}
                                                                                             </td>
                                                                                             {
-                                                                                                alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col4).length > 1 ?
-                                                                                                    <td className={alltablecolumns && alltablecolumns[i][index] && checkClassHead(alltablecolumns[i][index])} style={{ border: "1px solid #000" }}>
-                                                                                                        {alltablecolumns[i][index].col4}
+                                                                                                customer.tablecolumns && customer.tablecolumns[index] && (customer.tablecolumns[index].col4).length > 1 ?
+                                                                                                    <td className={customer.tablecolumns && customer.tablecolumns[index] && checkClassHead(customer.tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                                                        {customer.tablecolumns[index].col4}
                                                                                                     </td> : ""
                                                                                             }
                                                                                             {
-                                                                                                alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col5).length > 1 ?
-                                                                                                    <td className={alltablecolumns && alltablecolumns[i][index] && checkClassHead(alltablecolumns[i][index])} style={{ border: "1px solid #000" }}>
-                                                                                                        {alltablecolumns[i][index].col5}
+                                                                                                customer.tablecolumns && customer.tablecolumns[index] && (customer.tablecolumns[index].col5).length > 1 ?
+                                                                                                    <td className={customer.tablecolumns && customer.tablecolumns[index] && checkClassHead(customer.tablecolumns[index])} style={{ border: "1px solid #000" }}>
+                                                                                                        {customer.tablecolumns[index].col5}
                                                                                                     </td> : ""
                                                                                             }
                                                                                         </tr>
@@ -312,7 +335,7 @@ export const ClientAllHistory = () => {
 
                                                                             }
                                                                             {
-                                                                                alltablesections && alltablesections[i][index].map((tablesection, key) => {
+                                                                                customer.tablesections && customer.tablesections[index].map((tablesection, key) => {
                                                                                     if (tablesection.accept) {
                                                                                         return (
                                                                                             <tr style={{ backgroundColor: "white", marginTop: "10px !important" }}>
@@ -320,36 +343,36 @@ export const ClientAllHistory = () => {
                                                                                                     {++k}
                                                                                                 </td>
                                                                                                 <td
-                                                                                                    className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
+                                                                                                    className={customer.tablecolumns && customer.tablecolumns[index] && checkClassFoot(customer.tablecolumns[index])}
                                                                                                     style={{ border: "1px solid #000", borderTop: "0px solid white" }}
                                                                                                 >
                                                                                                     <p className='py-0 ps-2 text-start m-0' >{tablesection.name}</p>
                                                                                                 </td>
                                                                                                 <td
-                                                                                                    className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
+                                                                                                    className={customer.tablecolumns && customer.tablecolumns[index] && checkClassFoot(customer.tablecolumns[index])}
                                                                                                     style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
                                                                                                 >
                                                                                                     <pre className='pretable fw-bold fs-6' >{tablesection.result}</pre>
                                                                                                 </td>
                                                                                                 <td
-                                                                                                    className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
+                                                                                                    className={customer.tablecolumns && customer.tablecolumns[index] && checkClassFoot(customer.tablecolumns[index])}
                                                                                                     style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
                                                                                                 >
                                                                                                     {tablesection.norma}
                                                                                                 </td>
                                                                                                 {
-                                                                                                    alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col4).length > 1 ?
+                                                                                                    customer.tablecolumns && customer.tablecolumns[index] && (customer.tablecolumns[index].col4).length > 1 ?
                                                                                                         <td
-                                                                                                            className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
+                                                                                                            className={customer.tablecolumns && customer.tablecolumns[index] && checkClassFoot(customer.tablecolumns[index])}
                                                                                                             style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
                                                                                                         >
                                                                                                             <pre className='pretable' >{tablesection.additionalone}</pre>
                                                                                                         </td> : ""
                                                                                                 }
                                                                                                 {
-                                                                                                    alltablecolumns && alltablecolumns[i][index] && (alltablecolumns[i][index].col5).length > 1 ?
+                                                                                                    customer.tablecolumns && customer.tablecolumns[index] && (customer.tablecolumns[index].col5).length > 1 ?
                                                                                                         <td
-                                                                                                            className={alltablecolumns && alltablecolumns[i][index] && checkClassFoot(alltablecolumns[i][index])}
+                                                                                                            className={customer.tablecolumns && customer.tablecolumns[index] && checkClassFoot(customer.tablecolumns[index])}
                                                                                                             style={{ textAlign: "center", border: "1px solid #000", borderTop: "0px solid white" }}
                                                                                                         >
                                                                                                             <pre className='pretable' >{tablesection.additionaltwo}</pre>
@@ -456,8 +479,8 @@ export const ClientAllHistory = () => {
                                     </tfoot>
                                 </table>
                                 {
-                                    allsections && allsections[i].map((section, index) => {
-                                        if (allsectionFiles && allsectionFiles[i][index].length > 0) {
+                                    customer.sections && customer.sections.map((section, index) => {
+                                        if (customer.sectionFiles && customer.sectionFiles[index].length > 0) {
                                             return (
                                                 <div style={{ pageBreakAfter: "always" }}>
                                                     <div className='row mt-4'>
@@ -466,7 +489,7 @@ export const ClientAllHistory = () => {
                                                         </div>
                                                     </div>
                                                     {
-                                                        allsectionFiles && allsectionFiles[i][index] && allsectionFiles[i][index].map((file) => {
+                                                        customer.sectionFiles && customer.sectionFiles[index] && customer.sectionFiles[index].map((file) => {
                                                             return (
                                                                 <div className='row'>
                                                                     <div
@@ -494,6 +517,21 @@ export const ClientAllHistory = () => {
                         )
                     })
                 }
+            </div>
+
+            {/* Modal oynaning ochilishi */}
+            <div className={modal ? "modal" : "d-none"}>
+                <div className="modal-card">
+                    <div className="card p-4" style={{ fontFamily: "times" }}>
+                        <p className='fs-4 text-danger text-center'>Diqqat! Barcha ma;umorlar o'chirilishini tasdiqlaysizmi? <br />
+                            O'chirilgan ma'lumotlarni qayta tiklashning imkoni mavjud bo'lmaydi.
+                        </p>
+                        <div className='text-center'>
+                            <button className='btn btn-danger me-3' onClick={Delete}> O'chirish </button>
+                            <button className='btn btn-info' onClick={() => setModal(false)}> Qaytish </button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
         </div>

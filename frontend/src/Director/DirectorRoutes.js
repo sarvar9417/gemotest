@@ -54,6 +54,7 @@ import { ClientsDirector } from './directorPages/adoptions/ClientsDirektor'
 import { Adoption } from './directorPages/adoptions/Adoption'
 import { Sales } from './directorPages/salesandebt/Sales'
 import { Debtors } from './directorPages/salesandebt/Debtors'
+import { AllClients } from './directorPages/adoptions/AllClients'
 
 export const DirectorRoutes = (isAuthenticated) => {
     if (isAuthenticated) {
@@ -203,6 +204,9 @@ export const DirectorRoutes = (isAuthenticated) => {
                     </Route>
                     <Route path='/director/debtors' >
                         <RouterComponent component={<Debtors />} menu={true} />
+                    </Route>
+                    <Route path='/director/allresults' >
+                        <RouterComponent component={<AllClients />} menu={true} />
                     </Route>
                     <Route path="/sayt" >
                         <Sayt />

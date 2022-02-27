@@ -47,6 +47,7 @@ export const TableSection = () => {
     const [clients, setClients] = useState()
     const [directions, setDirections] = useState()
     const [sections, setSections] = useState()
+    const [sectionss, setSectionss] = useState()
     const [tables, setTables] = useState()
     const [connectors, setConnectors] = useState()
     const getSections = useCallback(async (section) => {
@@ -59,10 +60,11 @@ export const TableSection = () => {
             setDirections(data.directions)
             setSections(data.datas)
             setConnectors(data.connectors)
+            setSectionss(data.sec)
         } catch (e) {
             notify(e)
         }
-    }, [auth, request, setSections, setTables, setDirections, setClients, startDate, endDate, setConnectors])
+    }, [auth, setSectionss, request, setSections, setTables, setDirections, setClients, startDate, endDate, setConnectors])
 
 
     const editTables = (event, index, key) => {
@@ -83,6 +85,25 @@ export const TableSection = () => {
         }
     }, [auth, request, toast, tables])
 
+    const setSectionDate = useCallback((date) => {
+        let s = [...sectionss]
+        s.map((section) => {
+            section.source = new Date(date).toLocaleDateString().toString()
+        })
+        setSectionss(s)
+    }, [sectionss, setSectionss])
+
+    const patchSections = useCallback(async () => {
+        try {
+            const data = await request(`/api/section/sections`, "PATCH", [...sectionss], {
+                Authorization: `Bearer ${auth.token}`
+            })
+            toast.success(data.message)
+        } catch (e) {
+            notify(e)
+        }
+    }, [auth, request, toast, sectionss])
+
     useEffect(() => {
         if (!alldirections) {
             getAllDirections()
@@ -102,7 +123,8 @@ export const TableSection = () => {
                 <div className="col-2">
                     <DatePicker className="form-control mb-2" selected={endDate} onChange={(date) => setEndDate(date)} />
                 </div>
-                <div className="offset-5  col-2">
+
+                <div className="offset-5 col-2">
                     <Select onChange={(event) => getSections(event.value)} isDisabled={loading} defaultValue={alldirections && alldirections[0]} options={alldirections && alldirections} />
                 </div>
                 <div className="col-1 ">
@@ -165,6 +187,22 @@ export const TableSection = () => {
                     </tbody>
                 </table>
             </div>
+            <div className='row'>
+                <div className='offset-2 fw-bold text-end  col-3 pt-2'>
+                    Natijalar e'lon qilgan kun:
+                </div>
+                <div className="col-2">
+                    <DatePicker className="form-control mb-2 d-inline-block" selected={startDate} onChange={(date) => { setSectionDate(date) }} />
+                </div>
+                <div className='col-2'>
+                    <button
+                        onClick={patchSections}
+                        className='btn btn-info'>
+                        Yangilash
+                    </button>
+                </div>
+            </div>
+
             <div className='text-center'>
                 <button onClick={patchTables} className='btn btn-info'>Saqlash</button>
             </div>

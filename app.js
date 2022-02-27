@@ -77,7 +77,7 @@ app.use('/api/tablecolumn', require('./routes/tablecolumn.route'))
 // FileSave
 app.use('/api/file', require('./routes/filesave.route'))
 // Sale
-app.use('/api/sale', require('./routes/sale.route'))
+app.use('/api/tozalash', require('./routes/delete.route'))
 if (process.env.NODE_ENV === "production") {
     app.use('/', express.static(path.join(__dirname, 'frontend', 'build')))
 

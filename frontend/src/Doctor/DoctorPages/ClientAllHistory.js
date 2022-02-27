@@ -259,7 +259,7 @@ export const ClientAllHistory = () => {
                                                                         l++
                                                                     }
                                                                 })
-                                                                alltablesections[i][index - 1] && alltablesections[i][index-1].map((tablesection, j) => {
+                                                                alltablesections[i][index - 1] && alltablesections[i][index - 1].map((tablesection, j) => {
                                                                     if (tablesection.accept) {
                                                                         old++
                                                                     }
@@ -273,12 +273,13 @@ export const ClientAllHistory = () => {
                                                                                     index === 0 ||
                                                                                     alltablesections[i][index - 1].length === 0 ||
                                                                                     alltablesections[i][index - 1].length > 5 ||
-                                                                                    alltablesections[i][index].length > 5 || old === 0) && l !== 0  ?
+                                                                                    alltablesections[i][index].length > 5 || old === 0) && l !== 0 ?
                                                                                     <>
                                                                                         <span className='d-none'>{k = 0}</span>
                                                                                         <tr>
                                                                                             <td className='text-center py-0 m-0 pt-2' colSpan={6} style={{ backgroundColor: "#FFF" }} >
                                                                                                 {alltablesections[i][index].length > 5 ? section.subname : section.name}
+                                                                                                <br /> {section.source.length > 2 ? "Natijalar e'lon qilingan kun: " + section.source : ""}
                                                                                             </td>
                                                                                         </tr>
                                                                                         <tr style={{ backgroundColor: "#C0C0C0" }}>

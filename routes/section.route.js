@@ -712,6 +712,7 @@ router.get('/table/:start/:end/:section', async (req, res) => {
 
         let datas = []
         let tables = []
+        let sec = []
         for (let i = 0; i < connectors.length; i++) {
             let data = []
             let table = []
@@ -728,6 +729,7 @@ router.get('/table/:start/:end/:section', async (req, res) => {
                         t = await TableSection.findOne({
                             sectionid: sections[k]._id
                         })
+                        sec.push(sections[k])
                     }
                 }
                 data.push(yes)
@@ -737,7 +739,8 @@ router.get('/table/:start/:end/:section', async (req, res) => {
             tables.push(table)
         }
 
-        res.send({ clients, datas, directions, tables, connectors })
+
+        res.send({ clients, datas, directions, tables, connectors, sec })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -832,6 +835,19 @@ router.patch('/table', auth, async (req, res) => {
         })
         res.json({ message: "Ma'lumotlar muvaffaqqiyatli saqlandi" })
 
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
+router.patch('/sections', auth, async (req, res) => {
+    try {
+        const sections = [...req.body]
+        console.log(req.body);
+        sections.map(async (section) => {
+            const s = await Section.findByIdAndUpdate(section._id, section)
+        })
+        res.json({ message: "Ma'lumotlar muvaffaqqiyatli saqlandi" })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }

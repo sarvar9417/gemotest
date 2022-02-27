@@ -239,7 +239,10 @@ export const ClientsDirector = () => {
                 <div className='col-1'>
                     <button onClick={(event) => (searchName((event.target.value)))} className="btn text-white" style={{ backgroundColor: "#45D3D3" }}><FontAwesomeIcon icon={faSearch} /></button>
                 </div>
-                <div className="offset-8  col-1 ">
+                <div className='col-4'>
+                    <Link to="/director/allresults" className='btn btn-info'>Barcha natijalarni saqlab olish</Link>
+                </div>
+                <div className="offset-4  col-1 ">
                     <ReactHTMLTableToExcel
                         className="btn text-white mb-2 btn-success"
                         table="reseptionReport"

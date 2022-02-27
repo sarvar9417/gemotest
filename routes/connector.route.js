@@ -1444,6 +1444,64 @@ router.get('/reseptiononline/:start/:end', async (req, res) => {
     }
 })
 
+// /api/connector
+router.get('/allresults/:start/:end', async (req, res) => {
+    try {
+        const start = new Date(req.params.start)
+        const end = new Date(req.params.end)
+        const connectors = await Connector.find({
+            bronDay: {
+                $gte:
+                    new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
+                $lt: new Date(new Date(end).getFullYear(),
+                    new Date(end).getMonth(), new Date(end).getDate() + 1)
+            }
+        })
+            .sort({ _id: -1 })
+        let all = []
+        let t = 0
+        for (let i = 0; i < connectors.length; i++) {
+            const client = await Clients.findById(connectors[i].client)
+            const sections = await Section.find({
+                connector: connectors[i]._id,
+                priceCashier: { $gt: 0 },
+                // accept: true
+            })
+                .sort({ _id: 1 })
+            let tablesections = []
+            let tablecolumns = []
+            let sectionFiles = []
+            for (let j = 0; j < sections.length; j++) {
+                const t = await TableSection.find({
+                    sectionid: sections[j]._id
+                })
+                tablesections.push(t)
+                const tablecolumn = await TableColumn.findOne({
+                    direction: sections[j].nameid
+                })
+                const f = await FileSave.find({
+                    section: sections[j]._id
+                })
+                sectionFiles.push(f)
+                tablecolumns.push(tablecolumn)
+            }
+            all.push({
+                client,
+                connector: connectors[i],
+                sections,
+                tablesections,
+                tablecolumns,
+                sectionFiles
+            })
+        }
+
+        res.send(all)
+
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
 // /api/auth/connector/
 router.get('/statsionar/:start/:end', async (req, res) => {
     try {

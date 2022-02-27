@@ -169,6 +169,7 @@ export const Print = ({ sectionFiles, client, connector, sections, tablesections
                                                                 <tr>
                                                                     <td className='text-center py-0 pt-2' colSpan={6} style={{ backgroundColor: "#FFF" }} >
                                                                         {tablesections[index].length > 5 ? section.subname : section.name}
+                                                                        <br /> {section.source.length > 2 ? "Natijalar e'lon qilingan kun: " + section.source : ""}
                                                                     </td>
                                                                 </tr>
                                                                 <tr style={{ backgroundColor: "#C0C0C0" }}>

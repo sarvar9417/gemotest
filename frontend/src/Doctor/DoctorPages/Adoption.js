@@ -449,7 +449,7 @@ export const Adoption = () => {
                                                         <span className='d-none'>{k = 0}</span>
                                                         <tr>
                                                             <td className='text-center' colSpan={6} style={{ backgroundColor: "#FFF" }} >
-                                                                {tablesections[index].length > 5 ? section.subname : section.name}
+                                                                {tablesections[index].length > 5 ? section.subname : section.name} <br /> {section.source.length > 2 ? "Natijalar e'lon qilingan kun: " + section.source : ""}
                                                             </td>
                                                         </tr>
                                                         <tr style={{ backgroundColor: "#C0C0C0" }}>
