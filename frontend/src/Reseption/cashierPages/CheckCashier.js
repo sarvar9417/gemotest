@@ -189,7 +189,6 @@ export const CheckCashier = () => {
     }
 
     const setAllPayment = useCallback((event) => {
-
         const sum = (sections && sections.reduce((summ, section) => {
             return summ + section.priceCashier
         }, 0)) + (services && services.reduce((summ, service) => {
@@ -602,7 +601,8 @@ export const CheckCashier = () => {
         getSections,
         getServices,
         getClient,
-        getConnector
+        getConnector,
+        getSale
     ])
 
     if (loading) {

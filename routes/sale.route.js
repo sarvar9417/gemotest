@@ -42,9 +42,11 @@ router.post('/register', auth, async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
+        console.log("Salom");
         const sale = await Sale.find({
             connector: req.params.id
         })
+        console.log(sale);
         res.json(sale)
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })

@@ -1769,14 +1769,27 @@ router.get('/directorconnector/:id', async (req, res) => {
 router.get('/reseption/:id', async (req, res) => {
     try {
         const id = req.params.id
-        const client = await Clients.find({
-            id: id
-        })
-        const connectors = await Connector.find({
-            client: client[0]._id
-        })
-            .or([{ type: "offline" }, { type: "online" }, { type: "callcenter" }])
-            .sort({ _id: -1 })
+        let client
+        let connectors
+        if (id.length > 6) {
+            client = await Clients.find({
+                id: id
+            })
+        }
+        if (client) {
+            connectors = await Connector.find({
+                client: client[0]._id
+            })
+                .or([{ type: "offline" }, { type: "online" }, { type: "callcenter" }])
+                .sort({ _id: -1 })
+        } else {
+            connectors = await Connector.find({
+                probirka: id
+            })
+                .or([{ type: "offline" }, { type: "online" }, { type: "callcenter" }])
+                .sort({ _id: -1 })
+        }
+
         let clients = []
         let sections = []
         let services = []

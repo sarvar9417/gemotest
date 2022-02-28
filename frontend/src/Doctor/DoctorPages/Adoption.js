@@ -384,10 +384,11 @@ export const Adoption = () => {
                                 </tr>
                                 <tr style={{ textAlign: "center" }}>
                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
-                                        Telefon raqami
+                                        Kelgan sanasi
                                     </td>
                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
-                                        +{client && client.phone}
+                                        {connector && new Date(connector.bronDay).toLocaleDateString()}
+
                                     </td>
                                     <td className='p-0 fw-bold' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000" }}>
                                         Namuna
@@ -399,10 +400,10 @@ export const Adoption = () => {
 
                                 <tr style={{ textAlign: "center" }}>
                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
-                                        Sana
+                                        Manzil
                                     </td>
                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
-                                        {connector && new Date(connector.bronDay).toLocaleDateString()}
+                                        {client && client.address}
                                     </td>
                                     <td className='p-0 fw-bold' style={{ width: "200px", backgroundColor: "white", border: "1px solid #000" }}>
                                         ID

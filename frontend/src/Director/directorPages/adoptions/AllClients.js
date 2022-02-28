@@ -220,10 +220,11 @@ export const AllClients = () => {
                                                                 </tr>
                                                                 <tr style={{ textAlign: "center" }}>
                                                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
-                                                                        Telefon raqami
+                                                                        Kelgan sanasi
                                                                     </td>
                                                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
-                                                                        +{customer.client && customer.client.phone}
+                                                                        {customer.connector && new Date(customer.connector.bronDay).toLocaleDateString()}
+
                                                                     </td>
                                                                     <td className='p-0 fw-bold' style={{ width: "100px", backgroundColor: "white", border: "1px solid #000" }}>
                                                                         Namuna
@@ -235,10 +236,10 @@ export const AllClients = () => {
 
                                                                 <tr style={{ textAlign: "center" }}>
                                                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000" }}>
-                                                                        Sana
+                                                                        Manzil
                                                                     </td>
                                                                     <td className='p-0' style={{ width: "33%", backgroundColor: "white", border: "1px solid #000", fontSize: "20px" }}>
-                                                                        {customer.connector && new Date(customer.connector.bronDay).toLocaleDateString()}
+                                                                        {customer.client && customer.client.address}
                                                                     </td>
                                                                     <td className='p-0 fw-bold' style={{ width: "200px", backgroundColor: "white", border: "1px solid #000" }}>
                                                                         ID

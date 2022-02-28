@@ -12,8 +12,6 @@ import '../CSS/radio.css'
 const mongoose = require("mongoose")
 const animatedComponents = makeAnimated()
 
-
-
 toast.configure()
 export const NewClient = () => {
   //Xatoliklar chiqaruvi
@@ -28,7 +26,6 @@ export const NewClient = () => {
   //Avtorizatsiyani olish
   const auth = useContext(AuthContext)
   let s = []
-
 
   // So'rov kutish va xatoliklarni olish
   const { request, error, clearError, loading } = useHttp()
