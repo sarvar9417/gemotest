@@ -863,7 +863,7 @@ export const CheckCashier = () => {
                         </div>
                         <div className='col-md-3 col-4 text-center'>
                             <label className='mx-3'>
-                                <input disabled={loading} onChange={setAllPayment} id='cash' type="radio" name="payment" id='cash' /> Naqt
+                                <input disabled={loading} onChange={setAllPayment} id='cash' type="radio" name="payment" /> Naqt
                             </label>
                             <input
                                 value={payment.cash}
