@@ -37,7 +37,7 @@ export const ClientsDirector = () => {
         } catch (e) {
             notify(e)
         }
-    }, [request, auth, setAll])
+    }, [request, auth, setAll, startDate, endDate])
 
     const getId = useCallback(async () => {
         try {
