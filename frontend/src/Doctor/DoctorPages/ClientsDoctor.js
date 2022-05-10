@@ -13,6 +13,9 @@ import { AuthContext } from '../context/AuthContext'
 
 toast.configure()
 export const ClientsDoctor = () => {
+
+    let k = 0
+    let l = 0
     //Avtorizatsiyani olish
     const auth = useContext(AuthContext)
     const options = [
@@ -21,8 +24,8 @@ export const ClientsDoctor = () => {
         { value: false, label: "Qabul qilinmaganlar" },
     ]
 
-    const [startDate, setStartDate] = useState(new Date())
-    const [endDate, setEndDate] = useState(new Date())
+    const [startDate, setStartDate] = useState(new Date(new Date().setUTCHours(0, 0, 0, 0)))
+    const [endDate, setEndDate] = useState(new Date(new Date().setDate(new Date().getDate() + 1)))
     const [born, setBorn] = useState('')
     const { loading, request, error, clearError } = useHttp()
     const [clientId, setClientId] = useState('')
@@ -166,7 +169,7 @@ export const ClientsDoctor = () => {
         }
         if (!t && auth.doctor) {
             setT(1)
-            getToday()
+            getConnectors()
         }
     }, [notify, clearError, getToday, setT, auth])
 
@@ -292,33 +295,35 @@ export const ClientsDoctor = () => {
                     </thead>
                     <tbody className="" >
                         {
-                            all && all.clients.map((client, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td style={{ width: "100px" }} className='text-center'>{index + 1}</td>
-                                        <td style={{ width: "100px" }} className=' text-center'>
-                                            {all && new Date(all.connectors[index].bronDay).toLocaleString()}
-                                        </td>
-                                        <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
-                                            {client.lastname} {client.firstname} {client.fathername}
-                                        </td>
-                                        <td style={{ width: "100px" }} className=' text-center'>
-                                            {new Date(client.born).toLocaleDateString()}
-                                        </td>
-                                        <td style={{ width: "100px" }} className=' text-center'>
-                                            {client.id}
-                                        </td>
-                                        <td style={{ width: "100px" }} className=' text-center'>
-                                            {all && all.connectors[index].probirka}
-                                        </td>
-                                        <td style={{ width: "200px" }} className='text-center'>
-                                            <span className='text-success'>{all && all.countsection[index].accept}</span>
-                                        </td>
-                                        <td style={{ width: "100px" }} className='text-center'>
-                                            <span className='text-danger'>{all && all.countsection[index].all}</span>
-                                        </td>
-                                    </tr>
-                                )
+                            all && all.connectors.map((connector, index) => {
+                                if (all.countsection[index].all > 0) {
+                                    return (
+                                        <tr key={index}>
+                                            <td style={{ width: "100px" }} className='text-center'>{++k}</td>
+                                            <td style={{ width: "100px" }} className=' text-center'>
+                                                {all && new Date(connector.bronDay).toLocaleString()}
+                                            </td>
+                                            <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
+                                                {connector.client.lastname} {connector.client.lastname} {connector.client.lastname}
+                                            </td>
+                                            <td style={{ width: "100px" }} className=' text-center'>
+                                                {new Date(connector.client.born).toLocaleDateString()}
+                                            </td>
+                                            <td style={{ width: "100px" }} className=' text-center'>
+                                                {connector.client.id}
+                                            </td>
+                                            <td style={{ width: "100px" }} className=' text-center'>
+                                                {connector.probirka}
+                                            </td>
+                                            <td style={{ width: "200px" }} className='text-center'>
+                                                <span className='text-success'>{all && all.countsection[index].accept}</span>
+                                            </td>
+                                            <td style={{ width: "100px" }} className='text-center'>
+                                                <span className='text-danger'>{all && all.countsection[index].all}</span>
+                                            </td>
+                                        </tr>
+                                    )
+                                } else { return "" }
                             })
                         }
                     </tbody>
@@ -329,43 +334,47 @@ export const ClientsDoctor = () => {
                 <table className=" table-hover w-100"  >
                     <tbody className="" >
                         {
-                            all && all.clients.map((client, index) => {
-                                return (
-                                    <tr key={index}>
-                                        <td style={{ width: "100px" }} className='text-center'>{index + 1}</td>
-                                        <td style={{ width: "100px" }} className=' text-center'>
-                                            {all && new Date(all.connectors[index].bronDay).toLocaleString()}
-                                        </td>
-                                        <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
-                                            {client.lastname} {client.firstname} {client.fathername}
-                                        </td>
-                                        <td style={{ width: "100px" }} className=' text-center'>
-                                            {new Date(client.born).toLocaleDateString()}
-                                        </td>
-                                        <td style={{ width: "100px" }} className=' text-center'>
-                                            {client.id}
-                                        </td>
-                                        <td style={{ width: "100px" }} className=' text-center'>
-                                            {all && all.connectors[index].probirka}
-                                        </td>
-                                        <td style={{ width: "200px" }} className='text-center'>
-                                            <Link className='btn btn-info' to={`/doctor/adoption/${client._id}/${all && all.connectors[index]._id}`} >
-                                                <FontAwesomeIcon icon={faPenAlt} />
-                                            </Link>
-                                        </td>
-                                        <td style={{ width: "100px" }} className='text-center'>
-                                            <Link className='btn btn-info' to={`/doctor/clientallhistory/${client._id}`} >
-                                                <FontAwesomeIcon icon={faPrint} />
-                                            </Link>
-                                        </td>
-                                        <td style={{ width: "100px" }} className='text-center'>
-                                            {all && all.connectors[index] && all.connectors[index].diagnosis}
-                                        </td>
-                                        <td style={{ width: "100px" }} className='text-center fw-bold fs-5'>
-                                            <span className='text-success'>{all && all.countsection[index].accept}</span>  / <span className='text-danger'>{all && all.countsection[index].all}</span>
-                                        </td>
-                                    </tr>
-                                )
+                            all && all.connectors.map((connector, index) => {
+                                if (all.countsection[index].all > 0) {
+                                    return (
+                                        <tr key={index}>
+                                            <td style={{ width: "100px" }} className='text-center'>{++l}</td>
+                                            <td style={{ width: "100px" }} className=' text-center'>
+                                                {new Date(connector.bronDay).toLocaleString()}
+                                            </td>
+                                            <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
+                                                {connector.client.lastname} {connector.client.firstname} {connector.client.fathername}
+                                            </td>
+                                            <td style={{ width: "100px" }} className=' text-center'>
+                                                {new Date(connector.client.born).toLocaleDateString()}
+                                            </td>
+                                            <td style={{ width: "100px" }} className=' text-center'>
+                                                {connector.client.id}
+                                            </td>
+                                            <td style={{ width: "100px" }} className=' text-center'>
+                                                {connector.probirka}
+                                            </td>
+                                            <td style={{ width: "200px" }} className='text-center'>
+                                                <Link className='btn btn-info' to={`/doctor/adoption/${connector.client._id}/${connector._id}`} >
+                                                    <FontAwesomeIcon icon={faPenAlt} />
+                                                </Link>
+                                            </td>
+                                            <td style={{ width: "100px" }} className='text-center'>
+                                                <Link className='btn btn-info' to={`/doctor/clientallhistory/${connector.client._id}`} >
+                                                    <FontAwesomeIcon icon={faPrint} />
+                                                </Link>
+                                            </td>
+                                            <td style={{ width: "100px" }} className='text-center'>
+                                                {connector.diagnosis}
+                                            </td>
+                                            <td style={{ width: "100px" }} className='text-center fw-bold fs-5'>
+                                                <span className='text-success'>{all && all.countsection[index].accept}</span>  / <span className='text-danger'>{all && all.countsection[index].all}</span>
+                                            </td>
+                                        </tr>
+                                    )
+                                } else {
+                                    return ""
+                                }
                             })
                         }
                     </tbody>
