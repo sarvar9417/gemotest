@@ -74,6 +74,8 @@ export const AllClients = () => {
         if (!t) {
             setT(1)
             getAll()
+            getBaseUrl()
+            getLogo()
         }
         if (all) {
             QRCode.toDataURL(`gemo-test.uz`)
@@ -81,15 +83,9 @@ export const AllClients = () => {
                     setQr(data)
                 })
         }
-        if (!baseUrl) {
-            getBaseUrl()
-        }
         if (error) {
             notify(error)
             clearError()
-        }
-        if (!logo) {
-            getLogo()
         }
     }, [notify, clearError, setT, getAll])
 

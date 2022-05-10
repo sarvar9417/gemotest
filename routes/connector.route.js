@@ -281,35 +281,22 @@ router.get('/doctorfish/:start/:end/:section/:fish', async (req, res) => {
 // /api/auth/connector/
 router.get('/directorprobirka/:start/:end/:probirka', async (req, res) => {
     try {
-        const start = new Date(req.params.start)
-        const end = new Date(req.params.end)
-        const sections = await Section.find({
+        const connectors = await Connector.find({
+            probirka: req.params.probirka,
             bronDay: {
                 $gte:
-                    new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
-                $lt: new Date(new Date(end).getFullYear(),
-                    new Date(end).getMonth(), new Date(end).getDate() + 1)
+                    new Date(req.params.start),
+                $lt: new Date(req.params.end)
             },
-            priceCashier: { $gt: 0 }
         })
-        let connectors = []
-        for (let i = 0; i < sections.length; i++) {
-            const connector = await Connector.findById(sections[i].connector)
-            let k = true
-            connectors.map((c) => {
-                if ((connector._id).toString() === (c._id).toString()) {
-                    k = false
-                }
-            })
-            if (k && connector.probirka == req.params.probirka) {
-                connectors.push(connector)
-            }
-        }
+            .or([{ accept: true }])
+            .populate('client', 'born firstname lastname id')
+            .sort({ _id: -1 })
+            .select('bronDay client probirka diagnosis')
+
         let countsection = []
-        let clients = []
+
         for (let i = 0; i < connectors.length; i++) {
-            const client = await Clients.findById(connectors[i].client)
-            clients.push(client)
             const sections = await Section.find({
                 connector: connectors[i]._id,
                 priceCashier: { $gt: 0 }
@@ -326,7 +313,7 @@ router.get('/directorprobirka/:start/:end/:probirka', async (req, res) => {
             })
             countsection.push(c)
         }
-        res.json({ clients, connectors, countsection })
+        res.json({ connectors, countsection })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -335,43 +322,29 @@ router.get('/directorprobirka/:start/:end/:probirka', async (req, res) => {
 // /api/auth/connector/
 router.get('/directorid/:start/:end/:id', async (req, res) => {
     try {
-        const start = new Date(req.params.start)
-        const end = new Date(req.params.end)
         const id = req.params.id
-        const client = await Clients.find({
+        const client = await Clients.findOne({
             id: id
         })
         if (client.length === 0) {
             res.status(500).json({ message: "Bunday ID raqamli mijoz tizimda ro'yxatga olinmagan!" })
         }
-        const sections = await Section.find({
-            client: client[0]._id,
+        const connectors = await Connector.find({
+            client: client._id,
             bronDay: {
                 $gte:
-                    new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
-                $lt: new Date(new Date(end).getFullYear(),
-                    new Date(end).getMonth(), new Date(end).getDate() + 1)
+                    new Date(req.params.start),
+                $lt: new Date(req.params.end)
             },
-            priceCashier: { $gt: 0 }
         })
-        let connectors = []
-        for (let i = 0; i < sections.length; i++) {
-            const connector = await Connector.findById(sections[i].connector)
-            let k = true
-            connectors.map((c) => {
-                if ((connector._id).toString() === (c._id).toString()) {
-                    k = false
-                }
-            })
-            if (k) {
-                connectors.push(connector)
-            }
-        }
+            .or([{ probirka: { $eq: 0 } }, { accept: true }])
+            .populate('client', 'born firstname lastname id')
+            .sort({ _id: -1 })
+            .select('bronDay client probirka diagnosis')
+
         let countsection = []
-        let clients = []
+
         for (let i = 0; i < connectors.length; i++) {
-            const client = await Clients.findById(connectors[i].client)
-            clients.push(client)
             const sections = await Section.find({
                 connector: connectors[i]._id,
                 priceCashier: { $gt: 0 }
@@ -388,7 +361,7 @@ router.get('/directorid/:start/:end/:id', async (req, res) => {
             })
             countsection.push(c)
         }
-        res.json({ clients, connectors, countsection })
+        res.json({ connectors, countsection })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -622,48 +595,35 @@ router.get('/directorfish/:start/:end/:fish', async (req, res) => {
         const fish = (req.params.fish).split(" ")
         const name = new RegExp('.*' + fish[0] + ".*", "i")
         const lastname = fish[1] ? new RegExp('.*' + fish[1] + ".*", "i") : new RegExp('.*' + "" + ".*", "i")
-        const start = new Date(req.params.start)
-        const end = new Date(req.params.end)
+
         const clientss = await Clients.find()
             .or([
                 { firstname: name, lastname: lastname },
                 { lastname: name, firstname: lastname }
             ])
-        let sections = []
-        for (let i = 0; i < clientss.length; i++) {
-            const section = await Section.find({
-                client: clientss[i]._id,
+        let connectors = []
+
+        for (const client of clientss) {
+            const connector = await Connector.findOne({
+                client: client._id,
                 bronDay: {
                     $gte:
-                        new Date(new Date(start).getFullYear(), new Date(start).getMonth(), new Date(start).getDate()),
-                    $lt: new Date(new Date(end).getFullYear(),
-                        new Date(end).getMonth(), new Date(end).getDate() + 1)
+                        new Date(req.params.start),
+                    $lt: new Date(req.params.end)
                 },
-                priceCashier: { $gt: 0 }
             })
-            section.map(s => {
-                sections.push(s)
-            })
-        }
-
-        let connectors = []
-        for (let i = 0; i < sections.length; i++) {
-            const connector = await Connector.findById(sections[i].connector)
-            let k = true
-            connectors.map((c) => {
-                if ((connector._id).toString() === (c._id).toString()) {
-                    k = false
-                }
-            })
-            if (k) {
+                .or([{ probirka: { $eq: 0 } }, { accept: true }])
+                .populate('client', 'born firstname lastname id')
+                .sort({ _id: -1 })
+                .select('bronDay client probirka diagnosis')
+            if (connector) {
                 connectors.push(connector)
             }
         }
+
         let countsection = []
-        let clients = []
+
         for (let i = 0; i < connectors.length; i++) {
-            const client = await Clients.findById(connectors[i].client)
-            clients.push(client)
             const sections = await Section.find({
                 connector: connectors[i]._id,
                 priceCashier: { $gt: 0 }
@@ -680,7 +640,7 @@ router.get('/directorfish/:start/:end/:fish', async (req, res) => {
             })
             countsection.push(c)
         }
-        res.json({ clients, connectors, countsection })
+        res.json({ connectors, countsection })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -1384,6 +1344,47 @@ router.get('/sales/:start/:end', async (req, res) => {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
 })
+
+// /api/auth/connector/
+router.get('/directorclients/:startDate/:endDate', async (req, res) => {
+    try {
+        const connectors = await Connector.find({
+            bronDay: {
+                $gte:
+                    new Date(req.params.startDate),
+                $lt: new Date(req.params.endDate)
+            },
+        })
+            .or([{ probirka: { $eq: 0 } }, { accept: true }])
+            .populate('client', 'born firstname lastname id')
+            .sort({ _id: -1 })
+            .select('bronDay client probirka diagnosis')
+
+        let countsection = []
+
+        for (let i = 0; i < connectors.length; i++) {
+            const sections = await Section.find({
+                connector: connectors[i]._id,
+                priceCashier: { $gt: 0 }
+            })
+            let c = {
+                accept: 0,
+                all: 0
+            }
+            sections.map(section => {
+                c.all = c.all + 1
+                if (section.accept) {
+                    c.accept = c.accept + 1
+                }
+            })
+            countsection.push(c)
+        }
+        res.json({ connectors, countsection })
+    } catch (e) {
+        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
+    }
+})
+
 
 // /api/auth/connector/labaratoriya
 router.get('/labaratoriya/:start/:end', async (req, res) => {
@@ -2480,35 +2481,25 @@ router.get('/directorborn/:born', async (req, res) => {
                 $lt: new Date(new Date(born).getFullYear(), new Date(born).getMonth(), new Date(born).getDate() + 1)
             }
         })
-        let sections = []
-        for (let i = 0; i < clientss.length; i++) {
-            const section = await Section.find({
-                client: clientss[i]._id,
-                priceCashier: { $gt: 0 }
-            })
-            section.map(s => {
-                sections.push(s)
-            })
-        }
 
         let connectors = []
-        for (let i = 0; i < sections.length; i++) {
-            const connector = await Connector.findById(sections[i].connector)
-            let k = true
-            connectors.map((c) => {
-                if ((connector._id).toString() === (c._id).toString()) {
-                    k = false
-                }
+
+        for (const client of clientss) {
+            const connector = await Connector.findOne({
+                client: client._id
             })
-            if (k) {
+                .or([{ probirka: { $eq: 0 } }, { accept: true }])
+                .populate('client', 'born firstname lastname id')
+                .sort({ _id: -1 })
+                .select('bronDay client probirka diagnosis')
+            if (connector) {
                 connectors.push(connector)
             }
         }
+
         let countsection = []
-        let clients = []
+
         for (let i = 0; i < connectors.length; i++) {
-            const client = await Clients.findById(connectors[i].client)
-            clients.push(client)
             const sections = await Section.find({
                 connector: connectors[i]._id,
                 priceCashier: { $gt: 0 }
@@ -2525,7 +2516,7 @@ router.get('/directorborn/:born', async (req, res) => {
             })
             countsection.push(c)
         }
-        res.json({ clients, connectors, countsection })
+        res.json({ connectors, countsection })
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
@@ -2868,64 +2859,6 @@ router.get('/director', async (req, res) => {
     }
 })
 
-// /api/auth/connector/
-router.get('/directorclients', async (req, res) => {
-    try {
-        const sections = await Section.find({
-            bronDay: {
-                $gte:
-                    new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
-                $lt: new Date(new Date().getFullYear(),
-                    new Date().getMonth(), new Date().getDate() + 1)
-            },
-            priceCashier: { $gt: 0 }
-        })
-            .sort({ _id: -1 })
-        let connectors = []
-        for (let i = 0; i < sections.length; i++) {
-            const connector = await Connector.findById(sections[i].connector)
-            let k = true
-            connectors.map((c) => {
-                if ((connector._id).toString() === (c._id).toString()) {
-                    k = false
-                }
-            })
-            if (k) {
-                if (!connector.probirka) {
-                    connectors.push(connector)
-                } else {
-                    if (connector.accept) {
-                        connectors.push(connector)
-                    }
-                }
-            }
-        }
-        let countsection = []
-        let clients = []
-        for (let i = 0; i < connectors.length; i++) {
-            const client = await Clients.findById(connectors[i].client)
-            clients.push(client)
-            const sections = await Section.find({
-                connector: connectors[i]._id,
-                priceCashier: { $gt: 0 }
-            })
-            let c = {
-                accept: 0,
-                all: 0
-            }
-            sections.map(section => {
-                c.all = c.all + 1
-                if (section.accept) {
-                    c.accept = c.accept + 1
-                }
-            })
-            countsection.push(c)
-        }
-        res.json({ clients, connectors, countsection })
-    } catch (e) {
-        res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
-    }
-})
 
 // /api/auth/connector/
 router.get('/directorstatsionar', async (req, res) => {

@@ -11,16 +11,17 @@ import { AuthContext } from '../../context/AuthContext'
 
 toast.configure()
 export const ClientsDirector = () => {
+
     //Avtorizatsiyani olish
     const auth = useContext(AuthContext)
-    const options = [
-        { value: "all", label: "Barchasi" },
-        { value: true, label: "Qabul qilinganlar" },
-        { value: false, label: "Qabul qilinmaganlar" },
-    ]
+    // const options = [
+    //     { value: "all", label: "Barchasi" },
+    //     { value: true, label: "Qabul qilinganlar" },
+    //     { value: false, label: "Qabul qilinmaganlar" },
+    // ]
 
-    const [startDate, setStartDate] = useState(new Date())
-    const [endDate, setEndDate] = useState(new Date())
+    const [startDate, setStartDate] = useState(new Date(new Date().setUTCHours(0, 0, 0, 0)))
+    const [endDate, setEndDate] = useState(new Date(new Date().setDate(new Date().getDate() + 1)))
     const [born, setBorn] = useState('')
     const { loading, request, error, clearError } = useHttp()
     const [clientId, setClientId] = useState('')
@@ -29,7 +30,7 @@ export const ClientsDirector = () => {
 
     const getToday = useCallback(async () => {
         try {
-            const fetch = await request(`/api/connector/directorclients`, 'GET', null, {
+            const fetch = await request(`/api/connector/directorclients/${startDate}/${endDate}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
             setAll(fetch)
@@ -37,28 +38,6 @@ export const ClientsDirector = () => {
             notify(e)
         }
     }, [request, auth, setAll])
-
-    const getConnectors = useCallback(async () => {
-        try {
-            const fetch = await request(`/api/connector/director/${startDate}/${endDate}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            setAll(fetch)
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, auth, startDate, endDate, setAll])
-
-    const getConnectorType = useCallback(async (type) => {
-        try {
-            const fetch = await request(`/api/connector/labaratoriyatype/${startDate}/${endDate}/${type}`, 'GET', null, {
-                Authorization: `Bearer ${auth.token}`
-            })
-            setAll(fetch)
-        } catch (e) {
-            notify(e)
-        }
-    }, [request, auth, startDate, endDate, setAll])
 
     const getId = useCallback(async () => {
         try {
@@ -99,7 +78,7 @@ export const ClientsDirector = () => {
     };
 
     const searchDate = () => {
-        getConnectors()
+        getToday()
     }
 
 
@@ -114,15 +93,6 @@ export const ClientsDirector = () => {
     const searchBornDate = () => {
         getBorn()
     }
-
-    const searchType = (event) => {
-        if (event.value === "all") {
-            getConnectors()
-        } else {
-            getConnectorType(event.value)
-        }
-    }
-
     //=================================================================================
     //=================================================================================
     //=================================================================================
@@ -292,24 +262,24 @@ export const ClientsDirector = () => {
                     </thead>
                     <tbody className="" >
                         {
-                            all && all.clients.map((client, index) => {
+                            all && all.connectors.map((connector, index) => {
                                 return (
                                     <tr key={index}>
                                         <td style={{ width: "100px" }} className='text-center'>{index + 1}</td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {all && new Date(all.connectors[index].bronDay).toLocaleString()}
+                                            {new Date(connector.bronDay).toLocaleString()}
                                         </td>
                                         <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
-                                            {client.lastname} {client.firstname} {client.fathername}
+                                            {connector.client.lastname} {connector.client.firstname}
                                         </td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {new Date(client.born).toLocaleDateString()}
+                                            {new Date(connector.client.born).toLocaleDateString()}
                                         </td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {client.id}
+                                            {connector.client.id}
                                         </td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {all && all.connectors[index].probirka}
+                                            {connector.probirka}
                                         </td>
                                         <td style={{ width: "200px" }} className='text-center'>
                                             <span className='text-success'>{all && all.countsection[index].accept}</span>
@@ -329,37 +299,37 @@ export const ClientsDirector = () => {
                 <table className=" table-hover"  >
                     <tbody className="" >
                         {
-                            all && all.clients.map((client, index) => {
+                            all && all.connectors.map((connector, index) => {
                                 return (
                                     <tr key={index}>
                                         <td style={{ width: "100px" }} className='text-center'>{index + 1}</td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {all && all.connectors[index] && new Date(all.connectors[index].bronDay).toLocaleString()}
+                                            {new Date(connector.bronDay).toLocaleString()}
                                         </td>
                                         <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
-                                            {client && client.lastname} {client && client.firstname} {client && client.fathername}
+                                            {connector.client.lastname} {connector.client.firstname}
                                         </td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {client && new Date(client.born).toLocaleDateString()}
+                                            {new Date(connector.client.born).toLocaleDateString()}
                                         </td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {client.id}
+                                            {connector.client.id}
                                         </td>
                                         <td style={{ width: "100px" }} className=' text-center'>
-                                            {all && all.connectors[index] && all.connectors[index].probirka}
+                                            {connector.probirka}
                                         </td>
                                         <td style={{ width: "200px" }} className='text-center'>
-                                            <Link className='btn btn-info' to={`/director/adoption/${client._id}/${all && all.connectors[index]._id}`} >
+                                            <Link className='btn btn-info' to={`/director/adoption/${connector.client._id}/${connector._id}`} >
                                                 <FontAwesomeIcon icon={faPenAlt} />
                                             </Link>
                                         </td>
                                         <td style={{ width: "100px" }} className='text-center'>
-                                            <Link className='btn btn-info' to={`/director/clientallhistory/${client._id}`} >
+                                            <Link className='btn btn-info' to={`/director/clientallhistory/${connector.client._id}`} >
                                                 <FontAwesomeIcon icon={faPrint} />
                                             </Link>
                                         </td>
                                         <td style={{ width: "100px" }} className='text-center'>
-                                            {all && all.connectors[index] && all.connectors[index].diagnosis}
+                                            {connector.diagnosis}
                                         </td>
                                         <td style={{ width: "100px" }} className='text-center fw-bold fs-5'>
                                             <span className='text-success'>{all && all.countsection[index].accept}</span>  / <span className='text-danger'>{all && all.countsection[index].all}</span>
