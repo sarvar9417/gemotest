@@ -9,8 +9,10 @@ const clients = new Schema({
     id: { type: Number, required: true },
     gender: { type: String, required: true },
     phone: { type: Number },
-    born: { type: Date }, 
-    address: String   
+    born: { type: Date },
+    address: String
+} , {
+    timestamps: true,
 })
 
 function validateClients(clients) {

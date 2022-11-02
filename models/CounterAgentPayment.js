@@ -7,6 +7,8 @@ const counterAgentPayment = new Schema({
     counteragent: { type: Types.ObjectId, ref: "CounterAgent" },
     counterdoctor: { type: Types.ObjectId, ref: "CounterDoctor" },
     paymentDay: { type: Date }
+}, {
+    timestamps: true,
 })
 
 function validateCounterAgentPayment(counterAgentPayment) {

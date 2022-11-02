@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useState } from 'react'
 import { useHttp } from '../hooks/http.hook'
 import { toast } from "react-toastify"
 import './turn.css'
-import { Loading } from '../components/Loading'
 import { DirectionTurn } from './DirectionTurn'
 
 toast.configure()
@@ -15,27 +14,19 @@ export const Turn = () => {
     const getHeadsections = useCallback(async () => {
         try {
             const data = await request("/api/headsection", "GET", null)
-            let h = []
-            data.map((headsection) => {
-                h.push({
+            const h =  data.map((headsection) => {
+              return  {
                     headsection: headsection._id,
                     name: headsection.name,
                     room: 0,
                     turn: 0
-                })
+                }
             })
             setHeadsections(h)
         } catch (e) {
         }
-    }, [request, setHeadsections])
+    }, [request])
 
-    const getTurns = () => {
-        headsections && headsections.map((headsection) => {
-            const fetch = request(`/api/section/turnid/${headsection.headsection}`, 'GET', null)
-            let h = [...headsection]
-            console.log(fetch)
-        })
-    }
 
     const [time, setTime] = useState(new Date().toLocaleTimeString())
     setInterval(() => {

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { YMaps, Map, Placemark, FullscreenControl, ZoomControl } from 'react-yandex-maps'
 
 

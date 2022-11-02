@@ -31,6 +31,8 @@ const section = new Schema({
     probirka: Boolean
 
 
+}, {
+    timestamps: true,
 })
 
 function validateSection(section) {

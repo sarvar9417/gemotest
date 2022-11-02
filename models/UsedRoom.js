@@ -13,6 +13,8 @@ const usedroom = new Schema({
     price: Number,
     priceCashier: Number
 
+}, {
+    timestamps: true,
 })
 
 function validateUsedRoom(usedroom) {

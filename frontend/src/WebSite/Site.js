@@ -8,7 +8,6 @@ import { Gallery } from './Gallery';
 import { LabaratoriyaXonalar } from './LabaratoriyaXonalar';
 import { Sertifikat } from './Sertifikat';
 import { GetResult } from './GetResult';
-import { LogoBlock } from './LogoBlock';
 import { Navbar } from './Navbar';
 import { Servise } from './Servise';
 import { Slider } from './Slider';
@@ -16,6 +15,7 @@ import { Toptar } from './Toptar';
 
 
 export const Site = () => {
+    const scrollTop = ()=>{}
     return <div>
         <div>
             <Toptar />
@@ -33,7 +33,7 @@ export const Site = () => {
                 <GetResult />
                 <LabaratoriyaXonalar/>
 
-              {/* ======= Testimonials Section ======= 
+              {/* ======= Testimonials Section =======
                 <section id="testimonials" className="testimonials">
                     <div className="container" data-aos="fade-up">
                         <div className="section-title">
@@ -101,7 +101,7 @@ export const Site = () => {
                                         <h3>John Larson</h3>
                                         <h4>Entrepreneur</h4>
                                     </div>
-                                </div>{/* End testimonial item 
+                                </div>{/* End testimonial item
                             </div>
                             <div className="swiper-pagination" />
                         </div>
@@ -112,7 +112,7 @@ export const Site = () => {
 
                     <Gallery/>
 
-                {/* ======= Pricing Section ======= 
+                {/* ======= Pricing Section =======
                 <section id="pricing" className="pricing">
                     <div className="container" data-aos="fade-up">
                         <div className="section-title">
@@ -248,12 +248,12 @@ export const Site = () => {
                     </div>
                 </section>{/* End Frequently Asked Questioins Section */}
                 {/* ======= Contact Section ======= */}
-                    <Contact/> 
+                    <Contact/>
                 {/* End Contact Section */}
             </main>{/* End #main */}
                     <Footer/>
             {/* <div id="preloader" /> */}
-            <a href="#" className="back-to-top d-flex align-items-center justify-content-center"><i className="bi bi-arrow-up-short" /></a>
+            <button onClick={scrollTop} className="back-to-top d-flex align-items-center justify-content-center"><i className="bi bi-arrow-up-short" /></button>
         </div>
 
     </div>

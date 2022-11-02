@@ -11,6 +11,8 @@ const tablesection = new Schema({
     additionalone: { type: String },
     additionaltwo: { type: String },
     accept: Boolean,
+}, {
+    timestamps: true,
 })
 
 function validateTableSection(tablesection) {

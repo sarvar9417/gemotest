@@ -11,6 +11,8 @@ const payment = new Schema({
     cash: Number,
     position: String
 
+}, {
+    timestamps: true,
 })
 
 function validatePayment(payment) {

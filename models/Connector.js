@@ -13,6 +13,8 @@ const connector = new Schema({
     bronDay: Date,
     probirka: Number,
     accept: Boolean
+}, {
+    timestamps: true,
 })
 
 function validateConnector(connector) {

@@ -8,6 +8,8 @@ const sale = new Schema({
     summa: { type: Number, required: true },
     day: { type: Date },
     comment: { type: String }
+}, {
+    timestamps: true,
 })
 
 function validateSale(sale) {

@@ -5,6 +5,8 @@ const templateDoctor = new Schema({
     headsection: { type: Types.ObjectId, ref: "HeadSection" },
     template: { type: String },
     section: { type: String },
+}, {
+    timestamps: true,
 })
 
 function validateTemplateDoctor(templateDoctor) {

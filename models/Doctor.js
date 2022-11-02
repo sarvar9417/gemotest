@@ -12,6 +12,8 @@ const doctor = new Schema({
     section: { type: Types.ObjectId, ref: "HeadSection" },
     image: { type: String },
     procient: {type: Number}
+}, {
+    timestamps: true,
 })
 
 function validateDoctor(doctor) {
@@ -27,7 +29,7 @@ function validateDoctor(doctor) {
         image: Joi.string(),
         procient: Joi.number()
 
-        
+
     })
     return schema.validate(doctor)
 }

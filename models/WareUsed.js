@@ -9,6 +9,8 @@ const wareused = new Schema({
     section: { type: Types.ObjectId, ref: "Section" },
     day: Date,
     count: Number
+}, {
+    timestamps: true,
 })
 
 function validateWareUsed(wareused) {

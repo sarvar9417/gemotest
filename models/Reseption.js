@@ -11,6 +11,8 @@ const reseption = new Schema({
     born: { type: Date },
     section: { type: String },
     image: { type: String }
+}, {
+    timestamps: true,
 })
 
 function validateReseption(reseption) {

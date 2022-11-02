@@ -4,6 +4,8 @@ const Joi = require('joi')
 const headsection = new Schema({
     name: { type: String },
     probirka: Boolean
+}, {
+    timestamps: true,
 })
 
 function validateHeadSection(headsection) {

@@ -10,6 +10,8 @@ const tabledirection = new Schema({
     additionalone: { type: String },
     additionaltwo: { type: String },
     accept: Boolean,
+}, {
+    timestamps: true,
 })
 
 function validateTableDirection(tabledirection) {

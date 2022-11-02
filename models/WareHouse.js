@@ -6,6 +6,8 @@ const warehouse = new Schema({
     type: String,
     price: Number,
     pieces: Number
+}, {
+    timestamps: true,
 })
 
 function validateWareHouse(warehouse) {

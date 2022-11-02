@@ -15,6 +15,8 @@ const companyLogo = new Schema({
     phone2: { type: Number },
     phone3: { type: Number }
 
+}, {
+    timestamps: true,
 })
 
 function validateCompanyLogo(logos) {

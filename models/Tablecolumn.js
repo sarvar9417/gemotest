@@ -8,6 +8,8 @@ const tablecolumn = new Schema({
     col3: String,
     col4: String,
     col5: String,
+}, {
+    timestamps: true,
 })
 
 function validateTableColumn(tablecolumn) {

@@ -15,6 +15,8 @@ const service = new Schema({
     paymentMethod: String,
     commentCashier: { type: String },
 
+}, {
+    timestamps: true,
 })
 
 function validateService(service) {

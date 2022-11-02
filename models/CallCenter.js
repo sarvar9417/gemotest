@@ -7,6 +7,8 @@ const callCenter = new Schema({
     voucher: String,
     illness: String,
     callDay: Date
+}, {
+    timestamps: true,
 })
 
 function validateCallCenter(callCenter) {

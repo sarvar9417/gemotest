@@ -18,7 +18,7 @@ export const GetResult = () => {
         } catch (e) {
             toast.error(e.message)
         }
-    }, [request, id, born, toast])
+    }, [request, id, born,  history])
 
     return <div>
         <section id="appointment" className="appointment section-bg">
@@ -27,7 +27,7 @@ export const GetResult = () => {
                     <h2>Tekshiruv natijalaringizni oling</h2>
                     <p> Tekshiruv natijalaridan online xabardor bo'lish va ularni yuklab olish uchun ostki qismda ko'rsatilgan joyda <b>ID</b> raqam <b>tug'ilgan sanangiz</b>  ma'lumotlarini kiriting </p>
                 </div>
-                <form action="forms/appointment.php" method="post" role="form" className="php-email-form" data-aos="fade-up" data-aos-delay={100}>
+                <div  className="php-email-form" data-aos="fade-up" data-aos-delay={100}>
                     <div className="row">
                         <div className="col-md-6 form-group">
                             <b>ID raqamingizni kiriting:</b>
@@ -55,7 +55,7 @@ export const GetResult = () => {
                         </div>
                     </div>
                     <div className="text-center"><button onClick={getClient} type="submit">Tekshirish</button></div>
-                </form>
+                </div>
             </div>
         </section>
     </div>;

@@ -8,6 +8,8 @@ const ware = new Schema({
     pieces: Number,
     day: Date,
     warehouse: { type: Types.ObjectId, ref: "WareHouse" }
+}, {
+    timestamps: true,
 })
 
 function validateWare(ware) {

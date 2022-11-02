@@ -3,6 +3,8 @@ const Joi = require('joi')
 
 const source = new Schema({
     name: String
+}, {
+    timestamps: true,
 })
 
 function validateSource(source) {

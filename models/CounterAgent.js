@@ -7,6 +7,8 @@ const counterAgent = new Schema({
     firstname: { type: String, required: true },
     lastname: { type: String, required: true },
     phone: { type: Number },
+}, {
+    timestamps: true,
 })
 
 function validateCounterAgent(counterAgent) {

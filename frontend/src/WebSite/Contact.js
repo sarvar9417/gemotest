@@ -112,7 +112,7 @@ export const Contact = () => {
                         </div>
 
                         <div className="col-lg-6">
-                            <form action="forms/contact.php" method="post" role="form" className="php-email-form">
+                            <div className="php-email-form">
                                 <div className="row">
                                     <div className="col form-group mt-3">
                                         <input type="text" name="name" className="form-control" id="name" placeholder="Ismingiz" required />
@@ -133,7 +133,7 @@ export const Contact = () => {
                                     <div className="sent-message"> Sizning xabaringiz jo'natildi. </div>
                                 </div>
                                 <div className="text-center"><button type="submit">Xabarni jo'natish</button></div>
-                            </form>
+                            </div>
                         </div>
 
 

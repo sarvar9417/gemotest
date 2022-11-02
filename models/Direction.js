@@ -19,6 +19,8 @@ const direction = new Schema({
     additionaltwo: String,
     table: Boolean,
     tableturn: Number
+}, {
+    timestamps: true,
 })
 
 function validateDirection(direction) {

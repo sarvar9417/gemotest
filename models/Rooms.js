@@ -9,6 +9,8 @@ const room = new Schema({
     bed: String,
     price: Number,
     position: String
+}, {
+    timestamps: true,
 })
 
 function validateRoom(room) {

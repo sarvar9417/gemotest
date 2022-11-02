@@ -9,6 +9,8 @@ const counterDoctor = new Schema({
     // section: { type: String },
     counteragent: { type: Types.ObjectId, ref: "CounterAgent" },
     counteragentname: String
+}, {
+    timestamps: true,
 })
 
 function validateCounterDoctor(counterDoctor) {

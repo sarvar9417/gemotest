@@ -7,6 +7,8 @@ const wareconnector = new Schema({
     count: Number,
     sectionname: String,
     warehousename: String,
+},  {
+    timestamps: true,
 })
 
 function validateWareConnector(wareconnector) {
