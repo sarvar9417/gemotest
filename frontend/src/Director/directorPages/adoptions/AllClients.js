@@ -35,7 +35,6 @@ export const AllClients = () => {
             const fetch = await request(`/api/connector/allresults/${startDate}/${endDate}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            console.log(fetch)
             setAll(fetch)
         } catch (e) {
             notify(e)

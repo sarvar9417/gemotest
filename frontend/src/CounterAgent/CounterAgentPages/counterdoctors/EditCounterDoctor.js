@@ -30,7 +30,6 @@ export const EditCounterDoctor = () => {
       const data = await request(`/api/counterdoctor/doctor/${counterdoctorId}`, "GET", null, {
         Authorization: `Bearer ${auth.token}`
       })
-      console.log(data);
       setCounterDoctor(data)
     } catch (error) {
       notify(error)

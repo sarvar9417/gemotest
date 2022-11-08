@@ -49,7 +49,6 @@ export const Reciept = () => {
             const data = await request(`/api/section/reseptionid/${clientId}/${connectorId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            console.log(data)
             setSections(data)
         } catch (e) {
         }

@@ -177,7 +177,6 @@ export const OldOnlineClient = () => {
     }
 
     const changeTime = (event) => {
-        console.log(event.target.value);
         let key = parseInt(event.target.id)
         setSections(Object.values({ ...sections, [key]: { ...sections[key], bronTime: event.target.value } }))
     }
@@ -329,7 +328,6 @@ export const OldOnlineClient = () => {
             const data = await request(`/api/section/reseption/register/${client._id}`, "POST", { ...section, connector }, {
                 Authorization: `Bearer ${auth.token}`
             })
-            console.log(data)
         } catch (e) {
             notify(e)
         }

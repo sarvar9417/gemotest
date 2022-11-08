@@ -55,9 +55,7 @@ export const ClientsPayments = () => {
         }
     }, [request, auth, startDate, endDate, setAll, startDate, endDate])
     const sortOnOff = (event) => {
-        console.log(event)
         if (event.value === "all") {
-            console.log("Salom");
             getPayments()
         } else {
             getPaymentType(event.value)

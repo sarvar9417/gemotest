@@ -40,7 +40,6 @@ export const ClientsStatsionarPages = () => {
             const fetch = await request(`/api/connector/cashierstatsionar`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            console.log(fetch);
             setAll(fetch)
         } catch (e) {
             notify(e)
@@ -52,7 +51,6 @@ export const ClientsStatsionarPages = () => {
             const fetch = await request(`/api/connector/cashierstatsionar/${startDate}/${endDate}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            console.log(fetch)
             setAll(fetch)
         } catch (e) {
             notify(e)

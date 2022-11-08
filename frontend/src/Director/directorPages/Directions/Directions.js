@@ -23,7 +23,6 @@ export const Directions = () => {
             const fetch = await request(`/api/direction/head/${headId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            console.log(fetch)
             setDirections(fetch)
         } catch (e) {
 

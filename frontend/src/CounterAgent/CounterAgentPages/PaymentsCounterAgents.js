@@ -44,7 +44,6 @@ export const PaymentsCounterAgents = () => {
 
     const getPaymentType = useCallback(async (doctorId) => {
         try {
-            console.log(doctorId);
             const fetch = await request(`/api/counteragentpayment/doctor/${startDate}/${endDate}/${doctorId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })

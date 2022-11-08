@@ -136,7 +136,6 @@ export const ClientsCounterAgent = () => {
                 day = new Date(client.born).getDate().toString() < 10 ? "0" + new Date(client.born).getDate().toString() : new Date(client.born).getDate().toString()
                 let date2 = parseInt(year + month + day)
                 if (date1 === date2 && section.client === client._id) {
-                    console.log(date1);
                     c.push(section)
                 }
             })

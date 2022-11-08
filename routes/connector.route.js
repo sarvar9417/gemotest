@@ -2216,6 +2216,7 @@ router.get('/doctor/:section', async (req, res) => {
         })
             .sort({ _id: -1 })
         let connectors = []
+
         for (let i = 0; i < sections.length; i++) {
             const connector = await Connector.findById(sections[i].connector)
             let k = true

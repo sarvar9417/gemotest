@@ -234,7 +234,6 @@ export const EditStatsionarClient = () => {
       const fetch = await request(`/api/usedroom/reseption/${connectorId}`, 'GET', null, {
         Authorization: `Bearer ${auth.token}`
       })
-      console.log(fetch);
       setRoom(fetch)
     } catch (error) {
       notify(error)

@@ -69,7 +69,6 @@ export const CreateRoom = () => {
       const data = await request("/api/rooms/register", "POST", { ...room }, {
         Authorization: `Bearer ${auth.token}`
       })
-      console.log(data)
       history.push('/director/rooms')
     } catch (e) {
       notify(e)

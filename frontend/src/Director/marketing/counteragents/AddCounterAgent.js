@@ -36,7 +36,6 @@ export const AddCounterAgent = () => {
     }
   }
 
-  console.log(counteragent)
   const checkData = () => {
     if (CheckCounterAgentData(counteragent)) {
       return notify(CheckCounterAgentData(counteragent))

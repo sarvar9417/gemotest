@@ -34,11 +34,9 @@ export const ClientsDoctor = () => {
 
     const getConnectors = useCallback(async () => {
         try {
-            console.log(doctorId);
             const fetch = await request(`/api/connector/directordoctor/${startDate}/${endDate}/${doctorId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            console.log(fetch)
             setAll(fetch)
         } catch (e) {
             notify(e)

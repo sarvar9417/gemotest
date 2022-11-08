@@ -43,7 +43,6 @@ export const ClientsPages = () => {
             const fetch = await request(`/api/connector/reseption`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            console.log(fetch);
             setAll(fetch)
         } catch (e) {
             notify(e)
@@ -67,7 +66,7 @@ export const ClientsPages = () => {
             const fetch = await request(`/api/connector/reseption/${clientId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            setAll(fetch) 
+            setAll(fetch)
         } catch (e) {
             notify(e)
         }

@@ -80,7 +80,6 @@ export const RecieptStatsionar = () => {
             } else {
                 setBronDay(Math.abs((new Date(new Date(data.beginDay).getFullYear(), new Date(data.beginDay).getMonth() + 1, new Date(data.endDay).getDate()) - new Date(new Date(data.beginDay).getFullYear(), new Date(data.beginDay).getMonth() + 1, new Date(data.beginDay).getDate())) / oneDay) + 1)
             }
-            console.log(data)
             setRoom(data)
         } catch (e) {
             notify(e)

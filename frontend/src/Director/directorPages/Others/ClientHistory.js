@@ -37,7 +37,6 @@ export const ClientHistory = () => {
 
     const getBaseUrl = useCallback(async () => {
         try {
-            console.log("salom");
             const data = await request(`/api/clienthistorys/url`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
@@ -60,7 +59,6 @@ export const ClientHistory = () => {
 
     const getSection = useCallback(async () => {
         try {
-            console.log("Salom");
             const fetch = await request(`/api/section/reseption/${sectionId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
