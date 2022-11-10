@@ -2937,50 +2937,106 @@ router.get('/cashierstatsionar', async (req, res) => {
 // /api/auth/connector/
 router.get('/reseption', async (req, res) => {
     try {
-        const pagenumber = 1
-        const connectors = await Connector.find({
+        // const pagenumber = 1
+        // const connectors = await Connector.find({
+        //     bronDay: {
+        //         $gte:
+        //             new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
+        //         $lt: new Date(new Date().getFullYear(),
+        //             new Date().getMonth(), new Date().getDate() + 1)
+        //     }
+        // })
+        //     .or([{ type: "offline" }, { type: "online" }, { type: "callcenter" }])
+        //     .sort({ _id: -1 })
+        //     .skip((pagenumber - 1) * 15)
+        //     .limit(15)
+
+        const sections = await Section.find({
             bronDay: {
-                $gte:
-                    new Date(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()),
-                $lt: new Date(new Date().getFullYear(),
-                    new Date().getMonth(), new Date().getDate() + 1)
+                $gte: new Date(new Date().setHours(0, 0, 0, 0)).toISOString(),
+                $lt: new Date(new Date().setHours(23, 59, 59, 999)).toISOString()
             }
-        })
-            .or([{ type: "offline" }, { type: "online" }, { type: "callcenter" }])
-            .sort({ _id: -1 })
-            .skip((pagenumber - 1) * 15)
-            .limit(15)
-        let clients = []
-        let sections = []
-        let services = []
-        let countsection = []
-        for (let i = 0; i < connectors.length; i++) {
-            const client = await Clients.findById(connectors[i].client)
-            const sec = await Section.find({
-                connector: connectors[i]._id
-            })
-                .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
-                .sort({ _id: 1 })
-            const service = await Service.find({
-                connector: connectors[i]._id
-            })
-            let c = {
-                accept: 0,
-                all: 0
-            }
-            sec.map(section => {
-                c.all = c.all + 1
-                if (section.accept) {
-                    c.accept = c.accept + 1
+        }).or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
+            .populate('client')
+            .populate('connector')
+            .sort({connector: -1})
+            .then(async (sections) => {
+                let connectors = []
+                let countsection = []
+                let clients = []
+                let i = -1
+                let s = []
+                let ss = []
+                map(sections, (section, index) => {
+                    if(index === 0 || section.connector._id.toString() !== sections[index - 1].connector._id.toString()) {
+                        connectors.push(section.connector)
+                        countsection.push({
+                            accept: section.accept ? 1 : 0,
+                            all: 1
+                        })
+                        clients.push(section.client)
+                        if(index !== 0) {
+                            ss.push(s)
+                            s=[]
+                        }
+                        i++
+
+                    } else {
+                        countsection[i].all++
+                        if(section.accept) {
+                            countsection[i].accept++
+                        }
+                    }
+                    section.connector = section.connector._id
+                    s.push(section)
+                })
+                if(s.length > 0) {
+                    ss.push(s)
                 }
+                return {connectors, countsection, clients, sections: ss}
             })
-            countsection.push(c)
+
+
+        let services  = []
+        for (const connector of sections.connectors) {
+            const service = await Service.find({
+                connector: connector._id
+            })
             services.push(service)
-            clients.push(client)
-            sections.push(sec)
         }
-        res.json({ connectors, clients, sections, services, countsection })
+        // let clients = []
+        // let sections = []
+        // let services = []
+        // let countsection = []
+        // for (let i = 0; i < connectors.length; i++) {
+        //     const client = await Clients.findById(connectors[i].client)
+        //     const sec = await Section.find({
+        //         connector: connectors[i]._id
+        //     })
+        //         .or([{ position: "offline" }, { position: "kelgan" }, { position: "callcenter" }])
+        //         .sort({ _id: 1 })
+        //     const service = await Service.find({
+        //         connector: connectors[i]._id
+        //     })
+        //     let c = {
+        //         accept: 0,
+        //         all: 0
+        //     }
+        //     sec.map(section => {
+        //         c.all = c.all + 1
+        //         if (section.accept) {
+        //             c.accept = c.accept + 1
+        //         }
+        //     })
+        //     countsection.push(c)
+        //     services.push(service)
+        //     clients.push(client)
+        //     sections.push(sec)
+        // }
+
+        res.json({ ...sections, services})
     } catch (e) {
+        console.log(e)
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
 })
