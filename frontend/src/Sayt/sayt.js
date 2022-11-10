@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom'
 import { Loading } from './components/Loading'
 import './sayt.css'
 import AOS from 'aos'
@@ -10,15 +9,12 @@ import { Doctor } from './Sections/Doctor'
 import { Director } from './Sections/Director'
 import { Turn } from './Turn'
 import { CallCenter } from './CallCenter'
-import { Medsestra } from './Sections/Medsestra'
-import { Fizioterapevt } from './Sections/Fizioterapevt'
-import { CounterAgent } from './../CounterAgent/CounterAgent'
 import { Labaratoriya } from './Sections/Labaratoriya'
 
 export const Sayt = () => {
 
     const [loader, setLoader] = useState(true)
-    
+
 
     useEffect(() => {
         setLoader(false)
@@ -63,7 +59,7 @@ export const Sayt = () => {
             <Turn />
             <CallCenter />
 
-            
+
         </div>
 
     )

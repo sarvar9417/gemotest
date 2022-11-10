@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useParams } from 'react-router'
 import { savePDF } from '@progress/kendo-react-pdf'
 import { useHttp } from '../../hooks/http.hook'

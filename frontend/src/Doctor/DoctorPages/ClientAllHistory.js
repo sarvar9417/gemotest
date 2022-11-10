@@ -19,7 +19,7 @@ export const ClientAllHistory = () => {
         toast.error(e);
     };
     const auth = useContext(AuthContext)
-    const { loading, request, error, clearError } = useHttp()
+    const {  request, error, clearError } = useHttp()
 
     const clientId = useParams().id
     const [client, setClient] = useState()

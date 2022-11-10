@@ -1,5 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
-import { useHttp } from '../hooks/http.hook'
+import React from 'react'
 
 export const DirectionTurn = ({section, room, turn}) => {
 
