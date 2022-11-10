@@ -16,6 +16,7 @@ const { FileSave } = require('../models/FileSave')
 
 const { Payment } = require('../models/Payment')
 const { Sale } = require('../models/Sale')
+const {map} = require('lodash')
 
 // /api/auth/connector/register
 router.post('/register', async (req, res) => {
@@ -321,42 +322,101 @@ router.get('/directorid/:start/:end/:id', async (req, res) => {
 // /api/auth/connector/
 router.get('/doctor/:start/:end/:section', async (req, res) => {
     try {
-        const headsection = await HeadSection.findById(req.params.section)
-        const start = new Date(req.params.start)
-        const end = new Date(req.params.end)
-        const connectors = await Connector.find({
+        const start = new Date(new Date(req.params.start).setHours(0, 0, 0, 0)).toISOString()
+        const end = new Date(new Date(req.params.end).setHours(23, 59, 59, 999)).toISOString()
+        const sections = await Section.find({
             bronDay: {
-                $gte:
-                    new Date(start),
-                $lt: new Date(end)
+                $gte: start,
+                $lt: end
             },
-        })
+            headsectionid: req.params.section,
+            priceCashier: { $gt: 0 }
+        }).sort({connector: -1})
             .populate('client', 'born firstname lastname id')
-            .sort({ _id: -1 })
-            .select('bronDay client probirka')
-
-        let countsection = []
-        for (let i = 0; i < connectors.length; i++) {
-            const sections = await Section.find({
-                headsectionid: headsection._id,
-                connector: connectors[i]._id,
-                priceCashier: { $gt: 0 }
+            .populate('connector', 'probirka bronDay')
+            .then(sections => {
+                let connectors = []
+                let countsection = []
+                let i = -1
+                map(sections, (section, index) => {
+                    if(index === 0 || section.connector._id.toString() !== sections[index - 1].connector._id.toString()) {
+                        connectors.push({
+                            client: section.client,
+                            bronDay: section.connector.bronDay,
+                            probirka: section.connector.probirka,
+                            _id: section.connector._id,
+                        })
+                        countsection.push({
+                            accept: section.accept ? 1 : 0,
+                            all: 1
+                        })
+                        i++
+                    } else {
+                        countsection[i].all++
+                        if(section.accept) {
+                            countsection[i].accept++
+                        }
+                    }
+                })
+                return {connectors, countsection}
             })
 
-            let c = {
-                accept: 0,
-                all: 0
-            }
-            sections.map(section => {
-                c.all = c.all + 1
-                if (section.accept) {
-                    c.accept = c.accept + 1
-                }
-            })
-            countsection.push(c)
-        }
-        res.json({ connectors, countsection })
+        // const connectors = await Connector.find({
+        //     bronDay: {
+        //         $gte:
+        //             new Date(start),
+        //         $lt: new Date(end)
+        //     },
+        // })
+        //     .populate('client', 'born firstname lastname id')
+        //     .sort({ _id: -1 })
+        //     .select('bronDay client probirka')
+        //     .then(async (connectors) =>
+        //         await map(connectors, async (connector) => {
+        //              const sections =  await Section.find({
+        //                  connector: connector._id,
+        //                  headsectionid: headsection._id
+        //              }).count()
+        //              const accept = await Section.find({
+        //                  connector: connector._id,
+        //                  headsectionid: headsection._id,
+        //                  accept: true
+        //              }).count()
+        //              const data = {
+        //                  client: connector?.client,
+        //                  bronDay: connector?.bronDay,
+        //                  probirka: connector?.probirka,
+        //                  sections ,
+        //                  accept
+        //              }
+        //             return data
+        //         })
+        //        )
+        // console.log(connectors[0])
+        // let countsection = []
+        //
+        // for (let i = 0; i < connectors.length; i++) {
+        //     const sections = await Section.find({
+        //         headsectionid: headsection._id,
+        //         connector: connectors[i]._id,
+        //         priceCashier: { $gt: 0 }
+        //     })
+        //
+        //     let c = {
+        //         accept: 0,
+        //         all: 0
+        //     }
+        //     sections.map(section => {
+        //         c.all = c.all + 1
+        //         if (section.accept) {
+        //             c.accept = c.accept + 1
+        //         }
+        //     })
+        //     countsection.push(c)
+        // }
+        res.json(sections)
     } catch (e) {
+        console.log(e)
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
 })

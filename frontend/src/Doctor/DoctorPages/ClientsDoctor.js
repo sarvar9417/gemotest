@@ -262,18 +262,18 @@ export const ClientsDoctor = () => {
                 <div style={{ minWidth: "1100px" }} >
                     <table id="" className="table-striped table-hover w-100" style={{ borderBottom: "1px solid #aaa", marginBottom: "10px" }} >
                         <thead>
-                            <tr>
-                                <th style={{ width: "100px" }} className='text-center' >№ <FontAwesomeIcon icon={faSort} /> </th>
-                                <th style={{ width: "100px" }} className=" text-center">Kelgan vaqti <FontAwesomeIcon icon={faSort} /></th>
-                                <th style={{ width: "200px" }} className=" text-center">F.I.Sh <FontAwesomeIcon icon={faSort} /></th>
-                                <th style={{ width: "100px" }} className=" text-center">Tug'ilgan sanasi <FontAwesomeIcon icon={faSort} /></th>
-                                <th style={{ width: "100px" }} className=" text-center">ID <FontAwesomeIcon icon={faSort} /></th>
-                                <th style={{ width: "100px" }} className=" text-center">Probirka <FontAwesomeIcon icon={faSort} /></th>
-                                <th style={{ width: "200px" }} className=" text-center">Qabul qilish <FontAwesomeIcon icon={faSort} /></th>
-                                <th style={{ width: "100px" }} className=" text-center">Tahrirlash <FontAwesomeIcon icon={faSort} /></th>
-                                <th style={{ width: "100px" }} className=" text-center">Izoh <FontAwesomeIcon icon={faSort} /></th>
-                                <th style={{ width: "100px" }} className=" text-center">Holati <FontAwesomeIcon icon={faSort} /></th>
-                            </tr>
+                        <tr>
+                            <th style={{ width: "100px" }} className='text-center' >№ <FontAwesomeIcon icon={faSort} /> </th>
+                            <th style={{ width: "100px" }} className=" text-center">Kelgan vaqti <FontAwesomeIcon icon={faSort} /></th>
+                            <th style={{ width: "200px" }} className=" text-center">F.I.Sh <FontAwesomeIcon icon={faSort} /></th>
+                            <th style={{ width: "100px" }} className=" text-center">Tug'ilgan sanasi <FontAwesomeIcon icon={faSort} /></th>
+                            <th style={{ width: "100px" }} className=" text-center">ID <FontAwesomeIcon icon={faSort} /></th>
+                            <th style={{ width: "100px" }} className=" text-center">Probirka <FontAwesomeIcon icon={faSort} /></th>
+                            <th style={{ width: "200px" }} className=" text-center">Qabul qilish <FontAwesomeIcon icon={faSort} /></th>
+                            <th style={{ width: "100px" }} className=" text-center">Tahrirlash <FontAwesomeIcon icon={faSort} /></th>
+                            <th style={{ width: "100px" }} className=" text-center">Izoh <FontAwesomeIcon icon={faSort} /></th>
+                            <th style={{ width: "100px" }} className=" text-center">Holati <FontAwesomeIcon icon={faSort} /></th>
+                        </tr>
                         </thead>
                     </table>
                 </div>
@@ -282,50 +282,50 @@ export const ClientsDoctor = () => {
             <div className="d-none" >
                 <table id="reseptionReport" className=" table-hover"  >
                     <thead>
-                        <tr>
-                            <th style={{ width: "100px" }} className='text-center' >№ <FontAwesomeIcon icon={faSort} /> </th>
-                            <th style={{ width: "100px" }} className=" text-center">Kelgan vaqti <FontAwesomeIcon icon={faSort} /></th>
-                            <th style={{ width: "200px" }} className=" text-center">F.I.Sh <FontAwesomeIcon icon={faSort} /></th>
-                            <th style={{ width: "100px" }} className=" text-center">Tug'ilgan sanasi <FontAwesomeIcon icon={faSort} /></th>
-                            <th style={{ width: "100px" }} className=" text-center">ID <FontAwesomeIcon icon={faSort} /></th>
-                            <th style={{ width: "100px" }} className=" text-center">Probirka <FontAwesomeIcon icon={faSort} /></th>
-                            <th style={{ width: "200px" }} className=" text-center">Tayyorlangan <FontAwesomeIcon icon={faSort} /></th>
-                            <th style={{ width: "100px" }} className=" text-center">Tayyorlanmagan <FontAwesomeIcon icon={faSort} /></th>
-                        </tr>
+                    <tr>
+                        <th style={{ width: "100px" }} className='text-center' >№ <FontAwesomeIcon icon={faSort} /> </th>
+                        <th style={{ width: "100px" }} className=" text-center">Kelgan vaqti <FontAwesomeIcon icon={faSort} /></th>
+                        <th style={{ width: "200px" }} className=" text-center">F.I.Sh <FontAwesomeIcon icon={faSort} /></th>
+                        <th style={{ width: "100px" }} className=" text-center">Tug'ilgan sanasi <FontAwesomeIcon icon={faSort} /></th>
+                        <th style={{ width: "100px" }} className=" text-center">ID <FontAwesomeIcon icon={faSort} /></th>
+                        <th style={{ width: "100px" }} className=" text-center">Probirka <FontAwesomeIcon icon={faSort} /></th>
+                        <th style={{ width: "200px" }} className=" text-center">Tayyorlangan <FontAwesomeIcon icon={faSort} /></th>
+                        <th style={{ width: "100px" }} className=" text-center">Tayyorlanmagan <FontAwesomeIcon icon={faSort} /></th>
+                    </tr>
                     </thead>
                     <tbody className="" >
-                        {
-                            all && all.connectors.map((connector, index) => {
-                                if (all.countsection[index].all > 0) {
-                                    return (
-                                        <tr key={index}>
-                                            <td style={{ width: "100px" }} className='text-center'>{++k}</td>
-                                            <td style={{ width: "100px" }} className=' text-center'>
-                                                {all && new Date(connector.bronDay).toLocaleString()}
-                                            </td>
-                                            <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
-                                                {connector.client.lastname} {connector.client.lastname} {connector.client.lastname}
-                                            </td>
-                                            <td style={{ width: "100px" }} className=' text-center'>
-                                                {new Date(connector.client.born).toLocaleDateString()}
-                                            </td>
-                                            <td style={{ width: "100px" }} className=' text-center'>
-                                                {connector.client.id}
-                                            </td>
-                                            <td style={{ width: "100px" }} className=' text-center'>
-                                                {connector.probirka}
-                                            </td>
-                                            <td style={{ width: "200px" }} className='text-center'>
-                                                <span className='text-success'>{all && all.countsection[index].accept}</span>
-                                            </td>
-                                            <td style={{ width: "100px" }} className='text-center'>
-                                                <span className='text-danger'>{all && all.countsection[index].all}</span>
-                                            </td>
-                                        </tr>
-                                    )
-                                } else { return "" }
-                            })
-                        }
+                    {
+                        all && all.connectors.map((connector, index) => {
+                            if (all.countsection[index].all > 0) {
+                                return (
+                                    <tr key={index}>
+                                        <td style={{ width: "100px" }} className='text-center'>{++k}</td>
+                                        <td style={{ width: "100px" }} className=' text-center'>
+                                            {all && new Date(connector.bronDay).toLocaleString()}
+                                        </td>
+                                        <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
+                                            {connector.client.lastname} {connector.client.lastname} {connector.client.lastname}
+                                        </td>
+                                        <td style={{ width: "100px" }} className=' text-center'>
+                                            {new Date(connector.client.born).toLocaleDateString()}
+                                        </td>
+                                        <td style={{ width: "100px" }} className=' text-center'>
+                                            {connector.client.id}
+                                        </td>
+                                        <td style={{ width: "100px" }} className=' text-center'>
+                                            {connector.probirka}
+                                        </td>
+                                        <td style={{ width: "200px" }} className='text-center'>
+                                            <span className='text-success'>{all && all.countsection[index].accept}</span>
+                                        </td>
+                                        <td style={{ width: "100px" }} className='text-center'>
+                                            <span className='text-danger'>{all && all.countsection[index].all}</span>
+                                        </td>
+                                    </tr>
+                                )
+                            } else { return "" }
+                        })
+                    }
                     </tbody>
                 </table>
             </div>
@@ -333,50 +333,50 @@ export const ClientsDoctor = () => {
             <div className="overflow-auto" style={{ height: "60vh", minWidth: "1100px" }}>
                 <table className=" table-hover w-100"  >
                     <tbody className="" >
-                        {
-                            all && all.connectors.map((connector, index) => {
-                                if (all.countsection[index].all > 0) {
-                                    return (
-                                        <tr key={index}>
-                                            <td style={{ width: "100px" }} className='text-center'>{++l}</td>
-                                            <td style={{ width: "100px" }} className=' text-center'>
-                                                {new Date(connector.bronDay).toLocaleString()}
-                                            </td>
-                                            <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
-                                                {connector.client.lastname} {connector.client.firstname} {connector.client.fathername}
-                                            </td>
-                                            <td style={{ width: "100px" }} className=' text-center'>
-                                                {new Date(connector.client.born).toLocaleDateString()}
-                                            </td>
-                                            <td style={{ width: "100px" }} className=' text-center'>
-                                                {connector.client.id}
-                                            </td>
-                                            <td style={{ width: "100px" }} className=' text-center'>
-                                                {connector.probirka}
-                                            </td>
-                                            <td style={{ width: "200px" }} className='text-center'>
-                                                <Link className='btn btn-info' to={`/doctor/adoption/${connector.client._id}/${connector._id}`} >
-                                                    <FontAwesomeIcon icon={faPenAlt} />
-                                                </Link>
-                                            </td>
-                                            <td style={{ width: "100px" }} className='text-center'>
-                                                <Link className='btn btn-info' to={`/doctor/clientallhistory/${connector.client._id}`} >
-                                                    <FontAwesomeIcon icon={faPrint} />
-                                                </Link>
-                                            </td>
-                                            <td style={{ width: "100px" }} className='text-center'>
-                                                {connector.diagnosis}
-                                            </td>
-                                            <td style={{ width: "100px" }} className='text-center fw-bold fs-5'>
-                                                <span className='text-success'>{all && all.countsection[index].accept}</span>  / <span className='text-danger'>{all && all.countsection[index].all}</span>
-                                            </td>
-                                        </tr>
-                                    )
-                                } else {
-                                    return ""
-                                }
-                            })
-                        }
+                    {
+                        all && all.connectors.map((connector, index) => {
+                            if (all.countsection[index].all > 0) {
+                                return (
+                                    <tr key={index}>
+                                        <td style={{ width: "100px" }} className='text-center'>{++l}</td>
+                                        <td style={{ width: "100px" }} className=' text-center'>
+                                            {new Date(connector.bronDay).toLocaleString()}
+                                        </td>
+                                        <td style={{ width: "200px" }} className=' fw-bold text-success text-uppercase'>
+                                            {connector.client.lastname} {connector.client.firstname} {connector.client.fathername}
+                                        </td>
+                                        <td style={{ width: "100px" }} className=' text-center'>
+                                            {new Date(connector.client.born).toLocaleDateString()}
+                                        </td>
+                                        <td style={{ width: "100px" }} className=' text-center'>
+                                            {connector.client.id}
+                                        </td>
+                                        <td style={{ width: "100px" }} className=' text-center'>
+                                            {connector.probirka}
+                                        </td>
+                                        <td style={{ width: "200px" }} className='text-center'>
+                                            <Link className='btn btn-info' to={`/doctor/adoption/${connector.client._id}/${connector._id}`} >
+                                                <FontAwesomeIcon icon={faPenAlt} />
+                                            </Link>
+                                        </td>
+                                        <td style={{ width: "100px" }} className='text-center'>
+                                            <Link className='btn btn-info' to={`/doctor/clientallhistory/${connector.client._id}`} >
+                                                <FontAwesomeIcon icon={faPrint} />
+                                            </Link>
+                                        </td>
+                                        <td style={{ width: "100px" }} className='text-center'>
+                                            {connector.diagnosis}
+                                        </td>
+                                        <td style={{ width: "100px" }} className='text-center fw-bold fs-5'>
+                                            <span className='text-success'>{all && all.countsection[index].accept}</span>  / <span className='text-danger'>{all && all.countsection[index].all}</span>
+                                        </td>
+                                    </tr>
+                                )
+                            } else {
+                                return ""
+                            }
+                        })
+                    }
                     </tbody>
                 </table>
             </div>
