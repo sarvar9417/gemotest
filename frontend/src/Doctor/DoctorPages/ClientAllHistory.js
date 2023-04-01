@@ -42,6 +42,7 @@ export const ClientAllHistory = () => {
                         setQr(data)
                     })
             }
+
         } catch (e) {
             notify(e)
         }
