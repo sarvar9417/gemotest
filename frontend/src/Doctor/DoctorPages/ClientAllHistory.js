@@ -35,6 +35,13 @@ export const ClientAllHistory = () => {
                 Authorization: `Bearer ${auth.token}`
             })
             setClient(fetch)
+            const client = fetch
+            if (client) {
+                QRCode.toDataURL(`${baseUrl}/clienthistorys/${client._id}`)
+                    .then(data => {
+                        setQr(data)
+                    })
+            }
         } catch (e) {
             notify(e)
         }
@@ -84,12 +91,7 @@ export const ClientAllHistory = () => {
     }, [error])
 
     useEffect(() => {
-        if (client) {
-            QRCode.toDataURL(`${baseUrl}/clienthistorys/${client._id}`)
-                .then(data => {
-                    setQr(data)
-                })
-        }
+
             getBaseUrl()
             getClient()
             getConnectors()
@@ -117,7 +119,6 @@ export const ClientAllHistory = () => {
         return "text-center cw30 py-0"
     }
 
-    console.log(alltablecolumns)
 
     return (
         <div>

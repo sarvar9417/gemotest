@@ -33,7 +33,7 @@ export const ClientsAdvertisements = () => {
         }
     }, [auth, request, setAdvertisement, advertisementId])
 
-    
+
     let k = 0
     let kk = 0
     let position = "all"
@@ -76,7 +76,7 @@ export const ClientsAdvertisements = () => {
         }
     }, [request, auth, setSections, setAllSections, advertisement])
 
-    
+
 
 
     useEffect(() => {
@@ -92,11 +92,11 @@ export const ClientsAdvertisements = () => {
         }
         if (AllClients.length === 0 ) {
             getClients()
-            
+
         }
     }, [getClients, getAllSections])
 
-    
+
 
     const searchDate = () => {
         let c = []
@@ -135,7 +135,6 @@ export const ClientsAdvertisements = () => {
                 day = new Date(client.born).getDate().toString() < 10 ? "0" + new Date(client.born).getDate().toString() : new Date(client.born).getDate().toString()
                 let date2 = parseInt(year + month + day)
                 if (date1 === date2 && section.client === client._id) {
-                    console.log(date1);
                     c.push(section)
                 }
             })
@@ -188,7 +187,7 @@ export const ClientsAdvertisements = () => {
 
     return (
         <div className="container"  >
-            <div className='row'> 
+            <div className='row'>
                 <h5 >Reklama: {advertisement && advertisement.name}</h5>
             </div>
             <div className="row mb-3" style={{ minWidth: "1100px" }} >
@@ -264,7 +263,7 @@ export const ClientsAdvertisements = () => {
                                     if (section.payment !=="to'lanmagan") {
                                         paid = paid + section.priceCashier
                                         unpaid = unpaid + (section.price - section.priceCashier)
-                                    } 
+                                    }
                                     kk++
                                     return (
                                         <tr key={key} >

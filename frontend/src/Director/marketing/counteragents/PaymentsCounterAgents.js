@@ -66,7 +66,6 @@ export const PaymentsCounterAgents = () => {
             const fetch = await request(`/api/counteragentpayment/${startDate}/${endDate}/${counteragentId}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            console.log(fetch);
             setAll(fetch)
         } catch (e) {
         }

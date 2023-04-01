@@ -392,7 +392,6 @@ router.get('/doctor/:start/:end/:section', async (req, res) => {
         //             return data
         //         })
         //        )
-        // console.log(connectors[0])
         // let countsection = []
         //
         // for (let i = 0; i < connectors.length; i++) {
@@ -794,7 +793,6 @@ router.get('/debtorname/:start/:end/:fish', async (req, res) => {
             }
 
         }
-        // console.log(clients);
         res.json(clients)
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
@@ -893,7 +891,6 @@ router.get('/salename/:start/:end/:fish', async (req, res) => {
             }
 
         }
-        // console.log(clients);
         res.json(clients)
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
@@ -1245,7 +1242,6 @@ router.get('/debtors/:start/:end', async (req, res) => {
             }
 
         }
-        // console.log(clients);
         res.json(clients)
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
@@ -1330,7 +1326,6 @@ router.get('/sales/:start/:end', async (req, res) => {
             }
 
         }
-        // console.log(clients);
         res.json(clients)
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
@@ -1877,7 +1872,6 @@ router.get('/debtorid/:id', async (req, res) => {
             client.debt = sale && summsections + summservices - summpayments - sale.summa
         }
 
-        // console.log(clients);
         res.json([client])
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
@@ -1964,7 +1958,6 @@ router.get('/debtorprobirka/:probirka', async (req, res) => {
             client.debt = sale && summsections + summservices - summpayments - sale.summa
         }
 
-        // console.log(clients);
         res.json([client])
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
@@ -2049,7 +2042,6 @@ router.get('/saleid/:id', async (req, res) => {
             client.procient = sale.summa.procient
         }
 
-        // console.log(clients);
         res.json([client])
     } catch (e) {
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })

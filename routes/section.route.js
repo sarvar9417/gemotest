@@ -14,7 +14,7 @@ const { Sale } = require('../models/Sale')
 // ===================================================================================
 // ===================================================================================
 // RESEPTION routes
-// /api/section/reseption/register/ 
+// /api/section/reseption/register/
 router.post('/reseption/register/:id', auth, async (req, res) => {
     try {
         const id = req.params.id
@@ -843,7 +843,6 @@ router.patch('/table', auth, async (req, res) => {
 router.patch('/sections', auth, async (req, res) => {
     try {
         const sections = [...req.body]
-        console.log(req.body);
         sections.map(async (section) => {
             const s = await Section.findByIdAndUpdate(section._id, section)
         })

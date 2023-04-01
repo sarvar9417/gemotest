@@ -93,7 +93,6 @@ router.patch('/:id', async (req, res) => {
                 message: error.message
             })
         }
-        console.log(req.body);
         const {
             login,
             password,
