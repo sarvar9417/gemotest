@@ -77,35 +77,31 @@ export const ClientAllHistory = () => {
     }, [request, setBasuUrl])
 
     useEffect(() => {
+        if (error) {
+            notify(error)
+            clearError()
+        }
+    }, [error])
+
+    useEffect(() => {
         if (client) {
             QRCode.toDataURL(`${baseUrl}/clienthistorys/${client._id}`)
                 .then(data => {
                     setQr(data)
                 })
         }
-        if (!baseUrl) {
             getBaseUrl()
-        }
-        if (!client) {
             getClient()
-        }
-        if (error) {
-            notify(error)
-            clearError()
-        }
-        if (!connectors) {
             getConnectors()
-        }
-        if (!logo) {
             getLogo()
-        }
-    }, [notify, clearError])
+    }, [])
+
 
     const checkClassHead = (data) => {
-        if (data.col5.length > 1) {
+        if (data?.col5?.length > 1) {
             return "text-center fw-bold cw18 py-0"
         }
-        if (data.col4.length > 1) {
+        if (data?.col4?.length > 1) {
             return "text-center fw-bold   cw22 py-0"
         }
         return "text-center fw-bold  cw30 py-0"
@@ -120,6 +116,8 @@ export const ClientAllHistory = () => {
         }
         return "text-center cw30 py-0"
     }
+
+    console.log(alltablecolumns)
 
     return (
         <div>

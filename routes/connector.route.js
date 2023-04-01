@@ -16,7 +16,7 @@ const { FileSave } = require('../models/FileSave')
 
 const { Payment } = require('../models/Payment')
 const { Sale } = require('../models/Sale')
-const {map} = require('lodash')
+const {map, filter} = require('lodash')
 
 // /api/auth/connector/register
 router.post('/register', async (req, res) => {
@@ -2648,41 +2648,74 @@ router.get('/clientallhistory/:id', async (req, res) => {
             client: id
         })
             .sort({ _id: 1 })
+
+        const sections = await Section.find({
+                     priceCashier: { $gt: 0 },
+                    client: id
+                 }).select('nameid connector probirka accept summary subname comment name source').sort({ _id: 1 })
+
+        const tablesections = await TableSection.find({
+            clientid: id
+        }).sort({ sectionid: 1 })
+
+        const tablecolumns = await TableColumn.find({
+        }).sort({ direction: 1 })
+
+        const files = await FileSave.find({})
+
         let allsections = []
         let alltablesections = []
         let alltablecolumns = []
         let allsectionFiles = []
-        for (let i = 0; i < connectors.length; i++) {
-            const sections = await Section.find({
-                connector: connectors[i]._id,
-                priceCashier: { $gt: 0 }
-            })
-                .sort({ _id: 1 })
-            let tablesections = []
-            let tablecolumns = []
-            let sectionFiles = []
-            for (let j = 0; j < sections.length; j++) {
-                const t = await TableSection.find({
-                    sectionid: sections[j]._id
-                })
-                tablesections.push(t)
-                const tablecolumn = await TableColumn.findOne({
-                    direction: sections[j].nameid
-                })
-                const f = await FileSave.find({
-                    section: sections[j]._id
-                })
-                sectionFiles.push(f)
-                tablecolumns.push(tablecolumn)
+
+        for (const connector of connectors) {
+            const fsections = filter(sections, {'connector':connector._id})
+            let ftablesections = []
+            let ftablecolumns = []
+            let fsectionFiles = []
+            for (const section of fsections){
+                ftablesections.push(filter(tablesections, {'sectionid': section._id} ))
+                ftablecolumns.push(...filter(tablecolumns, {'direction':section.nameid}))
+                fsectionFiles.push(filter(files, {'section': section._id}))
             }
-            allsections.push(sections)
-            alltablesections.push(tablesections)
-            alltablecolumns.push(tablecolumns)
-            allsectionFiles.push(sectionFiles)
+            allsections.push(fsections)
+            alltablesections.push(ftablesections)
+            alltablecolumns.push(ftablecolumns)
+            allsectionFiles.push(fsectionFiles)
         }
+
+        // for (let i = 0; i < connectors.length; i++) {
+        //     const sections = await Section.find({
+        //         connector: connectors[i]._id,
+        //         priceCashier: { $gt: 0 }
+        //     })
+        //         .sort({ _id: 1 })
+        //     let tablesections = []
+        //     let tablecolumns = []
+        //     let sectionFiles = []
+        //     for (let j = 0; j < sections.length; j++) {
+        //         const t = await TableSection.find({
+        //             sectionid: sections[j]._id
+        //         })
+        //         tablesections.push(t)
+        //         const tablecolumn = await TableColumn.findOne({
+        //             direction: sections[j].nameid
+        //         })
+        //         const f = await FileSave.find({
+        //             section: sections[j]._id
+        //         })
+        //         sectionFiles.push(f)
+        //         tablecolumns.push(tablecolumn)
+        //     }
+        //     allsections.push(sections)
+        //     alltablesections.push(tablesections)
+        //     alltablecolumns.push(tablecolumns)
+        //     allsectionFiles.push(sectionFiles)
+        // }
         res.send({ connectors, allsections, alltablesections, alltablecolumns, allsectionFiles })
 
     } catch (e) {
+        console.log(e)
         res.status(500).json({ message: 'Serverda xatolik yuz berdi' })
     }
 })
@@ -2691,6 +2724,7 @@ router.get('/clientallhistory/:id', async (req, res) => {
 // /api/connector
 router.get('/clienthistory/:id', async (req, res) => {
     try {
+
         const id = req.params.id
         const connectors = await Connector.find({
             client: id
