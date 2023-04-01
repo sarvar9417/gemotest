@@ -118,7 +118,6 @@ export const ClientHistory = () => {
         }
         return "text-center cw30 py-0"
     }
-
     return (
         <div>
             <div className='row'>
