@@ -27,7 +27,6 @@ export const EditTemplate = () => {
         accept: false
     })
 
-    console.log(template)
 
 
     const [t, setT] = useState()

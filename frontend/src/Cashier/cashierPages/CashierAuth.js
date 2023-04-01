@@ -34,7 +34,6 @@ export const AuthPage = () => {
     const registerHandler = async () => {
         try {
             const data = await request('/api/auth/cashier/register', 'POST', { ...form })
-            console.log('Data: ', data);
         } catch (e) {
 
         }

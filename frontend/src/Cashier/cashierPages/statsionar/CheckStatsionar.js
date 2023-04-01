@@ -332,7 +332,6 @@ export const CheckStatsionar = () => {
                     k = k + (sections[i].priceCashier - sections1[i].priceCashier)
                 }
             })
-            console.log(k);
             services.map((s, i) => {
                 k = k + (services[i].priceCashier - services1[i].priceCashier)
             })

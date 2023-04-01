@@ -134,7 +134,6 @@ export const ClientsPages = () => {
 
     const getSortSection = useCallback(async (section) => {
         try {
-            console.log(section)
             const fetch = await request(`/api/connector/director/${startDate}/${endDate}/${section}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })

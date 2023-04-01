@@ -4,7 +4,6 @@ const auth = require('../middleware/auth.middleware')
 
 router.delete('/', auth, async (req, res) => {
     try {
-        console.log("Salom");
         res.json("O'chirildi")
 
     } catch (e) {

@@ -52,7 +52,6 @@ export const ClientsStatsionarPages = () => {
             const fetch = await request(`/api/connector/cashierstatsionar/${startDate}/${endDate}`, 'GET', null, {
                 Authorization: `Bearer ${auth.token}`
             })
-            // console.log(fetch);
             setAll(fetch)
         } catch (e) {
             notify(e)
@@ -69,7 +68,6 @@ export const ClientsStatsionarPages = () => {
             notify(e)
         }
     }, [request, auth, clientId, setAll])
-    console.log(all);
     const getBorn = useCallback(async () => {
         try {
             const fetch = await request(`/api/connector/statsionarborn/${born}`, 'GET', null, {

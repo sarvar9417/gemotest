@@ -42,7 +42,6 @@ router.post('/register', auth, async (req, res) => {
 
 router.get('/:id', async (req, res) => {
     try {
-        console.log("Salom");
         const sale = await Sale.find({
             connector: req.params.id
         })
